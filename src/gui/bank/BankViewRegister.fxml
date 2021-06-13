@@ -37,7 +37,7 @@
             <Label text="ID:" />
             <Label text="Código:" GridPane.rowIndex="1" />
             <Label text="Nome:" GridPane.rowIndex="2" />
-            <TextField fx:id="txtId" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" GridPane.columnIndex="1" />
+            <TextField fx:id="txtId" disable="true" editable="false" focusTraversable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" GridPane.columnIndex="1" />
             <TextField fx:id="txtCode" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="txtName" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label fx:id="lblErrorCode" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="1">

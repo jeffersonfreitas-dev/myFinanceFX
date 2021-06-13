@@ -11,5 +11,6 @@ public interface DAOBank {
 	void deleteById (Integer id);
 	Bank findById(Integer id);
 	List<Bank> findAllOrderByName();
+	Bank findByCodeOrName(String code, String name);
 
 }

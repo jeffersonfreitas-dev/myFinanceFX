@@ -2,9 +2,12 @@ package model.service;
 
 import java.util.List;
 
+import javafx.scene.control.Alert.AlertType;
 import model.dao.DAOBank;
 import model.dao.DAOFactory;
 import model.entities.Bank;
+import model.exceptions.RecordAlreadyRecordedException;
+import utils.Alerts;
 
 public class BankService {
 	
@@ -17,13 +20,18 @@ public class BankService {
 
 
 	public void saveOrUpdate(Bank bank) {
-		//TODO: verificar se existe o registro já cadastrado
-		if(bank.getId() == null) {
-			dao.insert(bank);
-		}else {
-			dao.update(bank);
+		
+		Bank isRecorded = dao.findByCodeOrName(bank.getCode(), bank.getName());
+		
+		if(isRecorded != null && !bank.equals(isRecorded)) {
+			throw new RecordAlreadyRecordedException("Registro já cadastrado no banco de dados!");
 		}
 		
+		if(bank.getId() == null) {
+			dao.insert(bank);
+		}else if (bank.getId() != null && bank.equals(isRecorded)){
+			dao.update(bank);
+		}
 	}
 
 

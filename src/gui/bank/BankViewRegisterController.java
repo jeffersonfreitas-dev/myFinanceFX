@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import model.entities.Bank;
+import model.exceptions.RecordAlreadyRecordedException;
 import model.exceptions.ValidationException;
 import model.service.BankService;
 import utils.Alerts;
@@ -68,6 +69,8 @@ public class BankViewRegisterController implements Initializable{
 			Scene scene = Utils.getCurrentScene(event);
 			loadView("/gui/bank/BankView.fxml", scene);
 			
+		} catch (RecordAlreadyRecordedException e) {
+			Alerts.showAlert("Registro já cadastrado", null, e.getMessage(), AlertType.INFORMATION);
 		} catch (ValidationException e) {
 			e.printStackTrace();
 			setErrorsMessage(e.getErrors());

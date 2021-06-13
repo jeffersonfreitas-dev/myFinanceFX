@@ -98,11 +98,8 @@ public class DAOBankImpl implements DAOBank{
 			rs = stmt.executeQuery();
 			
 			if (rs.next()) {
-				Bank entity = new Bank();
-				entity.setId(rs.getInt("id"));
-				entity.setCode(rs.getString("code"));
-				entity.setName(rs.getString("name"));
-				return entity;
+				Bank bank = instantiateBank(rs); 
+				return bank;
 			}
 			return null;
 
@@ -128,16 +125,47 @@ public class DAOBankImpl implements DAOBank{
 			List<Bank> list = new ArrayList<>();
 			
 			while(rs.next()) {
-				Bank bank = new Bank();
-				bank.setId(rs.getInt("id"));
-				bank.setCode(rs.getString("code"));
-				bank.setName(rs.getString("name"));
+				Bank bank = instantiateBank(rs); 
 				list.add(bank);
 			}
 			return list;
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new DatabaseException("Erro ao executar comando: findAllOrderByNane em banco -> " + e.getMessage());
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
+	}
+
+
+	private Bank instantiateBank(ResultSet rs) throws SQLException{
+		Bank bank = new Bank();
+		bank.setId(rs.getInt("id"));
+		bank.setCode(rs.getString("code"));
+		bank.setName(rs.getString("name"));
+		return bank;
+	}
+
+
+	@Override
+	public Bank findByCodeOrName(String code, String name) {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT * FROM bank WHERE code = ? OR name = ?";
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, code);
+			stmt.setString(2, name);
+			rs = stmt.executeQuery();
+			Bank bank = null;
+			if(rs.next()) {
+				bank = instantiateBank(rs); 
+			}
+			return bank;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException("Erro ao executar comando: alreadyRecordedByCodeOrName em banco -> " + e.getMessage());
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
