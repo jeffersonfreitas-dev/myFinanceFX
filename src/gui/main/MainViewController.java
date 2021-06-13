@@ -3,6 +3,7 @@ package gui.main;
 import java.io.IOException;
 import java.util.function.Consumer;
 
+import gui.bank.BankViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import model.service.BankService;
 import utils.Alerts;
 
 public class MainViewController {
@@ -30,7 +32,7 @@ public class MainViewController {
 	public void onMnuItemAboutAction(ActionEvent event) {
 		FXMLLoader loader = getLoaderView("/gui/about/AboutView.fxml");
 		Window parentScene = mnuMain.getScene().getWindow();
-		loadModalView(loader, "Sobre o sistema", parentScene, 310.0, 460.0);
+		loadModalView(loader, "Sobre o sistema", parentScene, 310.0, 460.0, x -> {});
 	}
 	
 	
@@ -40,11 +42,15 @@ public class MainViewController {
 	public void onMnuItemBankAction() {
 		FXMLLoader loader = getLoaderView("/gui/bank/BankView.fxml");
 		Window parentScene = mnuMain.getScene().getWindow();
-		loadModalView(loader, "Lista de bancos", parentScene, 600.0, 800.0);
+		loadModalView(loader, "Lista de bancos", parentScene, 600.0, 800.0, (BankViewController controller) -> {
+			controller.setBankService(new BankService());
+			controller.updateTableView();
+		});
 	}
 	
 	
-	private synchronized void loadModalView(FXMLLoader loader, String title, Window parentScene, double heigth, double width) {
+	private synchronized <T> void loadModalView(FXMLLoader loader, String title, Window parentScene, double heigth, double width, 
+			Consumer<T> initialization) {
 		try {
 			Pane pane = loader.load();	
 			Stage stage = new Stage();
@@ -55,6 +61,10 @@ public class MainViewController {
 			stage.initModality(Modality.WINDOW_MODAL);
 			stage.setHeight(heigth);
 			stage.setWidth(width);
+			
+			T controller = loader.getController();
+			initialization.accept(controller);
+			
 			stage.showAndWait();
 		} catch (IOException e) {
 			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);

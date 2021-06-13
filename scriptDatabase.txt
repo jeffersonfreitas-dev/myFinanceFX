@@ -1,0 +1,23 @@
+CREATE DATABASE myfinance
+  WITH ENCODING='UTF8'
+       OWNER=postgres
+       LC_COLLATE='Portuguese_Brazil.1252'
+       LC_CTYPE='Portuguese_Brazil.1252'
+       CONNECTION LIMIT=-1;
+       
+ 
+ CREATE SEQUENCE public.bank_sequence
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ 
+ CREATE TABLE public.bank
+(
+  id bigint NOT NULL DEFAULT nextval('bank_sequence'::regclass),
+  code character varying,
+  name character varying,
+  CONSTRAINT bank_pkey PRIMARY KEY (id)
+)
+
