@@ -2,12 +2,10 @@ package model.service;
 
 import java.util.List;
 
-import javafx.scene.control.Alert.AlertType;
 import model.dao.DAOBank;
 import model.dao.DAOFactory;
 import model.entities.Bank;
 import model.exceptions.RecordAlreadyRecordedException;
-import utils.Alerts;
 
 public class BankService {
 	

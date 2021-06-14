@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 import gui.bank.BankViewController;
+import gui.bankAgence.BankAgenceViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import model.service.BankAgenceService;
 import model.service.BankService;
 import utils.Alerts;
 
@@ -35,7 +37,6 @@ public class MainViewController {
 		loadModalView(loader, "Sobre o sistema", parentScene, 310.0, 460.0, x -> {});
 	}
 	
-	
 	@FXML
 	private MenuItem mnuItemBank;
 	@FXML
@@ -44,6 +45,18 @@ public class MainViewController {
 		Window parentScene = mnuMain.getScene().getWindow();
 		loadModalView(loader, "Lista de bancos", parentScene, 600.0, 800.0, (BankViewController controller) -> {
 			controller.setBankService(new BankService());
+			controller.updateTableView();
+		});
+	}
+	
+	@FXML
+	private MenuItem mnuItemBankAgence;
+	@FXML
+	public void onMnuItemBankAgenceAction() {
+		FXMLLoader loader = getLoaderView("/gui/bankAgence/BankAgenceView.fxml");
+		Window parentScene = mnuMain.getScene().getWindow();
+		loadModalView(loader, "Lista de agencias bancárias", parentScene, 600.0, 800.0, (BankAgenceViewController controller) -> {
+			controller.setBankAgenceService(new BankAgenceService());
 			controller.updateTableView();
 		});
 	}
@@ -67,6 +80,7 @@ public class MainViewController {
 			
 			stage.showAndWait();
 		} catch (IOException e) {
+			e.printStackTrace();
 			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
 		}
 	}

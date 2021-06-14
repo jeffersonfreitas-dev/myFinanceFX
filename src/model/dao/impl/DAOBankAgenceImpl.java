@@ -160,7 +160,7 @@ public class DAOBankAgenceImpl implements DAOBankAgence{
 		agence.setAgence(rs.getString("agence"));
 		agence.setDv(rs.getString("dv"));
 		agence.setBank(bank);
-		return null;
+		return agence;
 	}
 
 	private Bank instanceBank(ResultSet rs) throws SQLException{

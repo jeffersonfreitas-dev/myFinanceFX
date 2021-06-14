@@ -21,3 +21,24 @@ CREATE DATABASE myfinance
   CONSTRAINT bank_pkey PRIMARY KEY (id)
 )
 
+
+
+ CREATE SEQUENCE public.agence_sequence
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+CREATE TABLE public.bank_agence
+(
+  id bigint NOT NULL DEFAULT nextval('agence_sequence'::regclass),
+  agence character varying,
+  dv character varying,
+  id_bank bigint,
+  CONSTRAINT bank_agence_pkey PRIMARY KEY (id),
+  CONSTRAINT fk_bank FOREIGN KEY (id_bank)
+      REFERENCES public.bank (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+

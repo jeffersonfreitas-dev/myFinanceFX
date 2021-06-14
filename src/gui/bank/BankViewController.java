@@ -24,6 +24,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import model.entities.Bank;
 import model.service.BankService;
 import utils.Alerts;
@@ -42,9 +43,10 @@ public class BankViewController implements Initializable{
 	private Button btnNew;
 	@FXML
 	public void onBtnNewAction(ActionEvent event) {
-		Scene scene = Utils.getCurrentScene(event);
+		Stage stage = Utils.getCurrentStage(event);
+		stage.setTitle("Cadastro de banco");
 		Bank bank = new Bank();
-		loadView(bank, "/gui/bank/BankViewRegister.fxml", scene);
+		loadView(bank, "/gui/bank/BankViewRegister.fxml", stage.getScene());
 	}
 	
 	@FXML
@@ -125,6 +127,8 @@ public class BankViewController implements Initializable{
 				
 				setGraphic(button);
 				button.setOnAction( e -> {
+					Stage stage = Utils.getCurrentStage(e);
+					stage.setTitle("Alteração de banco");
 					loadView(entity, "/gui/bank/BankViewRegister.fxml", Utils.getCurrentScene(e));
 				});
 			}

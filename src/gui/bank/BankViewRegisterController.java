@@ -13,11 +13,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import model.entities.Bank;
 import model.exceptions.RecordAlreadyRecordedException;
 import model.exceptions.ValidationException;
@@ -51,8 +52,9 @@ public class BankViewRegisterController implements Initializable{
 	private Button btnCancel;
 	@FXML
 	public void onBtnCancelAction(ActionEvent event) {
-		Scene scene = Utils.getCurrentScene(event);
-		loadView("/gui/bank/BankView.fxml", scene);
+		Stage stage = Utils.getCurrentStage(event);
+		stage.setTitle("Lista de bancos");
+		loadView("/gui/bank/BankView.fxml", stage.getScene());
 	}
 	
 	
@@ -66,8 +68,9 @@ public class BankViewRegisterController implements Initializable{
 		try {
 			Bank bank = getFormData();
 			service.saveOrUpdate(bank);
-			Scene scene = Utils.getCurrentScene(event);
-			loadView("/gui/bank/BankView.fxml", scene);
+			Stage stage = Utils.getCurrentStage(event);
+			stage.setTitle("Lista de bancos");
+			loadView("/gui/bank/BankView.fxml", stage.getScene());
 			
 		} catch (RecordAlreadyRecordedException e) {
 			Alerts.showAlert("Registro já cadastrado", null, e.getMessage(), AlertType.INFORMATION);
