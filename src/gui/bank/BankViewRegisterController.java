@@ -124,7 +124,6 @@ public class BankViewRegisterController implements Initializable{
 	}
 	
 	private synchronized void loadView(String absolutePath, Scene scene) {
-		
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absolutePath));
 			VBox box = loader.load();

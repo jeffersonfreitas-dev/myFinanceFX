@@ -10,7 +10,7 @@
    <children>
       <ToolBar prefHeight="40.0" prefWidth="200.0">
         <items>
-          <Button fx:id="btnNew" mnemonicParsing="false" text="Novo" />
+          <Button fx:id="btnNew" mnemonicParsing="false" onAction="#onBtnNewAction" text="Novo" />
         </items>
       </ToolBar>
       <TableView fx:id="tblView" prefHeight="560.0" prefWidth="800.0">

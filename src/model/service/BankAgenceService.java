@@ -19,4 +19,12 @@ public class BankAgenceService {
 		
 	}
 
+	public void saveOrUpdate(BankAgence entity) {
+		if(entity.getId() == null) {
+			dao.insert(entity);
+		}else {
+			dao.update(entity);
+		}
+	}
+
 }

@@ -1,5 +1,6 @@
 package gui.bankAgence;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -10,8 +11,11 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -20,6 +24,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.entities.Bank;
 import model.entities.BankAgence;
@@ -37,6 +42,14 @@ public class BankAgenceViewController implements Initializable {
 
 	@FXML
 	private Button btnNew;
+	@FXML
+	public void onBtnNewAction(ActionEvent event) {
+		Stage stage = Utils.getCurrentStage(event);
+		stage.setTitle("Cadastro de agencias bancárias");
+		BankAgence agence = new BankAgence();
+		loadView(agence, "/gui/bankAgence/BankAgenceViewRegister.fxml", stage.getScene());
+	}
+
 	@FXML
 	private TableColumn<BankAgence, Integer> tblColumnId;
 	@FXML
@@ -70,6 +83,7 @@ public class BankAgenceViewController implements Initializable {
 		initRemoveButtons();
 	}
 
+	
 	private void initializationNodes() {
 		btnNew.setGraphic(new ImageView("/assets/icons/new16.png"));
 		tblColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -142,5 +156,26 @@ public class BankAgenceViewController implements Initializable {
 				Alerts.showAlert("Erro ao remover registro", null, e.getMessage(), AlertType.ERROR);
 			}
 		}
+	}
+	
+	
+	private void loadView(BankAgence agence, String absolutePath, Scene scene) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(absolutePath));
+			VBox box = loader.load();
+			
+			BankAgenceViewRegisterController controller = loader.getController();
+			controller.setBankAgenceService(new BankAgenceService());
+			controller.setBankAgence(agence);
+			controller.updateFormData();
+			
+			VBox mainBox = (VBox) scene.getRoot();
+			mainBox.getChildren().clear();
+			mainBox.getChildren().addAll(box.getChildren());
+		} catch (IOException e) {
+			e.printStackTrace();
+			Alerts.showAlert("Erro", "Erro ao carregar a janela", e.getMessage(), AlertType.ERROR);
+		}
+		
 	}
 }
