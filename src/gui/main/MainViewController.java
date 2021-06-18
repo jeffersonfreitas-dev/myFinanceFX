@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import gui.accountPlan.AccountPlanViewController;
 import gui.bank.BankViewController;
 import gui.bankAgence.BankAgenceViewController;
+import gui.clifor.CliforViewController;
 import gui.company.CompanyViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,6 +25,7 @@ import javafx.stage.Window;
 import model.service.AccountPlanService;
 import model.service.BankAgenceService;
 import model.service.BankService;
+import model.service.CliforService;
 import model.service.CompanyService;
 import utils.Alerts;
 
@@ -85,6 +87,18 @@ public class MainViewController {
 		Window parentScene = mnuMain.getScene().getWindow();
 		loadModalView(loader, "Lista de planos de conta", parentScene, 600.0, 800.0, (AccountPlanViewController controller) -> {
 			controller.setAccountPlanService(new AccountPlanService());
+			controller.updateTableView();
+		});
+	}
+
+	@FXML
+	private MenuItem mnuItemClifor;
+	@FXML
+	public void onMnuItemCliforAction() {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/clifor/CliforView.fxml"));
+		Window parentScene = mnuMain.getScene().getWindow();
+		loadModalView(loader, "Lista de clientes e fornecedores", parentScene, 600.0, 800.0, (CliforViewController controller) -> {
+			controller.setCliforService(new CliforService());
 			controller.updateTableView();
 		});
 	}

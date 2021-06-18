@@ -74,3 +74,18 @@ CREATE SEQUENCE public.accountplan_sequence
   name character varying,
   constraint account_pkey primary key (id)
 );
+
+
+CREATE SEQUENCE public.clifor_sequence
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+  
+ create table clifor(
+  id bigint not null default nextval('clifor_sequence'::regclass),
+  provider boolean,
+  name character varying,
+  constraint clifor_pkey primary key (id)
+);

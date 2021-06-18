@@ -12,36 +12,33 @@
          <children>
             <MenuBar fx:id="mnuMain">
               <menus>
-                  <Menu mnemonicParsing="false" text="Financeiro">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
-                    </items>
-                  </Menu>
-                <Menu mnemonicParsing="false" text="Cadastro">
+                  <Menu mnemonicParsing="false" text="Financeiro" />
+                <Menu mnemonicParsing="false" text="Cadastros">
                      <items>
-                        <Menu mnemonicParsing="false" text="Banco">
+                        <Menu mnemonicParsing="false" text="Bancos">
                           <items>
                             <MenuItem fx:id="mnuItemBank" mnemonicParsing="false" onAction="#onMnuItemBankAction" text="Banco" />
                               <MenuItem fx:id="mnuItemBankAgence" mnemonicParsing="false" onAction="#onMnuItemBankAgenceAction" text="Agencia bancária" />
                           </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Empresa">
+                        <Menu mnemonicParsing="false" text="Empresas">
                           <items>
                               <MenuItem fx:id="mnuItemCompany" mnemonicParsing="false" onAction="#onMnuItemCompanyAction" text="Empresa" />
                           </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Plano de conta">
+                        <Menu mnemonicParsing="false" text="Planos de conta">
                           <items>
                             <MenuItem fx:id="mnuItemAccountPlan" mnemonicParsing="false" onAction="#onMnuItemAccountPlanAction" text="Plano de conta" />
                           </items>
                         </Menu>
+                        <Menu mnemonicParsing="false" text="Clientes e Fornecedores">
+                          <items>
+                            <MenuItem fx:id="mnuItemClifor" mnemonicParsing="false" onAction="#onMnuItemCliforAction" text="Cliente/Fornecedor" />
+                          </items>
+                        </Menu>
                      </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Relatórios">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                  </items>
-                </Menu>
+                <Menu mnemonicParsing="false" text="Relatórios" />
                 <Menu mnemonicParsing="false" text="Ajuda">
                   <items>
                     <MenuItem fx:id="mnuItenAbout" mnemonicParsing="false" onAction="#onMnuItemAboutAction" text="Sobre o sistema" />
