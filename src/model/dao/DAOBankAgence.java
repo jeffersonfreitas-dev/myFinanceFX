@@ -11,5 +11,6 @@ public interface DAOBankAgence {
 	void deleteById (Integer id);
 	BankAgence findById(Integer id);
 	List<BankAgence> findAllOrderByAgence();
+	BankAgence findByAgenceAndBankId(String agence, Integer id_bank);
 
 }

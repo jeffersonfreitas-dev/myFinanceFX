@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import model.entities.Bank;
 import model.entities.BankAgence;
 import model.service.BankAgenceService;
+import model.service.BankService;
 import utils.Alerts;
 import utils.Utils;
 
@@ -115,7 +116,7 @@ public class BankAgenceViewController implements Initializable {
 				button.setOnAction(e -> {
 					Stage stage = Utils.getCurrentStage(e);
 					stage.setTitle("Alteração da agencia");
-//					loadView(entity, "/gui/bank/BankAgenceViewRegister.fxml", Utils.getCurrentScene(e));
+					loadView(entity, "/gui/bankAgence/BankAgenceViewRegister.fxml", Utils.getCurrentScene(e));
 				});
 			}
 		});
@@ -165,7 +166,8 @@ public class BankAgenceViewController implements Initializable {
 			VBox box = loader.load();
 			
 			BankAgenceViewRegisterController controller = loader.getController();
-			controller.setBankAgenceService(new BankAgenceService());
+			controller.setBankAgenceServices(new BankAgenceService(), new BankService());
+			controller.loadAssociateObjects();
 			controller.setBankAgence(agence);
 			controller.updateFormData();
 			

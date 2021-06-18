@@ -26,7 +26,7 @@ public class DAOBankAgenceImpl implements DAOBankAgence{
 	@Override
 	public void insert(BankAgence entity) {
 		PreparedStatement stmt = null;
-		String sql = "INSERT INTO bank_agence (agence, dv, id_bank) VALUES (?, ?, ?)";
+		String sql = "INSERT INTO bank_agence (agence, dv, id_bank) VALUES (upper(?), upper(?), ?)";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, entity.getAgence());
@@ -50,7 +50,7 @@ public class DAOBankAgenceImpl implements DAOBankAgence{
 	@Override
 	public void update(BankAgence entity) {
 		PreparedStatement stmt = null;
-		String sql = "UPDATE bank_agence SET agence = ?, dv = ?, id_bank = ? WHERE id = ?";
+		String sql = "UPDATE bank_agence SET agence = upper(?), dv = upper(?), id_bank = ? WHERE id = ?";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, entity.getAgence());
@@ -169,5 +169,31 @@ public class DAOBankAgenceImpl implements DAOBankAgence{
 		bank.setCode(rs.getString("code"));
 		bank.setName(rs.getString("name"));
 		return bank;
+	}
+
+	@Override
+	public BankAgence findByAgenceAndBankId(String agence, Integer id_bank) {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "Select a.*, b.* from bank_agence a inner join bank b on a.id_bank = b.id where upper(agence) = upper(?) and id_bank = ?";
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, agence);
+			stmt.setInt(2, id_bank);
+			rs = stmt.executeQuery();
+			if(rs.next()) {
+				Bank bank = instanceBank(rs);
+				BankAgence result = new BankAgence(rs.getInt("id"), rs.getString("agence"), rs.getString("dv"), bank);
+				return result;
+			}else {
+				return null;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException("Ocorreu um erro ao executar o comando findByAgenceAndBankId agencia -> " + e.getMessage());
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
 	}
 }

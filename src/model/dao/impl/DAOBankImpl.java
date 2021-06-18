@@ -24,7 +24,7 @@ public class DAOBankImpl implements DAOBank{
 	@Override
 	public void insert(Bank entity) {
 		PreparedStatement stmt = null;
-		String sql = "INSERT INTO bank (code, name) VALUES (?, ?)";
+		String sql = "INSERT INTO bank (code, name) VALUES (upper(?), upper(?))";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, entity.getCode());
@@ -46,7 +46,7 @@ public class DAOBankImpl implements DAOBank{
 	@Override
 	public void update(Bank entity) {
 		PreparedStatement stmt = null;
-		String sql = "UPDATE bank SET code = ?, name = ? WHERE id = ?";
+		String sql = "UPDATE bank SET code = upper(?), name = upper(?) WHERE id = ?";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, entity.getCode());
@@ -152,7 +152,7 @@ public class DAOBankImpl implements DAOBank{
 	public Bank findByCodeOrName(String code, String name) {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT * FROM bank WHERE code = ? OR name = ?";
+		String sql = "SELECT * FROM bank WHERE upper(code) = upper(?) OR upper(name) = upper(?)";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, code);
