@@ -25,6 +25,11 @@
                               <MenuItem fx:id="mnuItemBankAgence" mnemonicParsing="false" onAction="#onMnuItemBankAgenceAction" text="Agencia bancária" />
                           </items>
                         </Menu>
+                        <Menu mnemonicParsing="false" text="Empresa">
+                          <items>
+                              <MenuItem fx:id="mnuItemCompany" mnemonicParsing="false" onAction="#onMnuItemCompanyAction" text="Empresa" />
+                          </items>
+                        </Menu>
                      </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Relatórios">

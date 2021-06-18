@@ -14,7 +14,11 @@ import model.entities.Company;
 
 public class DAOCompanyImpl implements DAOCompany{
 	
-	private Connection conn = Database.getConnection();
+	private Connection conn;
+	
+	public DAOCompanyImpl(Connection conn) {
+		this.conn = conn;
+	}
 
 	@Override
 	public void insert(Company entity) {

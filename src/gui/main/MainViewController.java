@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 
 import gui.bank.BankViewController;
 import gui.bankAgence.BankAgenceViewController;
+import gui.company.CompanyViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +22,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import model.service.BankAgenceService;
 import model.service.BankService;
+import model.service.CompanyService;
 import utils.Alerts;
 
 public class MainViewController {
@@ -57,6 +59,18 @@ public class MainViewController {
 		Window parentScene = mnuMain.getScene().getWindow();
 		loadModalView(loader, "Lista de agencias bancárias", parentScene, 600.0, 800.0, (BankAgenceViewController controller) -> {
 			controller.setBankAgenceService(new BankAgenceService());
+			controller.updateTableView();
+		});
+	}
+	
+	@FXML
+	private MenuItem mnuItemCompany;
+	@FXML
+	public void onMnuItemCompanyAction() {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/company/CompanyView.fxml"));
+		Window parentScene = mnuMain.getScene().getWindow();
+		loadModalView(loader, "Lista de empresas", parentScene, 600.0, 800.0, (CompanyViewController controller) -> {
+			controller.setCompanyService(new CompanyService());
 			controller.updateTableView();
 		});
 	}
