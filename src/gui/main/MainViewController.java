@@ -3,6 +3,7 @@ package gui.main;
 import java.io.IOException;
 import java.util.function.Consumer;
 
+import gui.accountPlan.AccountPlanViewController;
 import gui.bank.BankViewController;
 import gui.bankAgence.BankAgenceViewController;
 import gui.company.CompanyViewController;
@@ -20,6 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import model.service.AccountPlanService;
 import model.service.BankAgenceService;
 import model.service.BankService;
 import model.service.CompanyService;
@@ -75,6 +77,17 @@ public class MainViewController {
 		});
 	}
 	
+	@FXML
+	private MenuItem mnuItemAccountPlan;
+	@FXML
+	public void onMnuItemAccountPlanAction() {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/accountPlan/AccountPlanView.fxml"));
+		Window parentScene = mnuMain.getScene().getWindow();
+		loadModalView(loader, "Lista de planos de conta", parentScene, 600.0, 800.0, (AccountPlanViewController controller) -> {
+			controller.setAccountPlanService(new AccountPlanService());
+			controller.updateTableView();
+		});
+	}
 	
 	private synchronized <T> void loadModalView(FXMLLoader loader, String title, Window parentScene, double heigth, double width, 
 			Consumer<T> initialization) {

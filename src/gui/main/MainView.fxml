@@ -30,6 +30,11 @@
                               <MenuItem fx:id="mnuItemCompany" mnemonicParsing="false" onAction="#onMnuItemCompanyAction" text="Empresa" />
                           </items>
                         </Menu>
+                        <Menu mnemonicParsing="false" text="Plano de conta">
+                          <items>
+                            <MenuItem fx:id="mnuItemAccountPlan" mnemonicParsing="false" onAction="#onMnuItemAccountPlanAction" text="Plano de conta" />
+                          </items>
+                        </Menu>
                      </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Relatórios">
