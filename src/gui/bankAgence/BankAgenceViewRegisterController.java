@@ -121,8 +121,8 @@ public class BankAgenceViewRegisterController implements Initializable{
 			VBox mainBox = (VBox) scene.getRoot();
 			mainBox.getChildren().clear();
 			mainBox.getChildren().addAll(box);
-		} catch (IOException e) {
-			e.printStackTrace();
+		}catch(IOException e) {
+			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
 		}
 	}
 
@@ -195,8 +195,4 @@ public class BankAgenceViewRegisterController implements Initializable{
 		obsList = FXCollections.observableArrayList(banks);
 		cmbBank.setItems(obsList);
 	}
-	
-	
-
-
 }

@@ -2,6 +2,7 @@ package model.dao;
 
 import database.Database;
 import model.dao.impl.DAOAccountPlanImpl;
+import model.dao.impl.DAOBankAccountImpl;
 import model.dao.impl.DAOBankAgenceImpl;
 import model.dao.impl.DAOBankImpl;
 import model.dao.impl.DAOCliforImpl;
@@ -27,6 +28,10 @@ public class DAOFactory {
 
 	public static DAOClifor createCliforDAO() {
 		return new DAOCliforImpl(Database.getConnection());
+	}
+
+	public static DAOBankAccount createBankAccountDAO() {
+		return new DAOBankAccountImpl(Database.getConnection());
 	}
 
 }

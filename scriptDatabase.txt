@@ -89,3 +89,23 @@ CREATE SEQUENCE public.clifor_sequence
   name character varying,
   constraint clifor_pkey primary key (id)
 );
+
+
+
+CREATE SEQUENCE public.bankaccount_sequence
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+  
+create table bank_account(
+  id bigint not null default nextval('bankaccount_sequence'::regclass),
+  code character varying,
+  account character varying,
+  id_bank_agence bigint,
+  id_company bigint,
+  constraint account_pk primary key(id),
+  constraint account_fk_agence foreign key (id_bank_agence) references bank_agence(id),
+  constraint account_fk_company foreign key (id_company) references company(id)
+)

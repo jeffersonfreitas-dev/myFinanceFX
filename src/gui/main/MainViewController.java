@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 
 import gui.accountPlan.AccountPlanViewController;
 import gui.bank.BankViewController;
+import gui.bankAccount.BankAccountViewController;
 import gui.bankAgence.BankAgenceViewController;
 import gui.clifor.CliforViewController;
 import gui.company.CompanyViewController;
@@ -23,6 +24,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import model.service.AccountPlanService;
+import model.service.BankAccountService;
 import model.service.BankAgenceService;
 import model.service.BankService;
 import model.service.CliforService;
@@ -90,9 +92,21 @@ public class MainViewController {
 			controller.updateTableView();
 		});
 	}
+	
+	@FXML
+	private MenuItem mnuItemBankAccount;
+	@FXML
+	private void onMnuItemBankAccountAction() {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/bankAccount/BankAccountView.fxml"));
+		Window parentScene = mnuMain.getScene().getWindow();
+		loadModalView(loader, "Lista de contas bancárias", parentScene, 600.0, 800.0, (BankAccountViewController controller) -> {
+			controller.setBankAccountService(new BankAccountService());
+			controller.updateTableView();
+		});
+	}
 
 	@FXML
-	private MenuItem mnuItemClifor;
+	private MenuItem mnuItemClifor; 
 	@FXML
 	public void onMnuItemCliforAction() {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/clifor/CliforView.fxml"));

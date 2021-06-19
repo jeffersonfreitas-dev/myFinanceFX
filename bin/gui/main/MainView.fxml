@@ -12,32 +12,24 @@
          <children>
             <MenuBar fx:id="mnuMain">
               <menus>
-                  <Menu mnemonicParsing="false" text="Financeiro" />
                 <Menu mnemonicParsing="false" text="Cadastros">
                      <items>
-                        <Menu mnemonicParsing="false" text="Bancos">
-                          <items>
-                            <MenuItem fx:id="mnuItemBank" mnemonicParsing="false" onAction="#onMnuItemBankAction" text="Banco" />
-                              <MenuItem fx:id="mnuItemBankAgence" mnemonicParsing="false" onAction="#onMnuItemBankAgenceAction" text="Agencia bancária" />
-                          </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Empresas">
-                          <items>
-                              <MenuItem fx:id="mnuItemCompany" mnemonicParsing="false" onAction="#onMnuItemCompanyAction" text="Empresa" />
-                          </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Planos de conta">
-                          <items>
-                            <MenuItem fx:id="mnuItemAccountPlan" mnemonicParsing="false" onAction="#onMnuItemAccountPlanAction" text="Plano de conta" />
-                          </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Clientes e Fornecedores">
-                          <items>
-                            <MenuItem fx:id="mnuItemClifor" mnemonicParsing="false" onAction="#onMnuItemCliforAction" text="Cliente/Fornecedor" />
-                          </items>
-                        </Menu>
+                        <MenuItem fx:id="mnuItemBankAgence" mnemonicParsing="false" onAction="#onMnuItemBankAgenceAction" text="Agencia bancária" />
+                      <MenuItem fx:id="mnuItemBank" mnemonicParsing="false" onAction="#onMnuItemBankAction" text="Banco" />
+                      <MenuItem fx:id="mnuItemClifor" mnemonicParsing="false" onAction="#onMnuItemCliforAction" text="Cliente e fornecedor" />
+                        <MenuItem fx:id="mnuItemBankAccount" mnemonicParsing="false" onAction="#onMnuItemBankAccountAction" text="Conta bancária" />
+                        <MenuItem fx:id="mnuItemCompany" mnemonicParsing="false" onAction="#onMnuItemCompanyAction" text="Empresa" />
+                      <MenuItem fx:id="mnuItemAccountPlan" mnemonicParsing="false" onAction="#onMnuItemAccountPlanAction" text="Plano de conta" />
                      </items>
                 </Menu>
+                  <Menu mnemonicParsing="false" text="Financeiro">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Extrato" />
+                        <MenuItem mnemonicParsing="false" text="Conta à pagar" />
+                        <MenuItem mnemonicParsing="false" text="Conta à receber" />
+                        <MenuItem mnemonicParsing="false" text="Transferencia bancária" />
+                     </items></Menu>
+                  <Menu mnemonicParsing="false" text="Investimentos" />
                 <Menu mnemonicParsing="false" text="Relatórios" />
                 <Menu mnemonicParsing="false" text="Ajuda">
                   <items>
