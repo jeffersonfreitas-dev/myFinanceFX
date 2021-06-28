@@ -48,7 +48,7 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </Label>
-            <Label textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="2">
+            <Label fx:id="lblErrorBank" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="5.0" />
                </GridPane.margin>

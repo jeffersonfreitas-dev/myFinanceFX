@@ -122,6 +122,10 @@ public class BankAccountViewRegisterController implements Initializable{
 	private Label lblErrorCode;
 	@FXML
 	private Label lblErrorAccount;
+	@FXML
+	private Label lblErrorCompany;
+	@FXML
+	private Label lblErrorAgence;
 	
 	private ObservableList<BankAgence> obsAgence;
 	private ObservableList<Company> obsCompanies;
@@ -175,7 +179,15 @@ public class BankAccountViewRegisterController implements Initializable{
 			exception.setError("account", "O número da conta não pode ser vazio");
 		}
 		account.setAccount(txtAccount.getText());
+		
+		if(cmbCompany.getValue() == null) {
+			exception.setError("company", "Selecione uma empresa");
+		}
 		account.setCompany(cmbCompany.getValue());
+
+		if(cmbAgence.getValue() == null) {
+			exception.setError("agence", "Selecione uma agencia bancária");
+		}
 		account.setBankAgence(cmbAgence.getValue());
 		
 		if(exception.getErrors().size() > 0) {
@@ -189,12 +201,20 @@ public class BankAccountViewRegisterController implements Initializable{
 		Set<String> keys = errors.keySet();
 		lblErrorAccount.setText("");
 		lblErrorCode.setText("");
+		lblErrorCompany.setText("");
+		lblErrorAgence.setText("");
 		
 		if(keys.contains("code")) {
 			lblErrorCode.setText(errors.get("code"));
 		}
 		if(keys.contains("account")) {
 			lblErrorAccount.setText(errors.get("account"));
+		}
+		if(keys.contains("company")) {
+			lblErrorCompany.setText(errors.get("company"));
+		}
+		if(keys.contains("agence")) {
+			lblErrorAgence.setText(errors.get("agence"));
 		}
 	}
 	

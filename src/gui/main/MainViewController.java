@@ -3,10 +3,12 @@ package gui.main;
 import java.io.IOException;
 import java.util.function.Consumer;
 
+import application.Main;
 import gui.accountPlan.AccountPlanViewController;
 import gui.bank.BankViewController;
 import gui.bankAccount.BankAccountViewController;
 import gui.bankAgence.BankAgenceViewController;
+import gui.billpay.BillpayViewController;
 import gui.clifor.CliforViewController;
 import gui.company.CompanyViewController;
 import javafx.event.ActionEvent;
@@ -27,6 +29,7 @@ import model.service.AccountPlanService;
 import model.service.BankAccountService;
 import model.service.BankAgenceService;
 import model.service.BankService;
+import model.service.BillpayService;
 import model.service.CliforService;
 import model.service.CompanyService;
 import utils.Alerts;
@@ -117,6 +120,17 @@ public class MainViewController {
 		});
 	}
 	
+	
+	@FXML
+	private MenuItem mnuItemBillpay;
+	@FXML
+	private void onMnuItemBillpayAction() {
+		loadView("/gui/billpay/BillpayView.fxml", (BillpayViewController controller) -> {
+			controller.setBillpayService(new BillpayService());
+			controller.updateTableView();
+		});
+	}
+	
 	private synchronized <T> void loadModalView(FXMLLoader loader, String title, Window parentScene, double heigth, double width, 
 			Consumer<T> initialization) {
 		try {
@@ -147,19 +161,18 @@ public class MainViewController {
 	}
 	
 	
-	@SuppressWarnings("unused")
 	private synchronized <T> void loadView(String absolutePath, Consumer<T> consumer) {
-		
 		try {
 			FXMLLoader loader = getLoaderView(absolutePath);
 			VBox box = loader.load();
+			Scene mainScene = Main.getMainScene();
 			
-			VBox mainBox = (VBox) ((ScrollPane) loader.getRoot()).getContent();
+			VBox mainBox = (VBox)  ((ScrollPane) mainScene.getRoot()).getContent();
 			Node mainMenu = mainBox.getChildren().get(0);
 			mainBox.getChildren().clear();
 			mainBox.getChildren().add(mainMenu);
 			mainBox.getChildren().addAll(box.getChildren());
-			
+			mainBox.prefWidthProperty().bind(Main.getMainScene().widthProperty().multiply(1));
 			T controller = loader.getController();
 			consumer.accept(controller);
 		}catch(IOException e) {

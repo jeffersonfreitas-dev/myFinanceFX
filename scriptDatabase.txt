@@ -109,3 +109,31 @@ create table bank_account(
   constraint account_fk_agence foreign key (id_bank_agence) references bank_agence(id),
   constraint account_fk_company foreign key (id_company) references company(id)
 )
+
+
+CREATE SEQUENCE public.billpay_sequence
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+  
+ CREATE TABLE billpay(
+  id bigint not null default nextval('billpay_sequence'::regclass),
+  invoice character varying,
+  historic character varying,
+  date date,
+  due_date date,
+  value decimal(10,2),
+  portion integer,
+  fulfillment integer,
+  status character varying,
+  id_clifor bigint,
+  id_company bigint,
+  id_account_plan bigint,
+  constraint bill_pk1 primary key(id),
+  constraint bill_fk2 foreign key(id_clifor) references clifor(id),
+  constraint bill_fk3 foreign key(id_company) references company(id),
+  constraint bill_fk4 foreign key(id_account_plan) references account_plan(id)
+);
+  

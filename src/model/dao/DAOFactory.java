@@ -5,6 +5,7 @@ import model.dao.impl.DAOAccountPlanImpl;
 import model.dao.impl.DAOBankAccountImpl;
 import model.dao.impl.DAOBankAgenceImpl;
 import model.dao.impl.DAOBankImpl;
+import model.dao.impl.DAOBillpayImpl;
 import model.dao.impl.DAOCliforImpl;
 import model.dao.impl.DAOCompanyImpl;
 
@@ -32,6 +33,10 @@ public class DAOFactory {
 
 	public static DAOBankAccount createBankAccountDAO() {
 		return new DAOBankAccountImpl(Database.getConnection());
+	}
+
+	public static DAOBillpay createBillpayDAO() {
+		return new DAOBillpayImpl(Database.getConnection());
 	}
 
 }

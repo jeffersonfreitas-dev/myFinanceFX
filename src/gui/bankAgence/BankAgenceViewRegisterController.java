@@ -55,6 +55,8 @@ public class BankAgenceViewRegisterController implements Initializable{
 	@FXML
 	private Label lblErrorAgence;
 	@FXML
+	private Label lblErrorBank;
+	@FXML
 	private TextField txtId;
 	@FXML
 	private TextField txtAgence;
@@ -153,6 +155,10 @@ public class BankAgenceViewRegisterController implements Initializable{
 		}
 		agence.setAgence(txtAgence.getText());
 		
+		if(cmbBank.getValue() == null) {
+			exception.setError("bank", "Selecione um banco");
+		}
+		
 		agence.setBank(cmbBank.getValue());
 		
 		if(exception.getErrors().size() > 0) {
@@ -165,9 +171,12 @@ public class BankAgenceViewRegisterController implements Initializable{
 	private void setErrorMessages(Map<String, String> errors) {
 		Set<String> keys = errors.keySet();
 		lblErrorAgence.setText("");
-		
+		lblErrorBank.setText("");
 		if(keys.contains("agence")) {
 			lblErrorAgence.setText(errors.get("agence"));
+		}
+		if(keys.contains("bank")) {
+			lblErrorBank.setText(errors.get("bank"));
 		}
 	}
 
