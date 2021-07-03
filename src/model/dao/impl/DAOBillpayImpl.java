@@ -35,8 +35,8 @@ public class DAOBillpayImpl implements DAOBillpay{
 			stmt.setDate(3, new java.sql.Date(entity.getDate().getTime()));
 			stmt.setDate(4, new java.sql.Date(entity.getDueDate().getTime()));
 			stmt.setDouble(5, entity.getValue());
-			stmt.setInt(6, entity.getPortion());
-			stmt.setInt(7, entity.getFulfillment());
+			stmt.setInt(6, 1);
+			stmt.setInt(7, 1);
 			stmt.setString(8, entity.getStatus());
 			stmt.setInt(9, entity.getClifor().getId());
 			stmt.setInt(10, entity.getCompany().getId());
@@ -66,8 +66,8 @@ public class DAOBillpayImpl implements DAOBillpay{
 			stmt.setDate(3, new java.sql.Date(entity.getDate().getTime()));
 			stmt.setDate(4, new java.sql.Date(entity.getDueDate().getTime()));
 			stmt.setDouble(5, entity.getValue());
-			stmt.setInt(6, entity.getPortion());
-			stmt.setInt(7, entity.getFulfillment());
+			stmt.setInt(6, 1);
+			stmt.setInt(7, 1);
 			stmt.setString(8, entity.getStatus());
 			stmt.setInt(9, entity.getClifor().getId());
 			stmt.setInt(10, entity.getCompany().getId());

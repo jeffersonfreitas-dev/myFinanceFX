@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 
 import database.exceptions.DatabaseException;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -58,15 +57,8 @@ public class BillpayViewController implements Initializable{
 	public void onBtnNewAction(ActionEvent event) {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/billpay/BillpayViewRegister.fxml"));
 		Window parent = btnNew.getScene().getWindow();
-		loadViewModal(loader , parent,"Cadastro de conta a pagar", 600.0, 800.0, (BillpayViewRegisterController controller) -> {
-			controller.setBillpayService(new BillpayService());
-			controller.setCompanyService(new CompanyService());
-			controller.setCliforService(new CliforService());
-			controller.setAccountPlanService(new AccountPlanService());
-			controller.setBillpay(new Billpay());
-			controller.loadAssociateObjects();
-			controller.updateFormData();
-		});
+		Billpay billpay = new Billpay();
+		loadViewModal(billpay, loader , parent,"Cadastro de conta a pagar", 600.0, 800.0);
 	}
 
 
@@ -149,11 +141,11 @@ public class BillpayViewController implements Initializable{
 		List<Billpay> list = service.findAll();
 		obsList = FXCollections.observableArrayList(list);
 		tblBillpay.setItems(obsList);
+		initializationNodes();
 	}
 	
 	
-	private synchronized <T> void loadViewModal(FXMLLoader loader, Window parent, String title, double height, double width, 
-			Consumer<T> initialization) {
+	private synchronized <T> void loadViewModal(Billpay billpay, FXMLLoader loader, Window parent, String title, double height, double width) {
 		try {
 			Pane pane = loader.load();
 			Stage stage = new Stage();
@@ -164,18 +156,22 @@ public class BillpayViewController implements Initializable{
 			stage.initModality(Modality.WINDOW_MODAL);
 			stage.setHeight(height);
 			stage.setWidth(width);
+			
+			BillpayViewRegisterController controller = loader.getController();
+			controller.setBillpayService(new BillpayService());
+			controller.setCompanyService(new CompanyService());
+			controller.setCliforService(new CliforService());
+			controller.setAccountPlanService(new AccountPlanService());
+			controller.setBillpay(billpay);
+			controller.loadAssociateObjects();
+			controller.updateFormData();
+			
 			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-				
 				@Override
 				public void handle(WindowEvent event) {
 					updateTableView();
-					
 				}
 			});
-			
-			T controller = loader.getController();
-			initialization.accept(controller);
-			
 			stage.showAndWait();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -214,15 +210,7 @@ public class BillpayViewController implements Initializable{
 				button.setOnAction( e -> {
 					FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/billpay/BillpayViewRegister.fxml"));
 					Window parent = btnNew.getScene().getWindow();
-					loadViewModal(loader , parent,"Cadastro de conta a pagar", 600.0, 800.0, (BillpayViewRegisterController controller) -> {
-						controller.setBillpayService(new BillpayService());
-						controller.setCompanyService(new CompanyService());
-						controller.setCliforService(new CliforService());
-						controller.setAccountPlanService(new AccountPlanService());
-						controller.setBillpay(new Billpay());
-						controller.loadAssociateObjects();
-						controller.updateFormData();
-					});
+					loadViewModal(entity, loader , parent,"Cadastro de conta a pagar", 600.0, 800.0);
 				});
 			}
 		});
@@ -243,7 +231,7 @@ public class BillpayViewController implements Initializable{
 					return;
 				}
 				setGraphic(button);
-//				button.setOnAction(e -> removeEntity(entity));
+				button.setOnAction(e -> paymentBill(entity));
 			}
 		});
 	}
@@ -286,7 +274,6 @@ public class BillpayViewController implements Initializable{
 		});
 	}
 	
-	
 	private void removeEntity(Billpay entity) {
 		Optional<ButtonType> result = Alerts.showConfirmation("Confirmação", "Você tem certeza que deseja remover este item?");
 		
@@ -296,6 +283,24 @@ public class BillpayViewController implements Initializable{
 			}
 			try {
 				service.remove(entity);
+				updateTableView();
+			} catch (DatabaseException e) {
+				e.printStackTrace();
+				Alerts.showAlert("Erro ao remover registro", null, e.getMessage(), AlertType.ERROR);
+			}
+		}
+	}
+	
+	private void paymentBill(Billpay entity) {
+		Optional<ButtonType> result = Alerts.showConfirmation("Pagamento de conta", "Deseja quitar esta conta a pagar?");
+		
+		if(result.get() == ButtonType.OK) {
+			if(service == null) {
+				throw new IllegalStateException("Serviço não instanciado");
+			}
+			
+			try {
+				service.payment(entity);
 				updateTableView();
 			} catch (DatabaseException e) {
 				e.printStackTrace();

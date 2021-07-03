@@ -24,9 +24,9 @@ public class BillpayService {
 	}
 
 	public void saveOrUpdate(Billpay entity) {
-		Billpay Billpay = dao.findByInvoiceAndCompanyId(entity.getInvoice(), entity.getCompany().getId());
+		Billpay billpay = dao.findByInvoiceAndCompanyId(entity.getInvoice(), entity.getCompany().getId());
 		
-		if(Billpay != null && !Billpay.equals(entity)) {
+		if(billpay != null && !entity.equals(billpay)) {
 			throw new RecordAlreadyRecordedException("Já existe uma conta a pagar com esta nota para esta empresa cadastrada.");
 		}
 		
@@ -38,6 +38,11 @@ public class BillpayService {
 			dao.update(entity);
 		}
 		
+	}
+
+	public void payment(Billpay entity) {
+		entity.setStatus("PAGO");
+		dao.update(entity);
 	}
 
 }

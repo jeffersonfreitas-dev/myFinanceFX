@@ -176,6 +176,7 @@ public class MainViewController {
 			T controller = loader.getController();
 			consumer.accept(controller);
 		}catch(IOException e) {
+			e.printStackTrace();
 			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
 		}
 	}

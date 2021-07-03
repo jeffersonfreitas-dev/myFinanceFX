@@ -1,6 +1,5 @@
 package gui.billpay;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -15,7 +14,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -27,7 +25,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
@@ -52,6 +49,7 @@ public class BillpayViewRegisterController implements Initializable{
 	private CliforService cliforService;
 	private AccountPlanService accountService;
 	private Billpay entity;
+	
 	
 	@FXML
 	private TextField txtId;
@@ -81,6 +79,7 @@ public class BillpayViewRegisterController implements Initializable{
 		cmbCompany.setCellFactory(factory);
 		cmbCompany.setButtonCell(factory.call(null));
 	}
+	
 	
 	@FXML
 	private ComboBox<Clifor> cmbClifor;
@@ -267,8 +266,9 @@ public class BillpayViewRegisterController implements Initializable{
 	private Billpay getFormDate() {
 		Billpay bill = new Billpay();
 		ValidationException exception = new ValidationException("");
-		bill.setId(Utils.tryParseToInt(txtId.getId()));
+		bill.setId(Utils.tryParseToInt(txtId.getText()));
 		
+		bill.setStatus(entity.getStatus());
 		
 		if(txtInvoice.getText() == null || txtInvoice.getText().trim().equals("")) {
 			exception.setError("invoice", "Informe a nota fiscal");
@@ -290,14 +290,18 @@ public class BillpayViewRegisterController implements Initializable{
 		if(txtValue.getText() == null || txtValue.getText().trim().equals("")) {
 			exception.setError("value", "Informe um valor para a conta");
 		}else {
-			bill.setValue(Double.valueOf(txtValue.getText()));
+			bill.setValue(Double.parseDouble(txtValue.getText().replace(",", ".")));
 		}
 
-		if(txtPortion.getText() == null || txtPortion.getText().trim().equals("")) {
-			exception.setError("portion", "Informe a quantidade de parcelas");
-		}else {
-			bill.setFulfillment(Integer.valueOf(txtPortion.getText()));
-		}
+//		if(txtPortion.getText() == null || txtPortion.getText().trim().equals("")) {
+//			exception.setError("portion", "Informe a quantidade de parcelas");
+//		}else {
+//			if(bill.getId() == null) {
+//				bill.setFulfillment(Integer.valueOf(txtPortion.getText()));
+//			}else {
+//				bill.setPortion(Integer.valueOf(txtPortion.getText()));
+//			}
+//		}
 
 		if(txtHistoric.getText() == null || txtHistoric.getText().trim().equals("")) {
 			exception.setError("historic", "Informe um histórico para a conta");
@@ -368,24 +372,5 @@ public class BillpayViewRegisterController implements Initializable{
 		}
 	}
 	
-	
-	private void loadView(Stage stage) throws IOException {
 
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/billpay/BillpayView.fxml"));
-		VBox box = loader.load();
-
-		Stage s = (Stage) stage.getScene().getWindow();
-        s.getOnCloseRequest().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
-
-//		BillpayViewController controller = loader.getController();
-//		controller.setBillpayService(new BillpayService());
-//		controller.updateTableView();	
-
-		
-//		VBox mainBox = (VBox) stage.getScene().getRoot();
-//		box.getChildren().clear();
-//		mainBox.getChildren().addAll(box.getChildren());
-		
-
-	}
 }
