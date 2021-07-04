@@ -62,7 +62,7 @@ public class BillpayViewRegisterController implements Initializable{
 	@FXML
 	private TextField txtValue;
 	@FXML
-	private TextField txtPortion;
+	private TextField txtFulfillment;
 	@FXML
 	private TextArea txtHistoric;
 	
@@ -179,12 +179,16 @@ public class BillpayViewRegisterController implements Initializable{
 		btnCancel.setGraphic(new ImageView("/assets/icons/cancel16.png"));	
 		Constraints.setTextFieldDouble(txtValue);
 		Constraints.setTextFieldMaxLength(txtInvoice, 20);
-		Constraints.setTextFieldInteger(txtPortion);
+		Constraints.setTextFieldInteger(txtFulfillment);
+		Constraints.setTextFieldInteger(txtId);
 		Utils.formatDatePicker(pkDueDate, "dd/MM/yyyy");
 		Utils.formatDatePicker(pkEmission, "dd/MM/yyyy");
 		initializeComboBoxAccountPlan();
 		initializeComboBoxCompany();
 		initializeComboBoxClifor();
+		pkDueDate.setPromptText("DD/MM/AAAA");
+		pkEmission.setPromptText("DD/MM/AAAA");
+		txtValue.setPromptText("0,00");
 	}
 
 	public void setBillpayService(BillpayService billpayService) {
@@ -214,7 +218,7 @@ public class BillpayViewRegisterController implements Initializable{
 		
 		txtId.setText(String.valueOf(entity.getId()));
 		txtInvoice.setText(entity.getInvoice());
-		txtPortion.setText(String.valueOf(entity.getPortion()));
+		txtFulfillment.setText(String.valueOf(entity.getFulfillment()));
 		txtHistoric.setText(entity.getHistoric());
 		txtValue.setText(String.format("%.2f", entity.getValue()));
 		
@@ -223,7 +227,7 @@ public class BillpayViewRegisterController implements Initializable{
 		}
 		
 		if(entity.getDate() != null) {
-			pkEmission.setValue(LocalDate.ofInstant(entity.getDueDate().toInstant(), ZoneId.systemDefault()));
+			pkEmission.setValue(LocalDate.ofInstant(entity.getDate().toInstant(), ZoneId.systemDefault()));
 		}
 		
 		if(entity.getAccountPlan() == null) {
@@ -262,12 +266,19 @@ public class BillpayViewRegisterController implements Initializable{
 		cmbCompany.setItems(obsCompany);
 	}
 	
+	public void setConfigPortiont(Integer integer) {
+		if(integer == null) {
+			txtFulfillment.setVisible(true);
+			txtFulfillment.setText("1");
+		}else {
+			txtFulfillment.setVisible(false);
+		}
+	}
 	
 	private Billpay getFormDate() {
 		Billpay bill = new Billpay();
 		ValidationException exception = new ValidationException("");
 		bill.setId(Utils.tryParseToInt(txtId.getText()));
-		
 		bill.setStatus(entity.getStatus());
 		
 		if(txtInvoice.getText() == null || txtInvoice.getText().trim().equals("")) {
@@ -276,15 +287,19 @@ public class BillpayViewRegisterController implements Initializable{
 		bill.setInvoice(txtInvoice.getText());
 		
 		if(pkEmission.getValue() == null) {
-			exception.setError("emission", "Informe uma date de emissão");
+			exception.setError("emission", "Informe uma data de emissão válida");
 		}else {
 			bill.setDate(Date.from(pkEmission.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 		}
 		
 		if(pkDueDate.getValue() == null) {
-			exception.setError("dueDate", "Informe uma data de vencimento");
+			exception.setError("dueDate", "Informe uma data de vencimento válida");
 		}else {
 			bill.setDueDate(Date.from(pkDueDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+			
+			if(bill.getDueDate().before(bill.getDate())) {
+				exception.setError("dueDate", "Data de vencimento menor que a emissão");
+			}
 		}
 		
 		if(txtValue.getText() == null || txtValue.getText().trim().equals("")) {
@@ -293,15 +308,16 @@ public class BillpayViewRegisterController implements Initializable{
 			bill.setValue(Double.parseDouble(txtValue.getText().replace(",", ".")));
 		}
 
-//		if(txtPortion.getText() == null || txtPortion.getText().trim().equals("")) {
-//			exception.setError("portion", "Informe a quantidade de parcelas");
-//		}else {
-//			if(bill.getId() == null) {
-//				bill.setFulfillment(Integer.valueOf(txtPortion.getText()));
-//			}else {
-//				bill.setPortion(Integer.valueOf(txtPortion.getText()));
-//			}
-//		}
+		if(bill.getId() == null) {
+			
+			if(txtFulfillment.getText() == null || txtFulfillment.getText().trim().equals("")) {
+				exception.setError("portion", "Informe a quantidade de parcelas");
+			}
+			bill.setFulfillment(Integer.valueOf(txtFulfillment.getText()));
+		}else {
+			bill.setPortion(entity.getPortion());
+			bill.setFulfillment(entity.getFulfillment());
+		}
 
 		if(txtHistoric.getText() == null || txtHistoric.getText().trim().equals("")) {
 			exception.setError("historic", "Informe um histórico para a conta");

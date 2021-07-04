@@ -78,9 +78,9 @@
             <Label text="Histórico:" GridPane.rowIndex="9" />
             <TextArea fx:id="txtHistoric" prefHeight="80.0" prefWidth="375.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
             <Label text="Emissão:" GridPane.rowIndex="2" />
-            <DatePicker fx:id="pkEmission" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <DatePicker fx:id="pkEmission" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label text="Vencimento:" GridPane.rowIndex="3" />
-            <DatePicker fx:id="pkDueDate" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <DatePicker fx:id="pkDueDate" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label text="Valor R$:" GridPane.rowIndex="4" />
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
@@ -90,7 +90,7 @@
             <Label text="Parcelas:" GridPane.rowIndex="5" />
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <children>
-                  <TextField fx:id="txtPortion" prefHeight="25.0" prefWidth="174.0" />
+                  <TextField fx:id="txtFulfillment" prefHeight="25.0" prefWidth="174.0" />
                </children>
             </HBox>
             <Label fx:id="lblErrorEmission" prefHeight="17.0" prefWidth="299.0" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="2">

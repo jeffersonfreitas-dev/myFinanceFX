@@ -1,5 +1,7 @@
 package model.service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javafx.collections.ObservableList;
@@ -12,7 +14,9 @@ public class BillpayService {
 	
 	private DAOBillpay dao = DAOFactory.createBillpayDAO();
 	
-
+	public Billpay findById(Integer id) {
+		return dao.findById(id);
+	}
 
 	public List<Billpay> findAll() {
 		return dao.findAllOrderByDueDate();
@@ -31,9 +35,25 @@ public class BillpayService {
 		}
 		
 		if(entity.getId() == null) {
-			entity.setStatus("ABERTO");
-			entity.setPortion(1);
-			dao.insert(entity);
+			Calendar cal = Calendar.getInstance();
+			for(int i = 0; i < entity.getFulfillment(); i++) {
+				cal.setTime(entity.getDueDate());
+				Billpay bill = new Billpay();
+				bill.setAccountPlan(entity.getAccountPlan());
+				bill.setClifor(entity.getClifor());
+				bill.setCompany(entity.getCompany());
+				bill.setDate(entity.getDate());
+				bill.setFulfillment(entity.getFulfillment());
+				bill.setHistoric(entity.getHistoric());
+				bill.setInvoice(entity.getInvoice() + "/"+(i+1));
+				bill.setValue(entity.getValue() / entity.getFulfillment());
+				bill.setPortion(i+1);
+				bill.setStatus("ABERTO");
+				cal.add(Calendar.MONTH, i);
+				bill.setDueDate(cal.getTime());
+				dao.insert(bill);
+			}
+			
 		}else {
 			dao.update(entity);
 		}

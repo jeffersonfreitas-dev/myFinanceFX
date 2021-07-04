@@ -41,12 +41,12 @@
                             <TableColumn fx:id="columnDate" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" resizable="false" text="Emissão" />
                               <TableColumn fx:id="columnDueDate" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" resizable="false" text="Vencimento" />
                               <TableColumn fx:id="columnHistoric" maxWidth="490.0" minWidth="490.0" prefWidth="490.0" resizable="false" text="Histórico" />
+                              <TableColumn fx:id="columnPortion" editable="false" maxWidth="45.0" minWidth="45.0" prefWidth="45.0" resizable="false" sortable="false" text="Parc" />
                               <TableColumn fx:id="columnValue" maxWidth="120.0" minWidth="90.0" prefWidth="90.0" text="Valor R$" />
                               <TableColumn fx:id="columnStatus" maxWidth="45.0" minWidth="45.0" prefWidth="45.0" resizable="false" text="ST" />
                               <TableColumn fx:id="columnPAY" maxWidth="45.0" minWidth="45.0" prefWidth="45.0" resizable="false" />
                               <TableColumn fx:id="columnEDIT" maxWidth="45.0" minWidth="45.0" prefWidth="45.0" resizable="false" />
                               <TableColumn fx:id="columnREMOVE" maxWidth="45.0" minWidth="45.0" prefWidth="45.0" resizable="false" />
-                              <TableColumn fx:id="columnDETAIL" maxWidth="45.0" minWidth="45.0" prefWidth="45.0" resizable="false" />
                           </columns>
                         </TableView>
                      </children>

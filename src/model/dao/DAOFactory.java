@@ -8,6 +8,7 @@ import model.dao.impl.DAOBankImpl;
 import model.dao.impl.DAOBillpayImpl;
 import model.dao.impl.DAOCliforImpl;
 import model.dao.impl.DAOCompanyImpl;
+import model.dao.impl.DAOPaymentImpl;
 
 public class DAOFactory {
 	
@@ -37,6 +38,10 @@ public class DAOFactory {
 
 	public static DAOBillpay createBillpayDAO() {
 		return new DAOBillpayImpl(Database.getConnection());
+	}
+
+	public static DAOPayment createPaymentDAO() {
+		return new DAOPaymentImpl(Database.getConnection());
 	}
 
 }

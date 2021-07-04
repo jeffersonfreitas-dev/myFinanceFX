@@ -35,8 +35,8 @@ public class DAOBillpayImpl implements DAOBillpay{
 			stmt.setDate(3, new java.sql.Date(entity.getDate().getTime()));
 			stmt.setDate(4, new java.sql.Date(entity.getDueDate().getTime()));
 			stmt.setDouble(5, entity.getValue());
-			stmt.setInt(6, 1);
-			stmt.setInt(7, 1);
+			stmt.setInt(6, entity.getPortion());
+			stmt.setInt(7, entity.getFulfillment());
 			stmt.setString(8, entity.getStatus());
 			stmt.setInt(9, entity.getClifor().getId());
 			stmt.setInt(10, entity.getCompany().getId());
@@ -66,8 +66,8 @@ public class DAOBillpayImpl implements DAOBillpay{
 			stmt.setDate(3, new java.sql.Date(entity.getDate().getTime()));
 			stmt.setDate(4, new java.sql.Date(entity.getDueDate().getTime()));
 			stmt.setDouble(5, entity.getValue());
-			stmt.setInt(6, 1);
-			stmt.setInt(7, 1);
+			stmt.setInt(6, entity.getPortion());
+			stmt.setInt(7, entity.getFulfillment());
 			stmt.setString(8, entity.getStatus());
 			stmt.setInt(9, entity.getClifor().getId());
 			stmt.setInt(10, entity.getCompany().getId());
@@ -112,7 +112,7 @@ public class DAOBillpayImpl implements DAOBillpay{
 		ResultSet rs = null;
 		String sql = "SELECT b.*, c.id as cod_clifor, c.name as name_clifor, e.id as cod_company, e.name as name_company, p.id as cod_account, "
 				+ "p.credit, p.name FROM billpay b INNER JOIN clifor c ON b.id_clifor = c.id "
-				+ "INNER JOIN company e ON b.id_company = e.id INNER JOIN account_plan p ON b.id_account_plan = p.id WHERE id = ?";
+				+ "INNER JOIN company e ON b.id_company = e.id INNER JOIN account_plan p ON b.id_account_plan = p.id WHERE b.id = ?";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, id);

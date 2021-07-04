@@ -136,4 +136,24 @@ CREATE SEQUENCE public.billpay_sequence
   constraint bill_fk3 foreign key(id_company) references company(id),
   constraint bill_fk4 foreign key(id_account_plan) references account_plan(id)
 );
+
+
+CREATE SEQUENCE public.payment_sequence
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+  
+CREATE TABLE payment (
+	id bigint not null default nextval('payment_sequence'::regclass),
+	id_billpay bigint not null,
+	id_bank_account bigint not null,
+	date date not null,
+	constraint pk_payment primary key (id),
+	constraint fk_billpay foreign key (id_billpay) references billpay(id),
+	constraint fk_account foreign key (id_bank_account) references bank_account(id)
+);
+
+
   
