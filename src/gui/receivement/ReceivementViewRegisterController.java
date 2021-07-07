@@ -1,4 +1,4 @@
-package gui.payment;
+package gui.receivement;
 
 import java.net.URL;
 import java.time.ZoneId;
@@ -27,24 +27,24 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import model.entities.BankAccount;
-import model.entities.Billpay;
-import model.entities.Payment;
+import model.entities.Receivable;
+import model.entities.Receivement;
 import model.exceptions.ValidationException;
 import model.service.BankAccountService;
-import model.service.BillpayService;
-import model.service.PaymentService;
+import model.service.ReceivableService;
+import model.service.ReceivementService;
 import utils.Alerts;
 import utils.Utils;
 
-public class PaymentViewRegisterController implements Initializable{
+public class ReceivementViewRegisterController implements Initializable{
 	
-	private Billpay billpay;
-	public void setBillpay(Billpay billpay) {
-		this.billpay = billpay;
+	private Receivable receivable;
+	public void setReceivable(Receivable receivable) {
+		this.receivable = receivable;
 	}
 	
-	private PaymentService service;
-	public void setService(PaymentService service) {
+	private ReceivementService service;
+	public void setService(ReceivementService service) {
 		this.service = service;
 	}
 	
@@ -53,13 +53,13 @@ public class PaymentViewRegisterController implements Initializable{
 		this.accountService = accountService;
 	}
 	
-	private BillpayService billService;
-	public void setBillpayService(BillpayService billService) {
-		this.billService = billService;
+	private ReceivableService recebService;
+	public void setReceivableService(ReceivableService recebService) {
+		this.recebService = recebService;
 	}
 	
-	private Payment entity;
-	public void setPayment(Payment entity) {
+	private Receivement entity;
+	public void setReceivement(Receivement entity) {
 		this.entity = entity;
 	}
 	
@@ -86,16 +86,16 @@ public class PaymentViewRegisterController implements Initializable{
 	@FXML
 	private Label lblErroAccount;
 	@FXML
-	private Button btnPayment;
+	private Button btnReceivement;
 	@FXML
-	public void onBtnPaymentAction(ActionEvent event) {
+	public void onBtnReceivementAction(ActionEvent event) {
 		if(entity == null || service == null) {
 			throw new IllegalStateException("Serviço e/ou Entidade não instanciado");
 		}
 		
 		try {
-			Payment payment = getFormDate();
-			service.save(payment, billService);
+			Receivement receivement = getFormDate();
+			service.save(receivement, recebService);
 			Stage stage = Utils.getCurrentStage(event);
 			stage.getOnCloseRequest().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
 			stage.close();
@@ -109,30 +109,30 @@ public class PaymentViewRegisterController implements Initializable{
 	}
 	
 
-	private Payment getFormDate() {
-		Payment pay = new Payment();
-		if(billpay == null) {
+	private Receivement getFormDate() {
+		Receivement receivement = new Receivement();
+		if(receivable == null) {
 			throw new IllegalStateException("Entidade conta a pagar não instanciada");
 		}
-		pay.setBillpay(billpay);
+		receivement.setReceivable(receivable);
 		ValidationException exception = new ValidationException("");
-		pay.setId(Utils.tryParseToInt(txtId.getText()));
+		receivement.setId(Utils.tryParseToInt(txtId.getText()));
 		
 		if(cmbAccount.getValue() == null) {
-			exception.setError("account", "Informe a conta bancária para pagamento");
+			exception.setError("account", "Informe a conta bancária para recebimento");
 		}
-		pay.setBankAccount(cmbAccount.getValue());
+		receivement.setBankAccount(cmbAccount.getValue());
 		
 		if(pkDate.getValue() == null) {
-			exception.setError("date", "Informe a data de pagamento");
+			exception.setError("date", "Informe a data de recebimento");
 		}else {
-			pay.setDate(Date.from(pkDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+			receivement.setDate(Date.from(pkDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 		}
 		
 		if(exception.getErrors().size() > 0) {
 			throw exception;
 		}
-		return pay;
+		return receivement;
 	}
 
 	@FXML
@@ -150,7 +150,7 @@ public class PaymentViewRegisterController implements Initializable{
 	
 	
 	public void loadAssociateObjects() {
-		if(service == null || billService == null) {
+		if(service == null || recebService == null) {
 			throw new IllegalStateException("Serviço não instanciado");
 		}
 		
@@ -161,7 +161,7 @@ public class PaymentViewRegisterController implements Initializable{
 
 
 	private void initializationNodes() {
-		btnPayment.setGraphic(new ImageView("/assets/icons/payment16.png"));
+		btnReceivement.setGraphic(new ImageView("/assets/icons/payment16.png"));
 		btnCancel.setGraphic(new ImageView("/assets/icons/cancel16.png"));
 		Utils.formatDatePicker(pkDate, "dd/MM/yyyy");
 		pkDate.setPromptText("DD/MM/AAAA");

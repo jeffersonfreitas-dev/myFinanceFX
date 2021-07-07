@@ -26,7 +26,7 @@
                      <items>
                         <MenuItem mnemonicParsing="false" text="Extrato" />
                         <MenuItem fx:id="mnuItemBillpay" mnemonicParsing="false" onAction="#onMnuItemBillpayAction" text="Conta à pagar" />
-                        <MenuItem mnemonicParsing="false" text="Conta à receber" />
+                        <MenuItem fx:id="mnuItemReceivable" mnemonicParsing="false" onAction="#onMnuItemReceivableAction" text="Conta à receber" />
                         <MenuItem mnemonicParsing="false" text="Transferencia bancária" />
                      </items></Menu>
                   <Menu mnemonicParsing="false" text="Investimentos" />

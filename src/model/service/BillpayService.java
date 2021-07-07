@@ -1,10 +1,8 @@
 package model.service;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-import javafx.collections.ObservableList;
 import model.dao.DAOBillpay;
 import model.dao.DAOFactory;
 import model.entities.Billpay;

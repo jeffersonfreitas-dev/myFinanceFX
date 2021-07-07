@@ -11,6 +11,7 @@ import gui.bankAgence.BankAgenceViewController;
 import gui.billpay.BillpayViewController;
 import gui.clifor.CliforViewController;
 import gui.company.CompanyViewController;
+import gui.receivable.ReceivableViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,6 +33,7 @@ import model.service.BankService;
 import model.service.BillpayService;
 import model.service.CliforService;
 import model.service.CompanyService;
+import model.service.ReceivableService;
 import utils.Alerts;
 
 public class MainViewController {
@@ -127,6 +129,16 @@ public class MainViewController {
 	private void onMnuItemBillpayAction() {
 		loadView("/gui/billpay/BillpayView.fxml", (BillpayViewController controller) -> {
 			controller.setBillpayService(new BillpayService());
+			controller.updateTableView();
+		});
+	}
+	
+	@FXML
+	private MenuItem mnuItemReceivable;
+	@FXML
+	private void onMnuItemReceivableAction() {
+		loadView("/gui/receivable/ReceivableView.fxml", (ReceivableViewController controller) -> {
+			controller.setReceivableService(new ReceivableService());
 			controller.updateTableView();
 		});
 	}

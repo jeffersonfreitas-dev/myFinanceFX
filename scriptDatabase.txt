@@ -156,4 +156,48 @@ CREATE TABLE payment (
 );
 
 
+CREATE SEQUENCE public.receivable_sequence
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+  
+ CREATE TABLE receivable(
+  id bigint not null default nextval('receivable_sequence'::regclass),
+  invoice character varying,
+  historic character varying,
+  date date,
+  due_date date,
+  value decimal(10,2),
+  portion integer,
+  fulfillment integer,
+  status character varying,
+  id_clifor bigint,
+  id_company bigint,
+  id_account_plan bigint,
+  constraint rec_pk1 primary key(id),
+  constraint rec_fk2 foreign key(id_clifor) references clifor(id),
+  constraint rec_fk3 foreign key(id_company) references company(id),
+  constraint rec_fk4 foreign key(id_account_plan) references account_plan(id)
+);
+
+
+CREATE SEQUENCE public.receivement_sequence
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+  
+CREATE TABLE receivement (
+	id bigint not null default nextval('receivement_sequence'::regclass),
+	id_receivable bigint not null,
+	id_bank_account bigint not null,
+	date date not null,
+	constraint pk_receivement primary key (id),
+	constraint fk_receivable foreign key (id_receivable) references receivable(id),
+	constraint fk_account foreign key (id_bank_account) references bank_account(id)
+);
+
   

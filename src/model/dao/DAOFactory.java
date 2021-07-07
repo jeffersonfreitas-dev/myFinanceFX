@@ -9,6 +9,8 @@ import model.dao.impl.DAOBillpayImpl;
 import model.dao.impl.DAOCliforImpl;
 import model.dao.impl.DAOCompanyImpl;
 import model.dao.impl.DAOPaymentImpl;
+import model.dao.impl.DAOReceivableImpl;
+import model.dao.impl.DAOReceivementImpl;
 
 public class DAOFactory {
 	
@@ -42,6 +44,14 @@ public class DAOFactory {
 
 	public static DAOPayment createPaymentDAO() {
 		return new DAOPaymentImpl(Database.getConnection());
+	}
+
+	public static DAOReceivable createReceivableDAO() {
+		return new DAOReceivableImpl(Database.getConnection());
+	}
+
+	public static DAOReceivement createReceivementDAO() {
+		return new DAOReceivementImpl(Database.getConnection());
 	}
 
 }
