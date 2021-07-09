@@ -108,8 +108,8 @@ public class Utils {
 					} else {
 						if (item.equals("ABERTO")) {
 							setText("AB");
-						} else if (item.equals("PAGO")) {
-							setText("PG");
+						} else if (item.equals("PAGO") || item.equals("RECEBIDO")) {
+							setText("OK");
 						} else {
 							setText("OUT");
 						}

@@ -208,7 +208,7 @@ public class ReceivableViewController implements Initializable{
 			protected void updateItem(Receivable entity, boolean empty) {
 				button.setGraphic(new ImageView("/assets/icons/edit16.png"));
 				super.updateItem(entity, empty);
-				if(entity == null || entity.getStatus().equals("PAGO")) {
+				if(entity == null || entity.getStatus().equals("RECEBIDO")) {
 					setGraphic(null);
 					return;
 				}
@@ -242,13 +242,13 @@ public class ReceivableViewController implements Initializable{
 			protected void updateItem(Receivable entity, boolean empty) {
 				button.setGraphic(new ImageView("/assets/icons/payment16.png"));
 				super.updateItem(entity, empty);
-				if(entity == null || entity.getStatus().equals("PAGO")) {
+				if(entity == null || entity.getStatus().equals("RECEBIDO")) {
 					setGraphic(null);
 					return;
 				}
 				setGraphic(button);
 				button.setOnAction(e -> {
-					FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/payment/PaymentViewRegister.fxml"));
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/receivement/ReceivementViewRegister.fxml"));
 					Window window = button.getScene().getWindow();
 					loadViewModal(entity, loader, window, "Recebimento de conta", 245.0, 500.0, (ReceivementViewRegisterController controller) -> {
 						controller.setReceivableService(new ReceivableService());
@@ -273,7 +273,7 @@ public class ReceivableViewController implements Initializable{
 			protected void updateItem(Receivable entity, boolean empty) {
 				button.setGraphic(new ImageView("/assets/icons/trash16.png"));
 				super.updateItem(entity, empty);
-				if(entity == null || entity.getStatus().equals("PAGO")) {
+				if(entity == null || entity.getStatus().equals("RECEBIDO")) {
 					setGraphic(null);
 					return;
 				}

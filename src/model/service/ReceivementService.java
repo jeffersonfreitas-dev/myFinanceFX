@@ -22,7 +22,7 @@ public class ReceivementService {
 
 	public void save(Receivement entity, ReceivableService receivableService) {
 		Receivable receb = receivableService.findById(entity.getReceivable().getId());
-		receb.setStatus("PAGO");
+		receb.setStatus("RECEBIDO");
 		receivableService.saveOrUpdate(receb);
 		dao.insert(entity);
 	}

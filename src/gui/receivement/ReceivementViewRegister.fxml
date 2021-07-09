@@ -48,7 +48,7 @@
       </GridPane>
       <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0">
         <items>
-          <Button fx:id="btnReceivement" mnemonicParsing="false" onAction="#onBtnReceivementAction" text="Pagar" />
+          <Button fx:id="btnReceivement" mnemonicParsing="false" onAction="#onBtnReceivementAction" text="Receber" />
             <Button fx:id="btnCancel" layoutX="10.0" layoutY="13.0" mnemonicParsing="false" onAction="#onBtnCancelAction" text="Cancelar" />
         </items>
          <VBox.margin>
