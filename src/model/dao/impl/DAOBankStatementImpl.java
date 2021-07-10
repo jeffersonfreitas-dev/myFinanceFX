@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import database.Database;
@@ -27,7 +30,7 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 	public void insert(BankStatement entity) {
 		PreparedStatement stmt = null;
 		String sql = "INSERT INTO bank_statement (date, credit, value, historic, id_payment, id_bank_account, id_receivement) VALUES"
-				+ "(?, ?, ?, uppercase(?), ?, ?, ?)";
+				+ "(?, ?, ?, upper(?), ?, ?, ?)";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setDate(1, new java.sql.Date(entity.getDate().getTime()));
@@ -36,7 +39,11 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 			stmt.setString(4, entity.getHistoric());
 			stmt.setInt(5, entity.getPayment().getId());
 			stmt.setInt(6, entity.getBankAccount().getId());
-			stmt.setInt(7, entity.getReceivement().getId());
+			if(entity.getReceivement() == null) {
+				stmt.setNull(7, Types.INTEGER);
+			}else {
+				stmt.setInt(7, entity.getReceivement().getId());
+			}
 			int result = stmt.executeUpdate();
 			
 			if(result  < 1) {
@@ -55,7 +62,7 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 	@Override
 	public void update(BankStatement entity) {
 		PreparedStatement stmt = null;
-		String sql = "UPDATE bank_statement SET id = ?, date = ?, credit = ?, value = ?, historic = uppercase(?), id_payment = ?, id_bank_account = ? "
+		String sql = "UPDATE bank_statement SET id = ?, date = ?, credit = ?, value = ?, historic = upper(?), id_payment = ?, id_bank_account = ? "
 				+ "id_receivement = ?";
 		try {
 			stmt = conn.prepareStatement(sql);
@@ -130,21 +137,41 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 
 	@Override
 	public List<BankStatement> findAllOrderByDateAndBankAccount() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		List<BankStatement> list = new ArrayList<BankStatement>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT x.*, p.id as cod_payment, c.id as cod_account, c.account, c.code, r.id as cod_receivement FROM bank_statement x INNER JOIN bank_account c "
+				+ "ON x.id_bank_account = c.id LEFT JOIN payment p ON x.id_payment = p.id LEFT JOIN receivement r ON x.id_receivement = r.id "
+				+ "ORDER BY x.date, c.account";
+		try {
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				BankStatement entity = getBankStatement(rs);
+				list.add(entity);
+			}
+			return list;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException("Ocorreu um erro ao executar o comando findAll extrato -> " + e.getMessage());
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
+	}	
 	
 	
 	private BankStatement getBankStatement(ResultSet rs) throws SQLException {
 		BankStatement entity = new BankStatement();
 		entity.setBankAccount(getBankAccount(rs));
 		entity.setCredit(false);
-		entity.setDate(null);
-		entity.setHistoric(null);
-		entity.setId(null);
+		entity.setDate(new Date(rs.getDate("date").getTime()));
+		entity.setHistoric(rs.getString("historic"));
+		entity.setId(rs.getInt("id"));
 		entity.setPayment(getPayment(rs));
 		entity.setReceivement(getReceivement(rs));
-		entity.setValue(null);
+		entity.setValue(rs.getDouble("value"));
 		return entity;
 	}
 
@@ -172,6 +199,7 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 	private BankAccount getBankAccount(ResultSet rs) throws SQLException {
 		BankAccount account = new BankAccount();
 		account.setId(rs.getInt("cod_account"));
+		account.setCode(rs.getString("code"));
 		return account;
 	}
 

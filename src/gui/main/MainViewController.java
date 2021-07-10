@@ -8,6 +8,8 @@ import gui.accountPlan.AccountPlanViewController;
 import gui.bank.BankViewController;
 import gui.bankAccount.BankAccountViewController;
 import gui.bankAgence.BankAgenceViewController;
+import gui.bankStatement.BankStatementViewChooseAccountController;
+import gui.bankStatement.BankStatementViewController;
 import gui.billpay.BillpayViewController;
 import gui.clifor.CliforViewController;
 import gui.company.CompanyViewController;
@@ -30,11 +32,13 @@ import model.service.AccountPlanService;
 import model.service.BankAccountService;
 import model.service.BankAgenceService;
 import model.service.BankService;
+import model.service.BankStatementService;
 import model.service.BillpayService;
 import model.service.CliforService;
 import model.service.CompanyService;
 import model.service.ReceivableService;
 import utils.Alerts;
+import utils.Utils;
 
 public class MainViewController {
 	
@@ -119,6 +123,20 @@ public class MainViewController {
 		loadModalView(loader, "Lista de clientes e fornecedores", parentScene, 600.0, 800.0, (CliforViewController controller) -> {
 			controller.setCliforService(new CliforService());
 			controller.updateTableView();
+		});
+	}
+	
+	
+	@FXML
+	private MenuItem mnuItemBankStatement;
+	@FXML
+	private void onMnuItemBankStatementAction() {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/bankStatement/BankStatementViewChooseAccount.fxml"));
+		Window window = mnuMain.getScene().getWindow();
+		loadModalView(loader, "Escolha a conta para exibir o extrato", window, 230.0, 500.0, (BankStatementViewChooseAccountController controller) ->{
+			controller.setBankStatementService(new BankStatementService());
+			controller.setBankAccountService(new BankAccountService());
+			controller.loadAssociateObjects();
 		});
 	}
 	

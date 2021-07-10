@@ -299,23 +299,4 @@ public class BillpayViewController implements Initializable{
 			}
 		}
 	}
-	
-//	private void paymentBill(Billpay entity) {
-//		Optional<ButtonType> result = Alerts.showConfirmation("Pagamento de conta", "Deseja quitar esta conta a pagar?");
-//		
-//		if(result.get() == ButtonType.OK) {
-//			if(service == null) {
-//				throw new IllegalStateException("Serviço não instanciado");
-//			}
-//			
-//			try {
-//				service.payment(entity);
-//				updateTableView();
-//			} catch (DatabaseException e) {
-//				e.printStackTrace();
-//				Alerts.showAlert("Erro ao remover registro", null, e.getMessage(), AlertType.ERROR);
-//			}
-//		}
-//	}
-
 }

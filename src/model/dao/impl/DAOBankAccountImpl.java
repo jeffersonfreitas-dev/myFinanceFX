@@ -96,7 +96,7 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		String sql = "SELECT acc.*, a.id as cod_agence, a.agence, a.dv, a.id_bank, c.id as cod_comp, c.name as name_comp, b.id as cod_bank, b.code as code_bank, b.name as name_bank FROM bank_account acc INNER JOIN bank_agence a ON acc.id_bank_agence = a.id INNER JOIN"
-				+ " company c ON acc.id_company = c.id INNER JOIN bank b ON a.id_bank = b.id WHERE id = ?";
+				+ " company c ON acc.id_company = c.id INNER JOIN bank b ON a.id_bank = b.id WHERE acc.id = ?";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, id);

@@ -6,7 +6,7 @@ import model.entities.Payment;
 
 public interface DAOPayment {
 	
-	void insert (Payment entity);
+	Integer insert (Payment entity);
 	void update (Payment entity);
 	void deleteById (Integer id);
 	Payment findById(Integer id);

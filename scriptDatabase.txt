@@ -200,4 +200,28 @@ CREATE TABLE receivement (
 	constraint fk_account foreign key (id_bank_account) references bank_account(id)
 );
 
+
+CREATE SEQUENCE public.bankstatement_sequence
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+
+CREATE TABLE bank_statement (
+	id bigint not null default nextval('bankstatement_sequence'::regclass),
+	date date not null,
+	credit boolean,
+	value decimal(10,2) not null,
+	historic character varying not null,
+	id_bank_account bigint,
+	id_payment bigint,
+	id_receivement bigint,
+	constraint pk_statement primary key (id),
+	constraint fk_bank_statement foreign key (id_bank_account) references bank_account(id),
+	constraint fk_payment_statement foreign key (id_payment) references payment(id),
+	constraint fk_receivement_statement foreign key(id_receivement) references receivement(id)
+);
+
   
