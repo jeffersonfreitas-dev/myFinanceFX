@@ -27,6 +27,7 @@ public class BankAccountService {
 		}
 		
 		if(entity.getId() == null) {
+			entity.setBalance(0.0);
 			dao.insert(entity);
 		}else {
 			dao.update(entity);

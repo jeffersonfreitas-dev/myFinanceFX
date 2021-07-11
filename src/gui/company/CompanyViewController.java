@@ -42,10 +42,15 @@ public class CompanyViewController implements Initializable{
 	private Button btnNew;
 	@FXML
 	public void onBtnNewAction(ActionEvent event) {
-		Stage stage = Utils.getCurrentStage(event);
-		stage.setTitle("Cadastro de empresa");
-		Company company = new Company();
-		loadView(company, "/gui/company/CompanyViewRegister.fxml", stage.getScene());
+		List<Company> list = service.findByAll();
+		if(list.isEmpty()) {
+			Stage stage = Utils.getCurrentStage(event);
+			stage.setTitle("Cadastro de empresa");
+			Company company = new Company();
+			loadView(company, "/gui/company/CompanyViewRegister.fxml", stage.getScene());
+		}else {
+			Alerts.showAlert("Aviso", "Aviso de implementação", "Só é perimitido cadastrar uma empresa. \nCadastro de mais empresa não foi implementada!", AlertType.INFORMATION);
+		}
 	}
 
 

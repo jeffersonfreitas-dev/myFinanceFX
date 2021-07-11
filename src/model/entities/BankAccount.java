@@ -10,6 +10,7 @@ public class BankAccount implements Serializable {
 	private String account;
 	private BankAgence bankAgence;
 	private Company company;
+	private Double balance;
 
 	public BankAccount() {
 	}
@@ -60,6 +61,14 @@ public class BankAccount implements Serializable {
 
 	public void setCompany(Company company) {
 		this.company = company;
+	}
+
+	public Double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Double balance) {
+		this.balance = balance;
 	}
 
 	@Override

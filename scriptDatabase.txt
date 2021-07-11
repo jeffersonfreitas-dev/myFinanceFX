@@ -224,4 +224,6 @@ CREATE TABLE bank_statement (
 	constraint fk_receivement_statement foreign key(id_receivement) references receivement(id)
 );
 
+
+ALTER TABLE bank_account ADD COLUMN balance DECIMAL(10,2);
   

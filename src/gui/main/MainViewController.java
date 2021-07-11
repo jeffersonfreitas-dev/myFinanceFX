@@ -9,10 +9,10 @@ import gui.bank.BankViewController;
 import gui.bankAccount.BankAccountViewController;
 import gui.bankAgence.BankAgenceViewController;
 import gui.bankStatement.BankStatementViewChooseAccountController;
-import gui.bankStatement.BankStatementViewController;
 import gui.billpay.BillpayViewController;
 import gui.clifor.CliforViewController;
 import gui.company.CompanyViewController;
+import gui.moviment.MovimentViewController;
 import gui.receivable.ReceivableViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,7 +38,6 @@ import model.service.CliforService;
 import model.service.CompanyService;
 import model.service.ReceivableService;
 import utils.Alerts;
-import utils.Utils;
 
 public class MainViewController {
 	
@@ -150,6 +149,14 @@ public class MainViewController {
 			controller.updateTableView();
 		});
 	}
+
+	@FXML
+	private MenuItem mnuItemMoviment;
+	@FXML
+	private void onMnuItemMovimentAction() {
+		loadView("/gui/moviment/MovimentView.fxml", x -> {});
+	}
+	
 	
 	@FXML
 	private MenuItem mnuItemReceivable;
