@@ -226,4 +226,27 @@ CREATE TABLE bank_statement (
 
 
 ALTER TABLE bank_account ADD COLUMN balance DECIMAL(10,2);
+
+
+CREATE SEQUENCE public.moviment_sequence
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ 
+ 
+ CREATE TABLE moviment (
+	id bigint not null default nextval('moviment_sequence'::regclass),
+	date_beginner date not null,
+	date_finish date not null,	
+	closed boolean,
+	value_beginner decimal(10,2) not null,
+	value_finish decimal(10,2),
+	balance_moviment decimal(10,2),
+	name character varying not null,
+	constraint pk_moviment primary key (id)
+);
+
+
   

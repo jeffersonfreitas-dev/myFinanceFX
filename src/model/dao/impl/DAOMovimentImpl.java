@@ -127,7 +127,7 @@ public class DAOMovimentImpl implements DAOMoviment{
 	public List<Moviment> findAllOrderByDateBeginner() {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT * FROM Moviment ORDER BY date_beginner";
+		String sql = "SELECT * FROM moviment";
 		try {
 			stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();
@@ -135,8 +135,8 @@ public class DAOMovimentImpl implements DAOMoviment{
 			List<Moviment> list = new ArrayList<>();
 			
 			while(rs.next()) {
-				Moviment Moviment = instantiateMoviment(rs); 
-				list.add(Moviment);
+				Moviment moviment = instantiateMoviment(rs); 
+				list.add(moviment);
 			}
 			return list;
 		} catch (SQLException e) {

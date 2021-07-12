@@ -36,6 +36,7 @@ import model.service.BankStatementService;
 import model.service.BillpayService;
 import model.service.CliforService;
 import model.service.CompanyService;
+import model.service.MovimentService;
 import model.service.ReceivableService;
 import utils.Alerts;
 
@@ -154,7 +155,10 @@ public class MainViewController {
 	private MenuItem mnuItemMoviment;
 	@FXML
 	private void onMnuItemMovimentAction() {
-		loadView("/gui/moviment/MovimentView.fxml", x -> {});
+		loadView("/gui/moviment/MovimentView.fxml", (MovimentViewController controller) -> {
+			controller.setMovimentService(new MovimentService());
+			controller.updateTableView();
+		});
 	}
 	
 	
