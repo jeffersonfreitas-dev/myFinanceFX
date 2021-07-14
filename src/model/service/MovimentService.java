@@ -1,5 +1,7 @@
 package model.service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import model.dao.DAOFactory;
@@ -16,22 +18,30 @@ public class MovimentService {
 	}
 
 
-//	public void saveOrUpdate(Bank bank) {
-//		
-//		Bank isRecorded = dao.findByCodeOrName(bank.getCode(), bank.getName());
+	public void save(Moviment moviment) {
+		
+//		Moviment isRecorded = dao.findByActiveTrueA(bank.getCode(), bank.getName());
 //		
 //		if(isRecorded != null && !bank.equals(isRecorded)) {
 //			throw new RecordAlreadyRecordedException("Registro já cadastrado no banco de dados!");
 //		}
-//		
-//		if(bank.getId() == null) {
-//			dao.insert(bank);
-//		}else if (bank.getId() != null && bank.equals(isRecorded)){
-//			dao.update(bank);
-//		}
-//	}
-//
-//
+		moviment.setClosed(false);
+		moviment.setValueBeginner(0.0);
+		moviment.setBalanceMoviment(0.0);
+		moviment.setValueFinish(0.0);
+		
+		LocalDate d = moviment.getDateBeginner().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		
+		moviment.setName(d.getYear() +"/"+d.getMonthValue());
+		dao.insert(moviment);
+	}
+
+
+	public void closeMoviment(Moviment entity) {
+		
+	}
+
+
 //	public void remove(Bank bank) {
 //		dao.deleteById(bank.getId());
 //	}

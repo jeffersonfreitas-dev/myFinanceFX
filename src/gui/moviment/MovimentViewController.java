@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import database.exceptions.DatabaseException;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,7 +22,9 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -49,7 +54,10 @@ public class MovimentViewController implements Initializable{
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/moviment/MovimentViewRegister.fxml")); 
 		Window window = btnNew.getScene().getWindow();
 		Moviment moviment = new Moviment();
-		loadViewModal(moviment, loader, window, "Cadastro de movimentação", 170.0, 500.0, null);
+		loadViewModal(moviment, loader, window, "Cadastro de movimentação", 250.0, 500.0, (MovimentViewRegisterController controller) -> {
+			controller.setService(new MovimentService());
+			controller.setMoviment(moviment);
+		});
 	}
 
 
@@ -78,6 +86,8 @@ public class MovimentViewController implements Initializable{
 	private TableColumn<Moviment, Double> columnValueBeginner;
 	@FXML
 	private TableColumn<Moviment, String> columnName;
+	@FXML
+	private TableColumn<Moviment, Moviment> columnClose;
 	@FXML
 	private TableColumn<Moviment, String> columnStatus;
 	
@@ -122,6 +132,7 @@ public class MovimentViewController implements Initializable{
 		obsList = FXCollections.observableArrayList(list);
 		tblMoviment.setItems(obsList);
 		initializationNodes();
+		initClosingButtons();
 	}
 	
 	
@@ -166,4 +177,43 @@ public class MovimentViewController implements Initializable{
 			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
 		}
 	}
+	
+	private void initClosingButtons() {
+		columnClose.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		columnClose.setCellFactory(param -> new TableCell<Moviment, Moviment>() {
+			private final Button button = new Button();
+			
+			@Override
+			protected void updateItem(Moviment entity, boolean empty) {
+				button.setGraphic(new ImageView("/assets/icons/payment16.png"));
+				super.updateItem(entity, empty);
+				if(entity == null || entity.isClosed()) {
+					setGraphic(null);
+					return;
+				}
+				setGraphic(button);
+				button.setOnAction(e -> closeMoviment(entity));
+			}
+		});
+	}
+	
+	
+	private Object closeMoviment(Moviment entity) {
+		Optional<ButtonType> opt = Alerts.showConfirmation("Confirmação", "Você tem certeza que deseja fechar este movimento?");
+		if(opt.get() == ButtonType.OK) {
+			if(service == null) {
+				throw new IllegalStateException("Serviço não instanciado");
+			}
+			try {
+				service.closeMoviment(entity);
+				updateTableView();
+			} catch (DatabaseException e) {
+				e.printStackTrace();
+				Alerts.showAlert("Erro ao fechar o movimento", null, e.getMessage(), AlertType.ERROR);
+			}			
+			
+		}
+		return null;
+	}
+
 }

@@ -41,6 +41,7 @@
                               <TableColumn fx:id="columnBalance" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" resizable="false" text="Saldo" />
                               <TableColumn fx:id="columnName" maxWidth="500.0" minWidth="500.0" prefWidth="500.0" resizable="false" text="Nome" />
                               <TableColumn fx:id="columnStatus" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" text="ST" />
+                              <TableColumn fx:id="columnClose" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" />
                           </columns>
                         </TableView>
                      </children>
