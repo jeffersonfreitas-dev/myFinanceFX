@@ -18,7 +18,6 @@ public class PaymentService {
 
 	private DAOPayment dao = DAOFactory.createPaymentDAO();
 	private DAOBankAccount daoAccount = DAOFactory.createBankAccountDAO();
-	private DAOBillpay daoBillpay = DAOFactory.createBillpayDAO();
 
 	public List<Payment> findAll() {
 		return dao.findAllOrderByDate();

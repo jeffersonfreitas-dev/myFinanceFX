@@ -20,6 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.entities.Moviment;
+import model.exceptions.RecordAlreadyRecordedException;
 import model.exceptions.ValidationException;
 import model.service.MovimentService;
 import utils.Alerts;
@@ -62,7 +63,13 @@ public class MovimentViewRegisterController implements Initializable{
 		} catch (ValidationException e) {
 			e.printStackTrace();
 			setErrorsMessage(e.getErrors());
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
 		} catch (DatabaseException e) {
+			e.printStackTrace();
+			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
+		} catch (RecordAlreadyRecordedException e) {
 			e.printStackTrace();
 			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
 		}

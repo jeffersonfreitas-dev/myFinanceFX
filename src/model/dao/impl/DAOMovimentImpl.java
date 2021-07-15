@@ -162,4 +162,28 @@ public class DAOMovimentImpl implements DAOMoviment{
 		return moviment;
 	}
 
+
+	@Override
+	public List<Moviment> findByAllOpenMoviment() {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT * FROM moviment WHERE closed = false";
+		try {
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			List<Moviment> list = new ArrayList<>();
+			while(rs.next()) {
+				Moviment entity = instantiateMoviment(rs);
+				list.add(entity);
+			}
+			return list;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException("Erro ao executar comando: findAllOrderByNane do registro -> " + e.getMessage());
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
+	}
+
 }

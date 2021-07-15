@@ -11,5 +11,6 @@ public interface DAOMoviment {
 	void deleteById (Integer id);
 	Moviment findById(Integer id);
 	List<Moviment> findAllOrderByDateBeginner();
+	List<Moviment> findByAllOpenMoviment();
 
 }
