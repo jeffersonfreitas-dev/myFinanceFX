@@ -174,6 +174,7 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 		account.setCode(rs.getString("code"));
 		account.setBankAgence(getBankAgence(rs));
 		account.setCompany(getCompany(rs));
+		account.setBalance(rs.getDouble("balance"));
 		return account;
 	}
 

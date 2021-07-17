@@ -14,6 +14,7 @@ public class BankStatement implements Serializable {
 	private BankAccount bankAccount;
 	private Payment payment;
 	private Receivement receivement;
+	private boolean initialValue;
 
 	public Integer getId() {
 		return id;
@@ -77,6 +78,14 @@ public class BankStatement implements Serializable {
 
 	public void setReceivement(Receivement receivement) {
 		this.receivement = receivement;
+	}
+
+	public boolean isInitialValue() {
+		return initialValue;
+	}
+
+	public void setInitialValue(boolean initialValue) {
+		this.initialValue = initialValue;
 	}
 
 	@Override

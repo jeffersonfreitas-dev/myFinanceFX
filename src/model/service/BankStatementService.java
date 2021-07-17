@@ -4,7 +4,9 @@ import java.util.List;
 
 import model.dao.DAOBankStatement;
 import model.dao.DAOFactory;
+import model.entities.BankAccount;
 import model.entities.BankStatement;
+import model.entities.Moviment;
 import model.entities.Payment;
 
 public class BankStatementService {
@@ -24,10 +26,38 @@ public class BankStatementService {
 		ext.setBankAccount(payment.getBankAccount());
 		ext.setCredit(false);
 		ext.setDate(payment.getDate());
-		ext.setHistoric("Pagamento realizado referente conta nº " + payment.getBillpay().getInvoice() + " no(a) " + payment.getBankAccount().getBankAgence().getBank().getName());
+		ext.setHistoric("Pagamento realizado referente conta nº " + payment.getBillpay().getInvoice());
 		ext.setPayment(payment);
 		ext.setReceivement(null);
 		ext.setValue(payment.getBillpay().getValue());
+		ext.setInitialValue(false);
+		dao.insert(ext);
+	}
+
+
+	public void createBankStatementByMoviment(Moviment moviment, List<BankAccount> accounts) {
+		if(moviment == null || accounts.size() < 1) {
+			throw new IllegalStateException("Entidade Movimento ou Contas bancárias estão nulos");
+		}
+		
+		for(BankAccount acc : accounts) {
+			createRegisterByAccounts(acc, moviment);
+		}
+		
+		
+	}
+
+
+	private void createRegisterByAccounts(BankAccount acc, Moviment moviment) {
+		BankStatement ext = new BankStatement();
+		ext.setBankAccount(acc);
+		ext.setCredit(false);
+		ext.setInitialValue(true);
+		ext.setDate(moviment.getDateBeginner());
+		ext.setHistoric("Saldo inicial do movimento nº " + moviment.getName());
+		ext.setPayment(null);
+		ext.setReceivement(null);
+		ext.setValue(acc.getBalance());	
 		dao.insert(ext);
 	}
 

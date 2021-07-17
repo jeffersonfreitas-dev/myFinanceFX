@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,11 +24,12 @@ public class DAOMovimentImpl implements DAOMoviment{
 
 	
 	@Override
-	public void insert(Moviment entity) {
+	public Integer insert(Moviment entity) {
 		PreparedStatement stmt = null;
+		ResultSet rs = null;
 		String sql = "INSERT INTO moviment (date_beginner, name, date_finish, value_beginner, balance_moviment, value_finish, closed) VALUES (?, upper(?), ?, ?, ?, ?, ?)";
 		try {
-			stmt = conn.prepareStatement(sql);
+			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			stmt.setDate(1, new java.sql.Date(entity.getDateBeginner().getTime()));
 			stmt.setString(2, entity.getName());
 			stmt.setDate(3, new java.sql.Date(entity.getDateFinish().getTime()));
@@ -36,15 +38,21 @@ public class DAOMovimentImpl implements DAOMoviment{
 			stmt.setDouble(6, entity.getValueFinish());
 			stmt.setBoolean(7, entity.isClosed());
 			int result = stmt.executeUpdate();
-			
 			if(result < 1) {
 				throw new DatabaseException("Nenhuma linha afetada na operação de salvar");
 			}
+			
+			rs = stmt.getGeneratedKeys();
+			if(rs.next()) {
+				return rs.getInt("id");
+			}
+			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new DatabaseException("Ocorreu um erro ao salvar o registro -> " + e.getMessage());
 		}finally {
 			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
 		}
 	}
 
@@ -127,7 +135,7 @@ public class DAOMovimentImpl implements DAOMoviment{
 	public List<Moviment> findAllOrderByDateBeginner() {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT * FROM moviment";
+		String sql = "SELECT * FROM moviment ORDER BY date_beginner desc";
 		try {
 			stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();

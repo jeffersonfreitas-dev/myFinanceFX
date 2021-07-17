@@ -248,5 +248,6 @@ CREATE SEQUENCE public.moviment_sequence
 	constraint pk_moviment primary key (id)
 );
 
+ALTER TABLE bank_statement ADD COLUMN initial_value BOOLEAN;
 
   

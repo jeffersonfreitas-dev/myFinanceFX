@@ -26,8 +26,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.entities.BankAccount;
+import model.entities.Moviment;
 import model.service.BankAccountService;
 import model.service.BankStatementService;
+import model.service.MovimentService;
 import utils.Alerts;
 import utils.Utils;
 
@@ -41,6 +43,11 @@ public class BankStatementViewChooseAccountController implements Initializable{
 	private BankAccountService accountService;
 	public void setBankAccountService(BankAccountService accountService) {
 		this.accountService = accountService;
+	}
+
+	private MovimentService movimentService;
+	public void setMovimentService(MovimentService movimentService) {
+		this.movimentService = movimentService;
 	}
 	
 
@@ -61,7 +68,20 @@ public class BankStatementViewChooseAccountController implements Initializable{
 	
 	
 	@FXML
-	private ComboBox<String> cmbMovimentation;
+	private ComboBox<Moviment> cmbMovimentation;
+	private void initializeComboBoxMoviment() {
+		Callback<ListView<Moviment>, ListCell<Moviment>> factory = lv -> new ListCell<Moviment>() {
+			@Override
+			protected void updateItem(Moviment item, boolean empty) {
+				super.updateItem(item, empty);
+				setText(empty ? "" : item.getName());
+			}
+		};
+		cmbMovimentation.setCellFactory(factory);
+		cmbMovimentation.setButtonCell(factory.call(null));
+	}
+	
+
 	@FXML
 	private Button btnOpen;
 	@FXML
@@ -86,6 +106,7 @@ public class BankStatementViewChooseAccountController implements Initializable{
 	private Label lblErros;
 	
 	private ObservableList<BankAccount> obsAccount;
+	private ObservableList<Moviment> obsMoviment;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -96,17 +117,22 @@ public class BankStatementViewChooseAccountController implements Initializable{
 		btnClose.setGraphic(new ImageView("/assets/icons/cancel16.png"));
 		btnOpen.setGraphic(new ImageView("/assets/icons/into16.png"));
 		initializeComboBoxAccount();
+		initializeComboBoxMoviment();
 	}
 	
 	
 	public void loadAssociateObjects() {
-		if(service == null || accountService == null) {
+		if(service == null || accountService == null || movimentService == null) {
 			throw new IllegalStateException("Serviços não instanciados");
 		}
 		
 		List<BankAccount> accounts = accountService.findAll();
 		obsAccount = FXCollections.observableArrayList(accounts);
 		cmbAccount.setItems(obsAccount);
+		
+		List<Moviment> moviments = movimentService.findAll();
+		obsMoviment = FXCollections.observableArrayList(moviments);
+		cmbMovimentation.setItems(obsMoviment);
 	}
 	
 	

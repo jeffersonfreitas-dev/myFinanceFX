@@ -136,6 +136,7 @@ public class MainViewController {
 		loadModalView(loader, "Escolha a conta para exibir o extrato", window, 230.0, 500.0, (BankStatementViewChooseAccountController controller) ->{
 			controller.setBankStatementService(new BankStatementService());
 			controller.setBankAccountService(new BankAccountService());
+			controller.setMovimentService(new MovimentService());
 			controller.loadAssociateObjects();
 		});
 	}

@@ -29,21 +29,26 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 	@Override
 	public void insert(BankStatement entity) {
 		PreparedStatement stmt = null;
-		String sql = "INSERT INTO bank_statement (date, credit, value, historic, id_payment, id_bank_account, id_receivement) VALUES"
-				+ "(?, ?, ?, upper(?), ?, ?, ?)";
+		String sql = "INSERT INTO bank_statement (date, credit, value, historic, id_payment, id_bank_account, id_receivement, initial_value) VALUES"
+				+ "(?, ?, ?, upper(?), ?, ?, ?, ?)";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setDate(1, new java.sql.Date(entity.getDate().getTime()));
 			stmt.setBoolean(2, entity.isCredit());
 			stmt.setDouble(3, entity.getValue());
 			stmt.setString(4, entity.getHistoric());
-			stmt.setInt(5, entity.getPayment().getId());
+			if(entity.getPayment() == null) {
+				stmt.setNull(5, Types.INTEGER);
+			}else {
+				stmt.setInt(5, entity.getPayment().getId());
+			}
 			stmt.setInt(6, entity.getBankAccount().getId());
 			if(entity.getReceivement() == null) {
 				stmt.setNull(7, Types.INTEGER);
 			}else {
 				stmt.setInt(7, entity.getReceivement().getId());
 			}
+			stmt.setBoolean(8, entity.isInitialValue());
 			int result = stmt.executeUpdate();
 			
 			if(result  < 1) {
@@ -63,7 +68,7 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 	public void update(BankStatement entity) {
 		PreparedStatement stmt = null;
 		String sql = "UPDATE bank_statement SET id = ?, date = ?, credit = ?, value = ?, historic = upper(?), id_payment = ?, id_bank_account = ? "
-				+ "id_receivement = ?";
+				+ "id_receivement = ?, initial_value= ?";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, entity.getId());
@@ -74,7 +79,7 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 			stmt.setInt(6, entity.getPayment().getId());
 			stmt.setInt(7, entity.getBankAccount().getId());
 			stmt.setInt(8, entity.getReceivement().getId());
-			
+			stmt.setBoolean(9, entity.isInitialValue());
 			int result = stmt.executeUpdate();
 			if(result < 1) {
 				throw new DatabaseException("Falha ao salvar o registro");
@@ -172,6 +177,7 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 		entity.setPayment(getPayment(rs));
 		entity.setReceivement(getReceivement(rs));
 		entity.setValue(rs.getDouble("value"));
+		entity.setInitialValue(rs.getBoolean("initial_value"));
 		return entity;
 	}
 

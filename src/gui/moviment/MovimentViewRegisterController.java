@@ -56,6 +56,7 @@ public class MovimentViewRegisterController implements Initializable{
 		
 		try {
 			Moviment mov = getFormDate();
+			
 			service.save(mov);
 			Stage stage = Utils.getCurrentStage(event);
 			stage.getOnCloseRequest().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
