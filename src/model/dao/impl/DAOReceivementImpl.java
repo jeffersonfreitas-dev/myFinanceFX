@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,11 +24,12 @@ public class DAOReceivementImpl implements DAOReceivement{
 
 	
 	@Override
-	public void insert(Receivement entity) {
+	public Integer insert(Receivement entity) {
 		PreparedStatement stmt = null;
+		ResultSet rs = null;
 		String sql = "INSERT INTO receivement (date, id_bank_account, id_receivable) VALUES (?, ?, ?)";
 		try {
-			stmt = conn.prepareStatement(sql);
+			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			stmt.setDate(1, new java.sql.Date(entity.getDate().getTime()));
 			stmt.setInt(2, entity.getBankAccount().getId());
 			stmt.setInt(3, entity.getReceivable().getId());
@@ -35,6 +37,13 @@ public class DAOReceivementImpl implements DAOReceivement{
 			if(result < 1) {
 				throw new DatabaseException("Falha ao salvar o registro");
 			}
+			
+			rs = stmt.getGeneratedKeys();
+			
+			if(rs.next()) {
+				return rs.getInt("id");
+			}
+			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new DatabaseException("Ocorreu um erro ao executar o comando insert do pagamento -> " + e.getMessage());
@@ -91,7 +100,7 @@ public class DAOReceivementImpl implements DAOReceivement{
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		String sql = "SELECT p.*, b.id as cod_bill, a.id as cod_account FROM receivement p INNER JOIN receivable b ON p.id_receivable = b.id "
-				+ "INNER JOIN bank_account a ON p.id_bank_account = a.id WHERE id = ?";
+				+ "INNER JOIN bank_account a ON p.id_bank_account = a.id WHERE p.id = ?";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, id);
@@ -118,7 +127,7 @@ public class DAOReceivementImpl implements DAOReceivement{
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		String sql = "SELECT p.*, b.id as cod_bill, a.id as cod_account FROM receivement p INNER JOIN receivable b ON p.id_receivable = b.id "
-				+ "INNER JOIN bank_account a ON p.id_bank_account = a.id WHERE id = ? ORDER BY date";
+				+ "INNER JOIN bank_account a ON p.id_bank_account = a.id WHERE p.id = ? ORDER BY p.date";
 		try {
 			stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();

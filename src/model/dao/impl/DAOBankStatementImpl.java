@@ -14,6 +14,7 @@ import database.exceptions.DatabaseException;
 import model.dao.DAOBankStatement;
 import model.entities.BankAccount;
 import model.entities.BankStatement;
+import model.entities.Moviment;
 import model.entities.Payment;
 import model.entities.Receivement;
 
@@ -170,7 +171,7 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 	private BankStatement getBankStatement(ResultSet rs) throws SQLException {
 		BankStatement entity = new BankStatement();
 		entity.setBankAccount(getBankAccount(rs));
-		entity.setCredit(false);
+		entity.setCredit(rs.getBoolean("credit"));
 		entity.setDate(new Date(rs.getDate("date").getTime()));
 		entity.setHistoric(rs.getString("historic"));
 		entity.setId(rs.getInt("id"));
@@ -185,7 +186,7 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 	private Receivement getReceivement(ResultSet rs) throws SQLException {
 		if(rs.findColumn("cod_receivement") > 0) {
 			Receivement rec = new Receivement();
-			rec.setId(rs.getInt("cod_receivement"));
+			rec.setId(rs.getInt("id_receivement"));
 			return rec;
 		}
 		return null;
@@ -195,7 +196,7 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 	private Payment getPayment(ResultSet rs) throws SQLException {
 		if(rs.findColumn("cod_payment") > 0) {
 			Payment pay = new Payment();
-			pay.setId(rs.getInt("cod_payment"));
+			pay.setId(rs.getInt("id_payment"));
 			return pay;
 		}
 		return null;
@@ -207,6 +208,37 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 		account.setId(rs.getInt("cod_account"));
 		account.setCode(rs.getString("code"));
 		return account;
+	}
+
+
+	@Override
+	public List<BankStatement> findAllByAccountAndMoviment(BankAccount bankAccount, Date dateBeginner, Date dateFinish) {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT x.*, p.id as cod_payment, c.id as cod_account, c.account, c.code, r.id as cod_receivement FROM bank_statement x INNER JOIN bank_account c "
+				+ "ON x.id_bank_account = c.id LEFT JOIN payment p ON x.id_payment = p.id LEFT JOIN receivement r ON x.id_receivement = r.id "
+				+ "WHERE c.id = ? and x.date between ? and ? ORDER BY x.date, c.account";
+		try {
+			List<BankStatement> list = new ArrayList<>();
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, bankAccount.getId());
+			stmt.setDate(2, new java.sql.Date(dateBeginner.getTime()));
+			stmt.setDate(3, new java.sql.Date(dateFinish.getTime()));
+			rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				BankStatement item = getBankStatement(rs);
+				list.add(item);
+			}
+			return list;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException("Ocorreu um erro ao executar o comando -> " + e.getMessage());
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
 	}
 
 }

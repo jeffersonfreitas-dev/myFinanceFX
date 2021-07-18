@@ -6,7 +6,7 @@ import model.entities.Receivement;
 
 public interface DAOReceivement {
 	
-	void insert (Receivement entity);
+	Integer insert (Receivement entity);
 	void update (Receivement entity);
 	void deleteById (Integer id);
 	Receivement findById(Integer id);

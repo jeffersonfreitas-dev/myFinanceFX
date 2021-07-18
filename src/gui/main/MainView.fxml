@@ -30,8 +30,6 @@
                         <MenuItem fx:id="mnuItemMoviment" mnemonicParsing="false" onAction="#onMnuItemMovimentAction" text="Movimento" />
                         <MenuItem mnemonicParsing="false" text="Transferencia bancária" />
                      </items></Menu>
-                  <Menu mnemonicParsing="false" text="Investimentos" />
-                <Menu mnemonicParsing="false" text="Relatórios" />
                 <Menu mnemonicParsing="false" text="Ajuda">
                   <items>
                     <MenuItem fx:id="mnuItenAbout" mnemonicParsing="false" onAction="#onMnuItemAboutAction" text="Sobre o sistema" />

@@ -60,7 +60,7 @@ public class DAOMovimentImpl implements DAOMoviment{
 	@Override
 	public void update(Moviment entity) {
 		PreparedStatement stmt = null;
-		String sql = "UPDATE moviment SET date_beginner = ?, name = upper(?), date_finish = ?, value_beginner = ?, balance_moviment = ?, value_finish = ?, closed = ?";
+		String sql = "UPDATE moviment SET date_beginner = ?, name = upper(?), date_finish = ?, value_beginner = ?, balance_moviment = ?, value_finish = ?, closed = ? WHERE id = ?";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setDate(1, new java.sql.Date(entity.getDateBeginner().getTime()));
@@ -70,6 +70,7 @@ public class DAOMovimentImpl implements DAOMoviment{
 			stmt.setDouble(5, entity.getBalanceMoviment());
 			stmt.setDouble(6, entity.getValueFinish());
 			stmt.setBoolean(7, entity.isClosed());
+			stmt.setInt(8, entity.getId());
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {

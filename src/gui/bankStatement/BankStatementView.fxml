@@ -35,9 +35,10 @@
                           <columns>
                             <TableColumn fx:id="columnCode" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Código" />
                             <TableColumn fx:id="columnDate" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Data" />
-                              <TableColumn fx:id="columnHistoric" maxWidth="850.0" minWidth="850.0" prefWidth="850.0" resizable="false" text="Histórico" />
+                              <TableColumn fx:id="columnHistoric" maxWidth="800.0" minWidth="800.0" prefWidth="800.0" resizable="false" text="Histórico" />
                               <TableColumn fx:id="columnCredit" editable="false" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" sortable="false" text="C/D" />
                               <TableColumn fx:id="columnValue" maxWidth="120.0" minWidth="90.0" prefWidth="90.0" text="Valor R$" />
+                              <TableColumn fx:id="columnBalance" maxWidth="120.0" minWidth="100.0" prefWidth="100.0" resizable="false" text="Saldo R$" />
                               <TableColumn fx:id="columnAccount" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" text="Conta" />
                               <TableColumn fx:id="columnStatus" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" resizable="false" text="ST" />
                           </columns>

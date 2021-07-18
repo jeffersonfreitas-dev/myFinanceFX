@@ -1,7 +1,9 @@
 package model.dao;
 
+import java.util.Date;
 import java.util.List;
 
+import model.entities.BankAccount;
 import model.entities.BankStatement;
 
 public interface DAOBankStatement {
@@ -11,5 +13,6 @@ public interface DAOBankStatement {
 	void deleteById (Integer id);
 	BankStatement findById(Integer id);
 	List<BankStatement> findAllOrderByDateAndBankAccount();
+	List<BankStatement> findAllByAccountAndMoviment(BankAccount bankAccount, Date dateBeginner, Date dateFinish);
 
 }

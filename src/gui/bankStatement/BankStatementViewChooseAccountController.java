@@ -90,6 +90,7 @@ public class BankStatementViewChooseAccountController implements Initializable{
 		loadView(loader);
 		Stage stage = Utils.getCurrentStage(event);
 		stage.close();
+		
 	}
 	
 
@@ -149,7 +150,7 @@ public class BankStatementViewChooseAccountController implements Initializable{
 			mainBox.prefWidthProperty().bind(Main.getMainScene().widthProperty().multiply(1));
 			BankStatementViewController controller = loader.getController();
 			controller.setBankStatementService(new BankStatementService());
-			controller.updateTableView();
+			controller.updateTableView(cmbAccount.getValue(), cmbMovimentation.getValue());
 		}catch(IOException e) {
 			e.printStackTrace();
 			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);

@@ -21,7 +21,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.entities.BankAccount;
 import model.entities.BankStatement;
+import model.entities.Moviment;
 import model.service.BankStatementService;
 import utils.Alerts;
 import utils.Utils;
@@ -63,6 +65,8 @@ public class BankStatementViewController implements Initializable{
 	@FXML
 	private TableColumn<BankStatement, Double> columnValue;
 	@FXML
+	private TableColumn<BankStatement, Double> columnBalance;
+	@FXML
 	private TableColumn<BankStatement, String> columnAccount;
 	@FXML
 	private TableColumn<BankStatement, String> columnStatus;
@@ -86,6 +90,8 @@ public class BankStatementViewController implements Initializable{
 		columnHistoric.setCellValueFactory(new PropertyValueFactory<>("historic"));
 		columnValue.setCellValueFactory(new PropertyValueFactory<>("value"));
 		Utils.formatTableColumnDouble(columnValue, 2);
+		columnBalance.setCellValueFactory(new PropertyValueFactory<>("balance"));
+		Utils.formatTableColumnDouble(columnBalance, 2);
 		columnCredit.setCellValueFactory(v -> {
 			String result = "";
 			result = v.getValue().isCredit() ? "C" : "D";
@@ -96,12 +102,31 @@ public class BankStatementViewController implements Initializable{
 		});
 	}
 
-
-	public void updateTableView() {
+	
+	public void updateTableView(BankAccount bankAccount, Moviment moviment) {
 		if(service == null) {
 			throw new IllegalStateException("O serviço não foi instanciado");
 		}
-		List<BankStatement> list = service.findAllOrderByDateAndBankAccount();
+		
+		Double total = 0.0;
+		
+		List<BankStatement> list = service.findAllByAccountAndMoviment(bankAccount, moviment.getDateBeginner(), moviment.getDateFinish());
+		for(BankStatement s : list) {
+			
+			if(s.isInitialValue()) {
+				s.setBalance(s.getValue());
+				total = s.getValue();
+			}else {
+				if(s.isCredit()) {
+					s.setBalance(total + s.getValue());
+					total = total + s.getValue();
+				}else {
+					s.setBalance(total - s.getValue());
+					total = total - s.getValue();
+				}
+			}
+			
+		}
 		obsList = FXCollections.observableArrayList(list);
 		tblBankStatement.setItems(obsList);
 		initializationNodes();
@@ -149,4 +174,5 @@ public class BankStatementViewController implements Initializable{
 			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
 		}
 	}
+
 }

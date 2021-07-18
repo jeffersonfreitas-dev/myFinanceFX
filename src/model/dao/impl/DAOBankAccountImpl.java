@@ -26,13 +26,14 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 	@Override
 	public void insert(BankAccount entity) {
 		PreparedStatement stmt = null;
-		String sql = "INSERT INTO bank_account (code, account, id_bank_agence, id_company) VALUES (upper(?), upper(?), ?, ?)";
+		String sql = "INSERT INTO bank_account (code, account, id_bank_agence, id_company, balance) VALUES (upper(?), upper(?), ?, ?, ?)";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, entity.getCode());
 			stmt.setString(2, entity.getAccount());
 			stmt.setInt(3, entity.getBankAgence().getId());
 			stmt.setInt(4, entity.getCompany().getId());
+			stmt.setDouble(5, entity.getBalance());
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
@@ -50,14 +51,15 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 	@Override
 	public void update(BankAccount entity) {
 		PreparedStatement stmt = null;
-		String sql = "UPDATE bank_account SET code = upper(?), account = upper(?), id_bank_agence = ?, id_company = ? WHERE id = ?";
+		String sql = "UPDATE bank_account SET code = upper(?), account = upper(?), id_bank_agence = ?, id_company = ?, balance = ? WHERE id = ?";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, entity.getCode());
 			stmt.setString(2, entity.getAccount());
 			stmt.setInt(3, entity.getBankAgence().getId());
 			stmt.setInt(4, entity.getCompany().getId());
-			stmt.setInt(5, entity.getId());
+			stmt.setDouble(5, entity.getBalance());
+			stmt.setInt(6, entity.getId());
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {

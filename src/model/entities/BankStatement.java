@@ -15,6 +15,7 @@ public class BankStatement implements Serializable {
 	private Payment payment;
 	private Receivement receivement;
 	private boolean initialValue;
+	private Double balance;
 
 	public Integer getId() {
 		return id;
@@ -86,6 +87,14 @@ public class BankStatement implements Serializable {
 
 	public void setInitialValue(boolean initialValue) {
 		this.initialValue = initialValue;
+	}
+
+	public Double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Double balance) {
+		this.balance = balance;
 	}
 
 	@Override

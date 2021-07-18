@@ -8,6 +8,7 @@ import model.dao.DAOBankAccount;
 import model.dao.DAOFactory;
 import model.dao.DAOMoviment;
 import model.entities.BankAccount;
+import model.entities.BankStatement;
 import model.entities.Moviment;
 import model.exceptions.RecordAlreadyRecordedException;
 import utils.MyUtils;
@@ -63,7 +64,33 @@ public class MovimentService {
 	}
 
 
-	public void closeMoviment(Moviment entity) {
+	public void closeMoviment(Moviment moviment) {
 		
+		List<BankAccount> accounts = daoAccount.findAllOrderByAccount();
+		
+		for(BankAccount b : accounts) {
+			List<BankStatement> exts = statementService.findAllByAccountAndMoviment(b, moviment.getDateBeginner(), moviment.getDateFinish());
+			Double total = 0.0;
+			for (BankStatement s : exts) {
+				if(s.isInitialValue()) {
+					s.setBalance(s.getValue());
+					total = s.getValue();
+				}else {
+					if(s.isCredit()) {
+						s.setBalance(total + s.getValue());
+						total = total + s.getValue();
+					}else {
+						s.setBalance(total - s.getValue());
+						total = total - s.getValue();
+					}
+				}
+			}
+			b.setBalance(total);
+			daoAccount.update(b);
+		}
+		moviment.setValueFinish(accounts.stream().map(a -> a.getBalance()).reduce(0.0, (a, b) -> a+b));
+		moviment.setBalanceMoviment(moviment.getValueFinish() - moviment.getValueBeginner());
+		moviment.setClosed(true);
+		dao.update(moviment);
 	}
 }

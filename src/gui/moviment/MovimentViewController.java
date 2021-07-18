@@ -198,7 +198,7 @@ public class MovimentViewController implements Initializable{
 	}
 	
 	
-	private Object closeMoviment(Moviment entity) {
+	private void closeMoviment(Moviment entity) {
 		Optional<ButtonType> opt = Alerts.showConfirmation("Confirmação", "Você tem certeza que deseja fechar este movimento?");
 		if(opt.get() == ButtonType.OK) {
 			if(service == null) {
@@ -213,7 +213,6 @@ public class MovimentViewController implements Initializable{
 			}			
 			
 		}
-		return null;
 	}
 
 }
