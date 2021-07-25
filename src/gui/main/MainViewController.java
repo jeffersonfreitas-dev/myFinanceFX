@@ -149,7 +149,7 @@ public class MainViewController {
 		loadView("/gui/billpay/BillpayView.fxml", (BillpayViewController controller) -> {
 			controller.setBillpayService(new BillpayService());
 			controller.updateTableView();
-		});
+		}, "");
 	}
 
 	@FXML
@@ -159,7 +159,7 @@ public class MainViewController {
 		loadView("/gui/moviment/MovimentView.fxml", (MovimentViewController controller) -> {
 			controller.setMovimentService(new MovimentService());
 			controller.updateTableView();
-		});
+		}, "../moviment/Moviment.css");
 	}
 	
 	
@@ -170,7 +170,7 @@ public class MainViewController {
 		loadView("/gui/receivable/ReceivableView.fxml", (ReceivableViewController controller) -> {
 			controller.setReceivableService(new ReceivableService());
 			controller.updateTableView();
-		});
+		}, "");
 	}
 	
 	private synchronized <T> void loadModalView(FXMLLoader loader, String title, Window parentScene, double heigth, double width, 
@@ -203,7 +203,7 @@ public class MainViewController {
 	}
 	
 	
-	private synchronized <T> void loadView(String absolutePath, Consumer<T> consumer) {
+	private synchronized <T> void loadView(String absolutePath, Consumer<T> consumer, String cssPath) {
 		try {
 			FXMLLoader loader = getLoaderView(absolutePath);
 			VBox box = loader.load();
@@ -215,6 +215,7 @@ public class MainViewController {
 			mainBox.getChildren().add(mainMenu);
 			mainBox.getChildren().addAll(box.getChildren());
 			mainBox.prefWidthProperty().bind(Main.getMainScene().widthProperty().multiply(1));
+			mainScene.getStylesheets().add(getClass().getResource(cssPath).toExternalForm());
 			T controller = loader.getController();
 			consumer.accept(controller);
 		}catch(IOException e) {

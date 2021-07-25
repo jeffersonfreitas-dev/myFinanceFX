@@ -67,7 +67,7 @@ public class Database {
 	
 	
 	private static Properties loadProperties() {
-		try (FileInputStream fs = new FileInputStream("database.properties")){
+		try (FileInputStream fs = new FileInputStream("database-prod.properties")){
 			Properties props = new Properties();
 			props.load(fs);
 			return props;

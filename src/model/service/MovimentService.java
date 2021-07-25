@@ -11,6 +11,7 @@ import model.entities.BankAccount;
 import model.entities.BankStatement;
 import model.entities.Moviment;
 import model.exceptions.RecordAlreadyRecordedException;
+import model.exceptions.ValidationException;
 import utils.MyUtils;
 
 public class MovimentService {
@@ -27,12 +28,11 @@ public class MovimentService {
 
 
 	public void save(Moviment moviment) {
-		
-		List<Moviment> isRecorded = dao.findByAllOpenMoviment();
-		
-		if(!isRecorded.isEmpty()) {
-			throw new RecordAlreadyRecordedException("Já existe um movimento ativo.");
+		if(moviment == null) {
+			throw new ValidationException("O objeto movimento está nulo");
 		}
+		
+		verificarSeTemMovimentoAberto();
 		
 		List<BankAccount> accounts = daoAccount.findAllOrderByAccount();
 		Double totalBalance = accounts.stream().map( a -> a.getBalance()).reduce(0.0, Double::sum);
@@ -55,6 +55,15 @@ public class MovimentService {
 			throw new IllegalStateException("Data final menor que data inicial");
 		}
 		
+	}
+
+
+	private void verificarSeTemMovimentoAberto() {
+		List<Moviment> isRecorded = dao.findByAllOpenMoviment();
+		
+		if(!isRecorded.isEmpty()) {
+			throw new RecordAlreadyRecordedException("Já existe um movimento ativo.");
+		}
 	}
 
 

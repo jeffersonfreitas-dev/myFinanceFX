@@ -25,6 +25,10 @@ public class DAOMovimentImpl implements DAOMoviment{
 	
 	@Override
 	public Integer insert(Moviment entity) {
+		
+		validaCamposObrigatorios(entity);
+		
+		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		String sql = "INSERT INTO moviment (date_beginner, name, date_finish, value_beginner, balance_moviment, value_finish, closed) VALUES (?, upper(?), ?, ?, ?, ?, ?)";
@@ -47,7 +51,7 @@ public class DAOMovimentImpl implements DAOMoviment{
 				return rs.getInt("id");
 			}
 			return null;
-		} catch (SQLException e) {
+		} catch (SQLException | NullPointerException e) {
 			e.printStackTrace();
 			throw new DatabaseException("Ocorreu um erro ao salvar o registro -> " + e.getMessage());
 		}finally {
@@ -56,13 +60,17 @@ public class DAOMovimentImpl implements DAOMoviment{
 		}
 	}
 
+
 	
 	@Override
-	public void update(Moviment entity) {
+	public Integer update(Moviment entity) {
+		validaCamposObrigatorios(entity);
+
 		PreparedStatement stmt = null;
+		ResultSet rs = null;
 		String sql = "UPDATE moviment SET date_beginner = ?, name = upper(?), date_finish = ?, value_beginner = ?, balance_moviment = ?, value_finish = ?, closed = ? WHERE id = ?";
 		try {
-			stmt = conn.prepareStatement(sql);
+			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			stmt.setDate(1, new java.sql.Date(entity.getDateBeginner().getTime()));
 			stmt.setString(2, entity.getName());
 			stmt.setDate(3, new java.sql.Date(entity.getDateFinish().getTime()));
@@ -76,6 +84,12 @@ public class DAOMovimentImpl implements DAOMoviment{
 			if(result < 1) {
 				throw new DatabaseException("Nenhuma linha afetada na operação de atualizar");
 			}
+			
+			rs = stmt.getGeneratedKeys();
+			if(rs.next()) {
+				return rs.getInt("id");
+			}
+			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new DatabaseException("Ocorreu um erro ao atualizar o registro -> " + e.getMessage());
@@ -86,7 +100,7 @@ public class DAOMovimentImpl implements DAOMoviment{
 
 	
 	@Override
-	public void deleteById(Integer id) {
+	public Integer deleteById(Integer id) {
 		PreparedStatement stmt = null;
 		String sql = "DELETE FROM moviment WHERE id = ?";
 		try {
@@ -97,6 +111,7 @@ public class DAOMovimentImpl implements DAOMoviment{
 			if(result < 1) {
 				throw new DatabaseException("Nenhuma linha afetada na operação de exclusão");
 			}
+			return result;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new DatabaseException("Ocorreu um erro ao deletar o registro -> " + e.getMessage());
@@ -192,6 +207,12 @@ public class DAOMovimentImpl implements DAOMoviment{
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
+		}
+	}
+	
+	private void validaCamposObrigatorios(Moviment entity) {
+		if(entity.getDateBeginner() == null || entity.getDateFinish() == null || entity.getName().equals("") || entity.getValueBeginner() == null) {
+			throw new DatabaseException("Existe campos obrigatórios nulos");
 		}
 	}
 

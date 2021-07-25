@@ -102,8 +102,13 @@ public class MovimentViewController implements Initializable{
 
 	private void initializationNodes() {
 	
-		btnNew.setGraphic(new ImageView("/assets/icons/new16.png"));
+		btnNew.setGraphic(new ImageView("/assets/icons/medium/Newfile.png"));
+		btnNew.getStyleClass().add("button");
+		btnNew.setDefaultButton(true);
+		
 		btnClose.setGraphic(new ImageView("/assets/icons/cancel16.png"));
+		btnClose.setCancelButton(true);
+		
 		columnCode.setCellValueFactory(new PropertyValueFactory<>("id"));
 		columnDateBeginner.setCellValueFactory(new PropertyValueFactory<>("dateBeginner"));
 		Utils.formatTableColumnDate(columnDateBeginner, "dd/MM/yyyy");

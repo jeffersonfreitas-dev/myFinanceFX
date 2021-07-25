@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.bankAgence.BankAgenceViewController">
+   <children>
+      <ToolBar prefHeight="40.0" prefWidth="200.0">
+        <items>
+          <Button fx:id="btnNew" mnemonicParsing="false" onAction="#onBtnNewAction" text="Novo" />
+        </items>
+      </ToolBar>
+      <TableView fx:id="tblView" prefHeight="560.0" prefWidth="800.0">
+        <columns>
+          <TableColumn fx:id="tblColumnId" editable="false" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" resizable="false" text="ID" />
+          <TableColumn fx:id="tblColumnAgence" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" text="Agencia" />
+            <TableColumn fx:id="tblColumnDV" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" resizable="false" text="DV" />
+            <TableColumn fx:id="tblColumnBank" editable="false" maxWidth="480.0" minWidth="480.0" prefWidth="480.0" resizable="false" text="Banco" />
+            <TableColumn fx:id="tblColumnEDIT" editable="false" maxWidth="43.0" minWidth="43.0" prefWidth="43.0" resizable="false" sortable="false" />
+            <TableColumn fx:id="tblColumnREMOVE" editable="false" maxWidth="43.0" minWidth="43.0" prefWidth="43.0" resizable="false" sortable="false" />
+        </columns>
+      </TableView>
+   </children>
+</VBox>
