@@ -1,23 +1,20 @@
 package gui.bank;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
 import database.exceptions.DatabaseException;
+import gui.main.MainViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.entities.Bank;
 import model.exceptions.RecordAlreadyRecordedException;
@@ -53,8 +50,7 @@ public class BankViewRegisterController implements Initializable{
 	@FXML
 	public void onBtnCancelAction(ActionEvent event) {
 		Stage stage = Utils.getCurrentStage(event);
-		stage.setTitle("Lista de bancos");
-		loadView("/gui/bank/BankView.fxml", stage.getScene());
+		stage.close();
 	}
 	
 	
@@ -68,9 +64,10 @@ public class BankViewRegisterController implements Initializable{
 		try {
 			Bank bank = getFormData();
 			service.saveOrUpdate(bank);
-			Stage stage = Utils.getCurrentStage(event);
-			stage.setTitle("Lista de bancos");
-			loadView("/gui/bank/BankView.fxml", stage.getScene());
+			onBtnCancelAction(event);
+//			Stage stage = Utils.getCurrentStage(event);
+//			stage.setTitle("Lista de bancos");
+			loadView("/gui/bank/BankView.fxml");
 			
 		} catch (RecordAlreadyRecordedException e) {
 			Alerts.showAlert("Registro já cadastrado", null, e.getMessage(), AlertType.INFORMATION);
@@ -123,20 +120,16 @@ public class BankViewRegisterController implements Initializable{
 		this.entity = bank;
 	}
 	
-	private synchronized void loadView(String absolutePath, Scene scene) {
+	private synchronized void loadView(String absolutePath) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absolutePath));
-			VBox box = loader.load();
 			
-			VBox mainBox =  (VBox) scene.getRoot();
-			mainBox.getChildren().clear();
-			mainBox.getChildren().addAll(box.getChildren());
-			
-			BankViewController controller = loader.getController();
-			controller.setBankService(new BankService());
-			controller.updateTableView();
+//			BankViewController controller = loader.getController();
+			MainViewController controller = new MainViewController();
+//			controller.setBankService(new BankService());
+			controller.onlinkBankAction();
 
-		}catch(IOException e) {
+		}catch(Exception e) {
 			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
 		}
 	}
@@ -161,9 +154,8 @@ public class BankViewRegisterController implements Initializable{
 		Constraints.setTextFieldInteger(txtId);
 		Constraints.setTextFieldMaxLength(txtCode, 10);
 		Constraints.setTextFieldMaxLength(txtName, 60);
-		btnSave.setGraphic(new ImageView("/assets/icons/save16.png"));
-		btnCancel.setGraphic(new ImageView("/assets/icons/cancel16.png"));
-
+		btnCancel.getStyleClass().add("btn-danger");
+		btnSave.getStyleClass().add("btn-success");
 	}
 
 }

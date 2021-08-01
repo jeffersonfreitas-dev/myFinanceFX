@@ -39,8 +39,8 @@ public class BankViewController implements Initializable{
 	}
 	
 
-	@FXML
-	private Button btnNew;
+//	@FXML
+//	private Button btnNew;
 	@FXML
 	public void onBtnNewAction(ActionEvent event) {
 		Stage stage = Utils.getCurrentStage(event);
@@ -108,7 +108,7 @@ public class BankViewController implements Initializable{
 		tblColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tblColumnCode.setCellValueFactory(new PropertyValueFactory<>("code"));
 		tblColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
-		btnNew.setGraphic(new ImageView("/assets/icons/new16.png"));
+
 	}
 	
 	
