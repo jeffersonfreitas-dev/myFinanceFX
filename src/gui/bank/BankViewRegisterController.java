@@ -6,16 +6,15 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import database.exceptions.DatabaseException;
-import gui.main.MainViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.entities.Bank;
 import model.exceptions.RecordAlreadyRecordedException;
 import model.exceptions.ValidationException;
@@ -27,8 +26,11 @@ import utils.Utils;
 public class BankViewRegisterController implements Initializable{
 	
 	private Bank entity;
-	private BankService service;
+	public void setBank(Bank bank) {
+		this.entity = bank;
+	}
 	
+	private BankService service;
 	public void setBankService(BankService service) {
 		this.service = service;
 	}
@@ -65,12 +67,15 @@ public class BankViewRegisterController implements Initializable{
 			Bank bank = getFormData();
 			service.saveOrUpdate(bank);
 			onBtnCancelAction(event);
-//			Stage stage = Utils.getCurrentStage(event);
-//			stage.setTitle("Lista de bancos");
-			loadView("/gui/bank/BankView.fxml");
+			Stage stage = Utils.getCurrentStage(event);
+			stage.getOnCloseRequest().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+			stage.close();
 			
 		} catch (RecordAlreadyRecordedException e) {
 			Alerts.showAlert("Registro já cadastrado", null, e.getMessage(), AlertType.INFORMATION);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
 		} catch (ValidationException e) {
 			e.printStackTrace();
 			setErrorsMessage(e.getErrors());
@@ -116,25 +121,9 @@ public class BankViewRegisterController implements Initializable{
 		return bank;
 	}
 
-	public void setBank(Bank bank) {
-		this.entity = bank;
-	}
-	
-	private synchronized void loadView(String absolutePath) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(absolutePath));
-			
-//			BankViewController controller = loader.getController();
-			MainViewController controller = new MainViewController();
-//			controller.setBankService(new BankService());
-			controller.onlinkBankAction();
-
-		}catch(Exception e) {
-			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
-		}
-	}
 
 	
+
 	public void updateFormData() {
 		if(entity == null) {
 			throw new IllegalStateException("Entidade não foi instanciada");

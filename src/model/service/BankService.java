@@ -27,7 +27,7 @@ public class BankService {
 		
 		if(bank.getId() == null) {
 			dao.insert(bank);
-		}else if (bank.getId() != null && bank.equals(isRecorded)){
+		}else {
 			dao.update(bank);
 		}
 	}

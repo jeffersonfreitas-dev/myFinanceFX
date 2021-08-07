@@ -6,15 +6,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import org.kordamp.bootstrapfx.BootstrapFX;
+
 import database.exceptions.DatabaseException;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -24,12 +28,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 import model.entities.AccountPlan;
 import model.service.AccountPlanService;
 import utils.Alerts;
-import utils.Utils;
 
 public class AccountPlanViewController implements Initializable{
 	
@@ -43,24 +49,23 @@ public class AccountPlanViewController implements Initializable{
 	private Button btnNew;
 	@FXML
 	public void onBtnNewAction(ActionEvent event) {
-		Stage stage = Utils.getCurrentStage(event);
-		stage.setTitle("Cadastro de plano de conta");
-		AccountPlan account = new AccountPlan();
-		loadView(account, "/gui/accountPlan/AccountPlanViewRegister.fxml", stage.getScene());
+		Stage stage = new Stage();
+		AccountPlan entity = new AccountPlan();
+		loadModalView(entity, "Cadastro de plano de conta", stage);
 	}
 
 	@FXML
-	private TableView<AccountPlan> tblAccountPlan;
+	private TableView<AccountPlan> tblView;
 	@FXML
-	private TableColumn<AccountPlan, Integer> columnId;
+	private TableColumn<AccountPlan, Integer> tblColumnId;
 	@FXML
-	private TableColumn<AccountPlan, String> columnCredit;
+	private TableColumn<AccountPlan, String> tblColumnCredit;
 	@FXML
-	private TableColumn<AccountPlan, String> columnName;
+	private TableColumn<AccountPlan, String> tblColumnName;
 	@FXML
-	private TableColumn<AccountPlan, AccountPlan> columnEDIT;
+	private TableColumn<AccountPlan, AccountPlan> tblColumnEDIT;
 	@FXML
-	private TableColumn<AccountPlan, AccountPlan> columnDELETE;
+	private TableColumn<AccountPlan, AccountPlan> tblColumnDELETE;
 	
 	
 	private ObservableList<AccountPlan> obsList;
@@ -72,41 +77,16 @@ public class AccountPlanViewController implements Initializable{
 	}
 
 
-
 	private void initializationNodes() {
-		btnNew.setGraphic(new ImageView("/assets/icons/new16.png"));
-		columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
-		columnName.setCellValueFactory(new PropertyValueFactory<>("name"));
-		columnCredit.setCellValueFactory( v -> {
-			return new ReadOnlyStringWrapper(v.getValue().isCredit() ? "Crédito" : "Débito");
+		tblColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+		tblColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
+		tblColumnCredit.setCellValueFactory( v -> {
+			return new ReadOnlyStringWrapper(v.getValue().isCredit() ? "CRÉDITO" : "DÉBITO");
 		});
-		initEditButtons();
-		initRemoveButtons();
+		btnNew.getStyleClass().add("btn-primary");
 	}
 	
 	
-	private void loadView(AccountPlan account, String pathView, Scene scene) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(pathView));
-			VBox box = loader.load();
-			
-			AccountPlanViewRegisterController controller = loader.getController();
-			controller.setAccountPlanService(new AccountPlanService());
-			controller.setAccountPlan(account);
-			controller.updateFormData();
-			
-			VBox mainBox = (VBox) scene.getRoot();
-			mainBox.getChildren().clear();
-			mainBox.getChildren().addAll(box.getChildren());
-		}catch(IOException e) {
-			e.printStackTrace();
-			Alerts.showAlert("Erro", "Erro ao carregar a janela", e.getMessage(), AlertType.ERROR);
-		}
-		
-	}
-
-
-
 	public void updateTableView() {
 		if(service == null) {
 			throw new IllegalStateException("O serviço não foi instanciado");
@@ -114,19 +94,23 @@ public class AccountPlanViewController implements Initializable{
 		
 		List<AccountPlan> list = service.findAll();
 		obsList = FXCollections.observableArrayList(list);
-		tblAccountPlan.setItems(obsList);
+		tblView.setItems(obsList);
+		initEditButtons();
+		initRemoveButtons();
 	}
 
 	
 	
 	private void initEditButtons() {
-		columnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		columnEDIT.setCellFactory(param -> new TableCell<AccountPlan, AccountPlan>() {
+		tblColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tblColumnEDIT.setCellFactory(param -> new TableCell<AccountPlan, AccountPlan>() {
 			private final Button button = new Button();
 
 			@Override
 			protected void updateItem(AccountPlan entity, boolean empty) {
 				button.setGraphic(new ImageView("/assets/icons/edit16.png"));
+				button.setStyle(" -fx-background-color:transparent;");
+				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
 				if (entity == null) {
 					setGraphic(null);
@@ -135,9 +119,8 @@ public class AccountPlanViewController implements Initializable{
 
 				setGraphic(button);
 				button.setOnAction(e -> {
-					Stage stage = Utils.getCurrentStage(e);
-					stage.setTitle("Alteração do plano de conta");
-					loadView(entity, "/gui/accountPlan/AccountPlanViewRegister.fxml", Utils.getCurrentScene(e));
+					Stage stage = new Stage();
+					loadModalView(entity, "Alteração de plano de conta", stage);
 				});
 			}
 		});
@@ -145,13 +128,15 @@ public class AccountPlanViewController implements Initializable{
 
 
 	private void initRemoveButtons() {
-		columnDELETE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		columnDELETE.setCellFactory(param -> new TableCell<AccountPlan, AccountPlan>() {
+		tblColumnDELETE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tblColumnDELETE.setCellFactory(param -> new TableCell<AccountPlan, AccountPlan>() {
 			private final Button button = new Button();
 
 			@Override
 			protected void updateItem(AccountPlan entity, boolean empty) {
 				button.setGraphic(new ImageView("/assets/icons/trash16.png"));
+				button.setStyle(" -fx-background-color:transparent;");
+				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
 				if (entity == null) {
 					setGraphic(null);
@@ -182,5 +167,38 @@ public class AccountPlanViewController implements Initializable{
 	}
 
 
+	private synchronized <T> void loadModalView(AccountPlan entity, String title, Stage stage) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/accountPlan/AccountPlanViewRegister.fxml"));
+			Window window = btnNew.getScene().getWindow();
+			Pane pane = loader.load();	
 
+			Scene scene = new Scene(pane);
+			scene.getStylesheets().addAll(BootstrapFX.bootstrapFXStylesheet()); 
+			stage.setTitle(title);
+			stage.setScene(scene);
+			stage.setResizable(false);
+			stage.initOwner(window);
+			stage.initModality(Modality.WINDOW_MODAL);
+			stage.setHeight(270.0);
+			stage.setWidth(600.0);
+			
+			AccountPlanViewRegisterController controller = loader.getController();
+			controller.setAccountPlan(entity);
+			controller.setAccountPlanService(new AccountPlanService());
+			controller.updateFormData();
+			
+			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent event) {
+					updateTableView();
+				}
+			});
+			
+			stage.showAndWait();
+		} catch (IOException e) {
+			e.printStackTrace();
+			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
+		}
+	}
 }

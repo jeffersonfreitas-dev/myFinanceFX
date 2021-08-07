@@ -5,3 +5,9 @@
 VBox {
 	-fx-background-color: #483D8B;
 }
+
+.buttonTransparent {
+	  -fx-background-color:transparent;
+	  -fx-border-color:transparent;
+	  -fx-text-fill:transparent;
+}

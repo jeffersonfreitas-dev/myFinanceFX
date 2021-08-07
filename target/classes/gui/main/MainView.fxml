@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
@@ -38,6 +37,7 @@
                <children>
                   <Hyperlink layoutX="14.0" layoutY="14.0" text="Conta a paga" textFill="#c9bdbd" />
                   <Hyperlink fx:id="linkBank" layoutX="14.0" layoutY="49.0" onAction="#onlinkBankAction" text="Banco" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkAccountPlan" layoutX="14.0" layoutY="72.0" onAction="#onlinkAccountPlanAction" text="Plano de conta" textFill="#c9bdbd" />
                </children></Pane>
          </children>
       </VBox>
@@ -57,7 +57,6 @@
                                   <MenuItem fx:id="mnuItemClifor" mnemonicParsing="false" onAction="#onMnuItemCliforAction" text="Cliente e fornecedor" />
                                     <MenuItem fx:id="mnuItemBankAccount" mnemonicParsing="false" onAction="#onMnuItemBankAccountAction" text="Conta bancária" />
                                     <MenuItem fx:id="mnuItemCompany" mnemonicParsing="false" onAction="#onMnuItemCompanyAction" text="Empresa" />
-                                  <MenuItem fx:id="mnuItemAccountPlan" mnemonicParsing="false" onAction="#onMnuItemAccountPlanAction" text="Plano de conta" />
                                  </items>
                             </Menu>
                               <Menu mnemonicParsing="false" text="Financeiro">
@@ -88,9 +87,9 @@
                </BorderPane.margin></Pane>
          </center>
          <top>
-            <HBox prefHeight="96.0" prefWidth="710.0" BorderPane.alignment="CENTER">
+            <HBox prefHeight="73.0" prefWidth="710.0" BorderPane.alignment="CENTER">
                <children>
-                  <GridPane alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="70.0" prefWidth="710.0" HBox.hgrow="ALWAYS">
+                  <GridPane alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="44.0" prefWidth="710.0" HBox.hgrow="ALWAYS">
                     <columnConstraints>
                       <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="385.0" minWidth="10.0" prefWidth="380.0" />
                       <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="330.0" />
@@ -98,10 +97,10 @@
                     <rowConstraints>
                       <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
                       <RowConstraints maxHeight="29.0" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="38.0" minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label fx:id="nomeTela" prefHeight="24.0" prefWidth="393.0" text="Dashboard principal" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                        <Label fx:id="nomeTela" prefHeight="37.0" prefWidth="375.0" text="Dashboard principal" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                            <GridPane.margin>
                               <Insets left="5.0" />
                            </GridPane.margin>
@@ -111,14 +110,6 @@
                               <Insets right="5.0" />
                            </GridPane.margin>
                         </Label>
-                        <Button fx:id="novoRegistro" mnemonicParsing="false" onAction="#onNovoRegistroAction" prefHeight="31.0" prefWidth="91.0" text="Novo registro" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
-                           <GridPane.margin>
-                              <Insets right="5.0" />
-                           </GridPane.margin>
-                           <padding>
-                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                           </padding>
-                        </Button>
                      </children>
                   </GridPane>
                </children>

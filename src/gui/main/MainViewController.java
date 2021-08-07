@@ -5,50 +5,26 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
-import org.kordamp.bootstrapfx.BootstrapFX;
-
 import application.Main;
+import gui.accountPlan.AccountPlanViewController;
 import gui.bank.BankViewController;
-import gui.bank.BankViewRegisterController;
-import gui.billpay.BillpayViewController;
-import gui.moviment.MovimentViewController;
-import gui.receivable.ReceivableViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.Window;
-import model.entities.Bank;
+import model.service.AccountPlanService;
 import model.service.BankService;
-import model.service.BillpayService;
-import model.service.MovimentService;
-import model.service.ReceivableService;
 import utils.Alerts;
 
 public class MainViewController implements Initializable{
-	
-	@FXML
-	private Button novoRegistro;
-	@FXML
-	public void onNovoRegistroAction(ActionEvent event) {
-		loadModalView("/gui/bank/BankViewRegister.fxml", "Cadastro de bancos", 270.0, 600.0, (BankViewRegisterController controller) -> {
-			controller.setBank(new Bank());
-			controller.setBankService(new BankService());
-		});
-	}
 	
 	@FXML
 	private Label nome;
@@ -76,8 +52,18 @@ public class MainViewController implements Initializable{
 	private Hyperlink linkBank;
 	@FXML
 	public void onlinkBankAction() {
-		loadView("/gui/bank/BankView.fxml",  (BankViewController controller) -> {
+		loadView("/gui/bank/BankView.fxml",  "Lista de bancos", (BankViewController controller) -> {
 			controller.setBankService(new BankService());
+			controller.updateTableView();
+		}, "");
+	}
+
+	@FXML
+	private Hyperlink linkAccountPlan;
+	@FXML
+	public void onlinkAccountPlanAction() {
+		loadView("/gui/accountPlan/AccountPlanView.fxml", "Lista de planos de conta", (AccountPlanViewController controller) -> {
+			controller.setAccountPlanService(new AccountPlanService());
 			controller.updateTableView();
 		}, "");
 	}
@@ -106,17 +92,17 @@ public class MainViewController implements Initializable{
 //		});
 	}
 	
-	@FXML
-	private MenuItem mnuItemAccountPlan;
-	@FXML
-	public void onMnuItemAccountPlanAction() {
+//	@FXML
+//	private MenuItem mnuItemAccountPlan;
+//	@FXML
+//	public void onMnuItemAccountPlanAction() {
 //		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/accountPlan/AccountPlanView.fxml"));
 //		Window parentScene = mnuMain.getScene().getWindow();
 //		loadModalView(loader, "Lista de planos de conta", parentScene, 600.0, 800.0, (AccountPlanViewController controller) -> {
 //			controller.setAccountPlanService(new AccountPlanService());
 //			controller.updateTableView();
 //		});
-	}
+//	}
 	
 	@FXML
 	private MenuItem mnuItemBankAccount;
@@ -162,20 +148,20 @@ public class MainViewController implements Initializable{
 	private MenuItem mnuItemBillpay;
 	@FXML
 	private void onMnuItemBillpayAction() {
-		loadView("/gui/billpay/BillpayView.fxml", (BillpayViewController controller) -> {
-			controller.setBillpayService(new BillpayService());
-			controller.updateTableView();
-		}, "");
+//		loadView("/gui/billpay/BillpayView.fxml", (BillpayViewController controller) -> {
+//			controller.setBillpayService(new BillpayService());
+//			controller.updateTableView();
+//		}, "");
 	}
 
 	@FXML
 	private MenuItem mnuItemMoviment;
 	@FXML
 	private void onMnuItemMovimentAction() {
-		loadView("/gui/moviment/MovimentView.fxml", (MovimentViewController controller) -> {
-			controller.setMovimentService(new MovimentService());
-			controller.updateTableView();
-		}, "../moviment/Moviment.css");
+//		loadView("/gui/moviment/MovimentView.fxml", (MovimentViewController controller) -> {
+//			controller.setMovimentService(new MovimentService());
+//			controller.updateTableView();
+//		}, "../moviment/Moviment.css");
 	}
 	
 	
@@ -183,37 +169,44 @@ public class MainViewController implements Initializable{
 	private MenuItem mnuItemReceivable;
 	@FXML
 	private void onMnuItemReceivableAction() {
-		loadView("/gui/receivable/ReceivableView.fxml", (ReceivableViewController controller) -> {
-			controller.setReceivableService(new ReceivableService());
-			controller.updateTableView();
-		}, "");
+//		loadView("/gui/receivable/ReceivableView.fxml", (ReceivableViewController controller) -> {
+//			controller.setReceivableService(new ReceivableService());
+//			controller.updateTableView();
+//		}, "");
 	}
 	
-	private synchronized <T> void loadModalView(String path, String title, double heigth, double width, Consumer<T> initialization) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
-			Window window = mnuMain.getScene().getWindow();
-			Pane pane = loader.load();	
-			Stage stage = new Stage();
-			stage.setTitle(title);
-			Scene scene = new Scene(pane);
-			scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet()); 
-			stage.setScene(scene);
-			stage.setResizable(false);
-			stage.initOwner(window);
-			stage.initModality(Modality.WINDOW_MODAL);
-			stage.setHeight(heigth);
-			stage.setWidth(width);
-			
-			T controller = loader.getController();
-			initialization.accept(controller);
-			
-			stage.showAndWait();
-		} catch (IOException e) {
-			e.printStackTrace();
-			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
-		}
-	}
+//	private synchronized <T> void loadModalView(String path, String title, double heigth, double width, Consumer<T> initialization) {
+//		try {
+//			FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+//			Window window = mnuMain.getScene().getWindow();
+//			Pane pane = loader.load();	
+//			Stage stage = new Stage();
+//			stage.setTitle(title);
+//			Scene scene = new Scene(pane);
+//			scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet()); 
+//			stage.setScene(scene);
+//			stage.setResizable(false);
+//			stage.initOwner(window);
+//			stage.initModality(Modality.WINDOW_MODAL);
+//			stage.setHeight(heigth);
+//			stage.setWidth(width);
+//			
+//			T controller = loader.getController();
+//			initialization.accept(controller);
+//			
+////			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+////				@Override
+////				public void handle(WindowEvent event) {
+////					updateTableView();
+////				}
+////			});
+//			
+//			stage.showAndWait();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
+//		}
+//	}
 
 
 	private FXMLLoader getLoaderView(String absolutePath) {
@@ -222,7 +215,7 @@ public class MainViewController implements Initializable{
 	}
 	
 	
-	private synchronized <T> void loadView(String absolutePath, Consumer<T> consumer, String cssPath) {
+	private synchronized <T> void loadView(String absolutePath, String tela ,Consumer<T> consumer, String cssPath) {
 		try {
 			FXMLLoader loader = getLoaderView(absolutePath);
 			VBox box = loader.load();
@@ -234,8 +227,7 @@ public class MainViewController implements Initializable{
 			secound.setTop(top);
 			secound.setBottom(bottom);
 			secound.setCenter(box);
-			novoRegistro.setVisible(true);
-			nomeTela.setText("Lista de bancos");
+			nomeTela.setText(tela);
 			T controller = loader.getController();
 			consumer.accept(controller);
 		}catch(IOException e) {
@@ -247,8 +239,6 @@ public class MainViewController implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		nome.getStyleClass().setAll("h1");
-		novoRegistro.setVisible(false);
-		novoRegistro.getStyleClass().add("btn-primary");
 		
 		nomeTela.setText("DASHBOARD");
 		nomeTela.getStyleClass().addAll("h3", "strong", "text-primary");
