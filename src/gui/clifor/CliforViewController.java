@@ -6,15 +6,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import org.kordamp.bootstrapfx.BootstrapFX;
+
 import database.exceptions.DatabaseException;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -24,12 +28,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 import model.entities.Clifor;
 import model.service.CliforService;
 import utils.Alerts;
-import utils.Utils;
 
 public class CliforViewController implements Initializable{
 	
@@ -43,24 +49,23 @@ public class CliforViewController implements Initializable{
 	private Button btnNew;
 	@FXML
 	public void onBtnNewAction(ActionEvent event) {
-		Stage stage = Utils.getCurrentStage(event);
-		stage.setTitle("Cadastro de clientes e fornecedores");
-		Clifor clifor = new Clifor();
-		loadView(clifor, "/gui/clifor/CliforViewRegister.fxml", stage.getScene());
+		Stage stage = new Stage();
+		Clifor entity = new Clifor();
+		loadModalView(entity, "Cadastro de Clifor", stage);
 	}
 
 	@FXML
-	private TableView<Clifor> tblClifor;
+	private TableView<Clifor> tblView;
 	@FXML
-	private TableColumn<Clifor, Integer> columnId;
+	private TableColumn<Clifor, Integer> tblColumnId;
 	@FXML
-	private TableColumn<Clifor, String> columnProvider;
+	private TableColumn<Clifor, String> tblColumnProvider;
 	@FXML
-	private TableColumn<Clifor, String> columnName;
+	private TableColumn<Clifor, String> tblColumnName;
 	@FXML
-	private TableColumn<Clifor, Clifor> columnEDIT;
+	private TableColumn<Clifor, Clifor> tblColumnEDIT;
 	@FXML
-	private TableColumn<Clifor, Clifor> columnDELETE;
+	private TableColumn<Clifor, Clifor> tblColumnDELETE;
 	
 	
 	private ObservableList<Clifor> obsList;
@@ -72,38 +77,15 @@ public class CliforViewController implements Initializable{
 	}
 
 
-
 	private void initializationNodes() {
-		btnNew.setGraphic(new ImageView("/assets/icons/new16.png"));
-		columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
-		columnName.setCellValueFactory(new PropertyValueFactory<>("name"));
-		columnProvider.setCellValueFactory( v -> {
+		btnNew.getStyleClass().add("btn-primary");
+		tblColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+		tblColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
+		tblColumnProvider.setCellValueFactory( v -> {
 			return new ReadOnlyStringWrapper(v.getValue().isProvider() ? "Fornecedor" : "Cliente");
 		});
-		initEditButtons();
-		initRemoveButtons();
 	}
 	
-	
-	private void loadView(Clifor clifor, String pathView, Scene scene) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(pathView));
-			VBox box = loader.load();
-			
-			CliforViewRegisterController controller = loader.getController();
-			controller.setCliforService(new CliforService());
-			controller.setClifor(clifor);
-			controller.updateFormData();
-			
-			VBox mainBox = (VBox) scene.getRoot();
-			mainBox.getChildren().clear();
-			mainBox.getChildren().addAll(box.getChildren());
-		}catch(IOException e) {
-			e.printStackTrace();
-			Alerts.showAlert("Erro", "Erro ao carregar a janela", e.getMessage(), AlertType.ERROR);
-		}
-		
-	}
 
 
 
@@ -114,19 +96,23 @@ public class CliforViewController implements Initializable{
 		
 		List<Clifor> list = service.findAll();
 		obsList = FXCollections.observableArrayList(list);
-		tblClifor.setItems(obsList);
+		tblView.setItems(obsList);
+		initEditButtons();
+		initRemoveButtons();
 	}
 
 	
 	
 	private void initEditButtons() {
-		columnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		columnEDIT.setCellFactory(param -> new TableCell<Clifor, Clifor>() {
+		tblColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tblColumnEDIT.setCellFactory(param -> new TableCell<Clifor, Clifor>() {
 			private final Button button = new Button();
 
 			@Override
 			protected void updateItem(Clifor entity, boolean empty) {
 				button.setGraphic(new ImageView("/assets/icons/edit16.png"));
+				button.setStyle(" -fx-background-color:transparent;");
+				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
 				if (entity == null) {
 					setGraphic(null);
@@ -135,9 +121,8 @@ public class CliforViewController implements Initializable{
 
 				setGraphic(button);
 				button.setOnAction(e -> {
-					Stage stage = Utils.getCurrentStage(e);
-					stage.setTitle("Alteração do cliente ou fornecedor");
-					loadView(entity, "/gui/clifor/CliforViewRegister.fxml", Utils.getCurrentScene(e));
+					Stage stage = new Stage();
+					loadModalView(entity, "Alteração de Clifor", stage);
 				});
 			}
 		});
@@ -145,13 +130,15 @@ public class CliforViewController implements Initializable{
 
 
 	private void initRemoveButtons() {
-		columnDELETE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		columnDELETE.setCellFactory(param -> new TableCell<Clifor, Clifor>() {
+		tblColumnDELETE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tblColumnDELETE.setCellFactory(param -> new TableCell<Clifor, Clifor>() {
 			private final Button button = new Button();
 
 			@Override
 			protected void updateItem(Clifor entity, boolean empty) {
 				button.setGraphic(new ImageView("/assets/icons/trash16.png"));
+				button.setStyle(" -fx-background-color:transparent;");
+				button.setCursor(Cursor.HAND);				
 				super.updateItem(entity, empty);
 				if (entity == null) {
 					setGraphic(null);
@@ -182,5 +169,39 @@ public class CliforViewController implements Initializable{
 	}
 
 
+	private synchronized <T> void loadModalView(Clifor entity, String title, Stage stage) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/clifor/CliforViewRegister.fxml"));
+			Window window = btnNew.getScene().getWindow();
+			Pane pane = loader.load();	
+
+			Scene scene = new Scene(pane);
+			scene.getStylesheets().addAll(BootstrapFX.bootstrapFXStylesheet()); 
+			stage.setTitle(title);
+			stage.setScene(scene);
+			stage.setResizable(false);
+			stage.initOwner(window);
+			stage.initModality(Modality.WINDOW_MODAL);
+			stage.setHeight(270.0);
+			stage.setWidth(600.0);
+			
+			CliforViewRegisterController controller = loader.getController();
+			controller.setClifor(entity);
+			controller.setCliforService(new CliforService());
+			controller.updateFormData();
+			
+			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent event) {
+					updateTableView();
+				}
+			});
+			
+			stage.showAndWait();
+		} catch (IOException e) {
+			e.printStackTrace();
+			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
+		}
+	}
 
 }

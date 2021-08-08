@@ -10,6 +10,7 @@ import gui.accountPlan.AccountPlanViewController;
 import gui.bank.BankViewController;
 import gui.bankAccount.BankAccountViewController;
 import gui.bankAgence.BankAgenceViewController;
+import gui.clifor.CliforViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +27,7 @@ import model.service.AccountPlanService;
 import model.service.BankAccountService;
 import model.service.BankAgenceService;
 import model.service.BankService;
+import model.service.CliforService;
 import utils.Alerts;
 
 public class MainViewController implements Initializable{
@@ -117,15 +119,13 @@ public class MainViewController implements Initializable{
 	}
 
 	@FXML
-	private MenuItem mnuItemClifor; 
+	private Hyperlink linkClifor; 
 	@FXML
-	public void onMnuItemCliforAction() {
-//		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/clifor/CliforView.fxml"));
-//		Window parentScene = mnuMain.getScene().getWindow();
-//		loadModalView(loader, "Lista de clientes e fornecedores", parentScene, 600.0, 800.0, (CliforViewController controller) -> {
-//			controller.setCliforService(new CliforService());
-//			controller.updateTableView();
-//		});
+	public void onlinkCliforAction() {
+		loadView("/gui/clifor/CliforView.fxml", "Lista de clientes/fornecedores", (CliforViewController controller) -> {
+			controller.setCliforService(new CliforService());
+			controller.updateTableView();
+		}, "");
 	}
 	
 	
