@@ -35,7 +35,7 @@
             <Label text="Nome:" GridPane.rowIndex="3" />
             <TextField fx:id="txtId" disable="true" editable="false" focusTraversable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" GridPane.columnIndex="1" />
             <TextField fx:id="txtName" prefHeight="35.0" prefWidth="500.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label fx:id="lblErrorCode" prefHeight="8.0" prefWidth="500.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <Label prefHeight="8.0" prefWidth="500.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets left="5.0" />
                </GridPane.margin>
