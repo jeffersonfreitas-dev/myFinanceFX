@@ -1,6 +1,5 @@
 package gui.bankAccount;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -12,9 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -22,9 +19,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import model.entities.BankAccount;
 import model.entities.BankAgence;
@@ -58,18 +54,26 @@ public class BankAccountViewRegisterController implements Initializable{
 	private Button btnSave;
 	@FXML
 	public void onBtnSaveAction(ActionEvent event) {
-		if(service == null || entity == null) {
+		if(entity == null || service == null) {
 			throw new IllegalStateException("Entidade e/ou Serviço não instanciado.");
 		}
 		try {
 			BankAccount account = getFormData();
+			account.setBalance(entity.getBalance());
 			service.saveOrUpdate(account);
 			onBtnCancelAction(event);
-		}catch(RecordAlreadyRecordedException e) {
+			Stage stage = Utils.getCurrentStage(event);
+			stage.getOnCloseRequest().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+			stage.close();
+			
+		} catch (RecordAlreadyRecordedException e) {
 			Alerts.showAlert("Registro já cadastrado", null, e.getMessage(), AlertType.INFORMATION);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
 		} catch (ValidationException e) {
 			e.printStackTrace();
-			setErrorMessages(e.getErrors());
+			setErrorsMessage(e.getErrors());
 		} catch (DatabaseException e) {
 			e.printStackTrace();
 			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
@@ -82,8 +86,7 @@ public class BankAccountViewRegisterController implements Initializable{
 	@FXML
 	public void onBtnCancelAction(ActionEvent event) {
 		Stage stage = Utils.getCurrentStage(event);
-		stage.setTitle("Lista de contas bancárias");
-		loadView("/gui/bankAccount/BankAccountView.fxml", stage.getScene());
+		stage.close();
 	}
 
 	@FXML
@@ -136,27 +139,9 @@ public class BankAccountViewRegisterController implements Initializable{
 	}
 
 	
-	private void loadView(String pathView, Scene scene) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(pathView));
-			VBox box = loader.load();
-			
-			BankAccountViewController controller = loader.getController();
-			controller.setBankAccountService(new BankAccountService());
-			controller.updateTableView();
-			
-			VBox mainBox = (VBox) scene.getRoot();
-			mainBox.getChildren().clear();
-			mainBox.getChildren().addAll(box.getChildren());
-		}catch(IOException e) {
-			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
-		}
-	}	
-	
-	
 	private void initializationNodes() {
-		btnSave.setGraphic(new ImageView("/assets/icons/save16.png"));
-		btnCancel.setGraphic(new ImageView("/assets/icons/cancel16.png"));	
+		btnCancel.getStyleClass().add("btn-danger");
+		btnSave.getStyleClass().add("btn-success");
 		Constraints.setTextFieldInteger(txtId);
 		Constraints.setTextFieldMaxLength(txtCode, 10);
 		Constraints.setTextFieldMaxLength(txtAccount, 20);
@@ -197,7 +182,7 @@ public class BankAccountViewRegisterController implements Initializable{
 	}	
 
 	
-	private void setErrorMessages(Map<String, String> errors) {
+	private void setErrorsMessage(Map<String, String> errors) {
 		Set<String> keys = errors.keySet();
 		lblErrorAccount.setText("");
 		lblErrorCode.setText("");
@@ -237,7 +222,7 @@ public class BankAccountViewRegisterController implements Initializable{
 			throw new IllegalStateException("Entidade não foi instanciada");
 		}
 		
-		txtId.setId(String.valueOf(entity.getId()));
+		txtId.setText(String.valueOf(entity.getId()));
 		txtCode.setText(entity.getCode());
 		txtAccount.setText(entity.getAccount());
 		

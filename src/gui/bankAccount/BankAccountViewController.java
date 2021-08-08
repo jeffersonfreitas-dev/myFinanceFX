@@ -6,15 +6,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import org.kordamp.bootstrapfx.BootstrapFX;
+
 import database.exceptions.DatabaseException;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -24,14 +28,16 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 import model.entities.BankAccount;
 import model.service.BankAccountService;
 import model.service.BankAgenceService;
 import model.service.CompanyService;
 import utils.Alerts;
-import utils.Utils;
 
 public class BankAccountViewController implements Initializable{
 	
@@ -44,28 +50,27 @@ public class BankAccountViewController implements Initializable{
 	private Button btnNew;
 	@FXML
 	public void onBtnNewAction(ActionEvent event) {
-		Stage stage = Utils.getCurrentStage(event);
-		stage.setTitle("Cadastro de conta bancária");
-		BankAccount account = new BankAccount();
-		loadView(account, "/gui/bankAccount/BankAccountViewRegister.fxml", stage.getScene());
+		Stage stage = new Stage();
+		BankAccount entity = new BankAccount();
+		loadModalView(entity, "Cadastro de contas bancárias", stage);
 	}
 
 	@FXML
-	private TableView<BankAccount> tblBankAccount;
+	private TableView<BankAccount> tblView;
 	@FXML
-	private TableColumn<BankAccount, Integer> columnId;
+	private TableColumn<BankAccount, Integer> tblColumnId;
 	@FXML
-	private TableColumn<BankAccount, String> columnCode;
+	private TableColumn<BankAccount, String> tblColumnCode;
 	@FXML
-	private TableColumn<BankAccount, String> columnAccount;
+	private TableColumn<BankAccount, String> tblColumnAccount;
 	@FXML
-	private TableColumn<BankAccount, String> columnBank;
+	private TableColumn<BankAccount, String> tblColumnBank;
 	@FXML
-	private TableColumn<BankAccount, String> columnCompany;
+	private TableColumn<BankAccount, String> tblColumnCompany;
 	@FXML
-	private TableColumn<BankAccount, BankAccount> columnEDIT;
+	private TableColumn<BankAccount, BankAccount> tblColumnEDIT;
 	@FXML
-	private TableColumn<BankAccount, BankAccount> columnDELETE;
+	private TableColumn<BankAccount, BankAccount> tblColumnDELETE;
 	
 	private ObservableList<BankAccount> obsList;
 
@@ -76,58 +81,78 @@ public class BankAccountViewController implements Initializable{
 	
 	
 	private void initializationNodes() {
-		columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
-		columnCode.setCellValueFactory(new PropertyValueFactory<>("code"));
-		columnAccount.setCellValueFactory(new PropertyValueFactory<>("account"));
-		columnBank.setCellValueFactory( v -> {
+		tblColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+		tblColumnCode.setCellValueFactory(new PropertyValueFactory<>("code"));
+		tblColumnAccount.setCellValueFactory(new PropertyValueFactory<>("account"));
+		tblColumnBank.setCellValueFactory( v -> {
 			String col = v.getValue().getBankAgence().getAgence() + " - " + v.getValue().getBankAgence().getBank().getName();
 			return new ReadOnlyStringWrapper(col);
 		});
-		columnCompany.setCellValueFactory(v -> {
+		tblColumnCompany.setCellValueFactory(v -> {
 			return new ReadOnlyStringWrapper(v.getValue().getCompany().getName());
 		});
-		btnNew.setGraphic(new ImageView("/assets/icons/new16.png"));
-		initEditButtons();
-		initRemoveButtons();
+		btnNew.getStyleClass().add("btn-primary");
 	}
 
 	
 	public void updateTableView() {
+		if(service == null) {
+			throw new IllegalArgumentException("Serviço não instanciado");
+		}
 		List<BankAccount> list = service.findAll();
 		obsList = FXCollections.observableArrayList(list);
-		tblBankAccount.setItems(obsList);
+		tblView.setItems(obsList);
+		initEditButtons();
+		initRemoveButtons();
 	}
 	
 	
-	private void loadView(BankAccount account, String pathView, Scene scene) {
+	private synchronized <T> void loadModalView(BankAccount entity, String title, Stage stage) {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(pathView));
-			VBox box = loader.load();
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/bankAccount/BankAccountViewRegister.fxml"));
+			Window window = btnNew.getScene().getWindow();
+			Pane pane = loader.load();	
+
+			Scene scene = new Scene(pane);
+			scene.getStylesheets().addAll(BootstrapFX.bootstrapFXStylesheet()); 
+			stage.setTitle(title);
+			stage.setScene(scene);
+			stage.setResizable(false);
+			stage.initOwner(window);
+			stage.initModality(Modality.WINDOW_MODAL);
+			stage.setHeight(380.0);
+			stage.setWidth(600.0);
 			
 			BankAccountViewRegisterController controller = loader.getController();
+			controller.setBankAccount(entity);
 			controller.setBankAccountService(new BankAccountService(), new BankAgenceService(), new CompanyService());
-			controller.loadAssociateObjects();
-			controller.setBankAccount(account);
 			controller.updateFormData();
+			controller.loadAssociateObjects();
 			
-			VBox mainBox = (VBox) scene.getRoot();
-			mainBox.getChildren().clear();
-			mainBox.getChildren().addAll(box.getChildren());			
+			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent event) {
+					updateTableView();
+				}
+			});
+			
+			stage.showAndWait();
 		} catch (IOException e) {
 			e.printStackTrace();
-			Alerts.showAlert("Erro", "Erro ao carregar a janela", e.getMessage(), AlertType.ERROR);
+			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
 		}
 	}
 	
-	
 	private void initEditButtons() {
-		columnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		columnEDIT.setCellFactory(param -> new TableCell<BankAccount, BankAccount>() {
+		tblColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tblColumnEDIT.setCellFactory(param -> new TableCell<BankAccount, BankAccount>() {
 			private final Button button = new Button();
 
 			@Override
 			protected void updateItem(BankAccount entity, boolean empty) {
 				button.setGraphic(new ImageView("/assets/icons/edit16.png"));
+				button.setStyle(" -fx-background-color:transparent;");
+				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
 				if (entity == null) {
 					setGraphic(null);
@@ -136,22 +161,23 @@ public class BankAccountViewController implements Initializable{
 
 				setGraphic(button);
 				button.setOnAction(e -> {
-					Stage stage = Utils.getCurrentStage(e);
-					stage.setTitle("Alteração da conta bancária");
-					loadView(entity, "/gui/bankAccount/BankAccountViewRegister.fxml", Utils.getCurrentScene(e));
+					Stage stage = new Stage();
+					loadModalView(entity, "Alteração de conta bancária", stage);
 				});
 			}
 		});
 	}
 
 	private void initRemoveButtons() {
-		columnDELETE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		columnDELETE.setCellFactory(param -> new TableCell<BankAccount, BankAccount>() {
+		tblColumnDELETE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tblColumnDELETE.setCellFactory(param -> new TableCell<BankAccount, BankAccount>() {
 			private final Button button = new Button();
 
 			@Override
 			protected void updateItem(BankAccount entity, boolean empty) {
 				button.setGraphic(new ImageView("/assets/icons/trash16.png"));
+				button.setStyle(" -fx-background-color:transparent;");
+				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
 				if (entity == null) {
 					setGraphic(null);

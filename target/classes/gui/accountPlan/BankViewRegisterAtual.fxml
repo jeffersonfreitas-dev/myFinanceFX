@@ -3,42 +3,39 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="364.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.bankAccount.BankAccountViewRegisterController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.accountPlan.AccountPlanViewRegisterController">
    <children>
-      <GridPane prefHeight="275.0" prefWidth="575.0">
+      <GridPane prefHeight="183.0" prefWidth="575.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="66.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="517.0" minWidth="10.0" prefWidth="509.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints maxHeight="53.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="57.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="63.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label text="ID:" />
             <Label text="Código:" GridPane.rowIndex="1" />
-            <Label text="Conta:" GridPane.rowIndex="3" />
+            <Label text="Nome:" GridPane.rowIndex="3" />
             <TextField fx:id="txtId" disable="true" editable="false" focusTraversable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" GridPane.columnIndex="1" />
-            <TextField fx:id="txtCode" prefHeight="35.0" prefWidth="253.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="txtAccount" prefHeight="35.0" prefWidth="500.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label fx:id="lblErrorCode" prefHeight="8.0" prefWidth="500.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <TextField fx:id="txtName" prefHeight="35.0" prefWidth="500.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label prefHeight="8.0" prefWidth="500.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets left="5.0" />
                </GridPane.margin>
@@ -46,7 +43,7 @@
                   <Font name="System Bold" size="10.0" />
                </font>
             </Label>
-            <Label fx:id="lblErrorAccount" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="TOP">
+            <Label fx:id="lblErrorName" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets left="5.0" />
                </GridPane.margin>
@@ -54,20 +51,19 @@
                   <Font name="System Bold" size="10.0" />
                </font>
             </Label>
-            <Label text="Agencia:" GridPane.rowIndex="5" />
-            <Label text="Empresa:" GridPane.rowIndex="7" />
-            <ComboBox fx:id="cmbAgence" prefHeight="34.0" prefWidth="509.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <ComboBox fx:id="cmbCompany" prefHeight="34.0" prefWidth="509.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <Label fx:id="lblErrorAgence" prefHeight="8.0" prefWidth="500.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="6">
-               <font>
-                  <Font name="System Bold" size="10.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblErrorCompany" prefHeight="8.0" prefWidth="500.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="8">
-               <font>
-                  <Font name="System Bold" size="10.0" />
-               </font>
-            </Label>
+            <HBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <RadioButton fx:id="rdioCredit" mnemonicParsing="false" selected="true" text="CRÉDITO" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                     <toggleGroup>
+                        <ToggleGroup fx:id="rdioGroup" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="rdioDebito" mnemonicParsing="false" text="DÉBITO" toggleGroup="$rdioGroup" />
+               </children>
+            </HBox>
          </children>
          <VBox.margin>
             <Insets bottom="20.0" left="5.0" right="20.0" top="20.0" />

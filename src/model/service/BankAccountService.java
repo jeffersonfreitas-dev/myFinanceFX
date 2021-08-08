@@ -21,8 +21,9 @@ public class BankAccountService {
 	}
 
 	public void saveOrUpdate(BankAccount entity) {
-		BankAccount Account = dao.findByAccountAndCompanyId(entity.getAccount(), entity.getCompany().getId());
-		if(Account != null && !Account.equals(entity)) {
+		BankAccount account = dao.findByAccountAndCompanyId(entity.getAccount(), entity.getCompany().getId());
+		
+		if(account != null && !account.equals(entity)) {
 			throw new RecordAlreadyRecordedException("Número de conta já cadastrada para esta empresa!");
 		}
 		

@@ -62,11 +62,17 @@
                <font>
                   <Font name="System Bold" size="10.0" />
                </font>
+               <GridPane.margin>
+                  <Insets left="5.0" />
+               </GridPane.margin>
             </Label>
             <Label fx:id="lblErrorCompany" prefHeight="8.0" prefWidth="500.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="8">
                <font>
                   <Font name="System Bold" size="10.0" />
                </font>
+               <GridPane.margin>
+                  <Insets left="5.0" />
+               </GridPane.margin>
             </Label>
          </children>
          <VBox.margin>
