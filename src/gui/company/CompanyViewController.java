@@ -6,14 +6,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import org.kordamp.bootstrapfx.BootstrapFX;
+
 import database.exceptions.DatabaseException;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -23,12 +27,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 import model.entities.Company;
 import model.service.CompanyService;
 import utils.Alerts;
-import utils.Utils;
 
 public class CompanyViewController implements Initializable{
 	
@@ -44,26 +50,25 @@ public class CompanyViewController implements Initializable{
 	public void onBtnNewAction(ActionEvent event) {
 		List<Company> list = service.findByAll();
 		if(list.isEmpty()) {
-			Stage stage = Utils.getCurrentStage(event);
-			stage.setTitle("Cadastro de empresa");
-			Company company = new Company();
-			loadView(company, "/gui/company/CompanyViewRegister.fxml", stage.getScene());
+			Stage stage = new Stage();
+			Company entity = new Company();
+			loadModalView(entity, "Cadastro de empresas", stage);
 		}else {
-			Alerts.showAlert("Aviso", "Aviso de implementação", "Só é perimitido cadastrar uma empresa. \nCadastro de mais empresa não foi implementada!", AlertType.INFORMATION);
+			Alerts.showAlert("Aviso", "Aviso de implementação", "Só é permitido cadastrar uma empresa. \nCadastro de mais empresa não foi implementada!", AlertType.INFORMATION);
 		}
 	}
 
 
 	@FXML
-	private TableView<Company> tblCompanies;
+	private TableView<Company> tblView;
 	@FXML
-	private TableColumn<Company, Integer> columnId;
+	private TableColumn<Company, Integer> tblColumnId;
 	@FXML
-	private TableColumn<Company, String> columnName;
+	private TableColumn<Company, String> tblColumnName;
 	@FXML
-	private TableColumn<Company, Company> columnEDIT;
+	private TableColumn<Company, Company> tblColumnEDIT;
 	@FXML
-	private TableColumn<Company, Company> columnDELETE;
+	private TableColumn<Company, Company> tblColumnDELETE;
 	
 	private ObservableList<Company> obsList;
 	
@@ -71,36 +76,13 @@ public class CompanyViewController implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		initializationNodes();
-		
-	}
-
-	
-	private void loadView(Company company, String pathView, Scene scene) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(pathView));
-			VBox box = loader.load();
-			
-			CompanyViewRegisterController controller = loader.getController();
-			controller.setCompany(company);
-			controller.setCompanyService(new CompanyService());
-			controller.updateFormData();
-			
-			VBox mainBox = (VBox) scene.getRoot();
-			mainBox.getChildren().clear();
-			mainBox.getChildren().addAll(box.getChildren());
-		}catch(IOException e) {
-			e.printStackTrace();
-			Alerts.showAlert("Erro", "Erro ao carregar a janela", e.getMessage(), AlertType.ERROR);
-		}
-		
 	}	
 
 	private void initializationNodes() {
-		columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
-		columnName.setCellValueFactory(new PropertyValueFactory<>("name"));
-		btnNew.setGraphic(new ImageView("/assets/icons/new16.png"));
-		initEditButtons();
-		initRemoveButtons();
+		tblColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+		tblColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
+		btnNew.getStyleClass().add("btn-primary");
+
 	}
 
 
@@ -110,17 +92,21 @@ public class CompanyViewController implements Initializable{
 		}
 		List<Company> list = service.findByAll();
 		obsList = FXCollections.observableArrayList(list);
-		tblCompanies.setItems(obsList);
+		tblView.setItems(obsList);
+		initEditButtons();
+		initRemoveButtons();
 	}
 	
 	
 	private void initEditButtons() {
-		columnEDIT.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue()));
-		columnEDIT.setCellFactory(p -> new TableCell<Company, Company>() {
+		tblColumnEDIT.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue()));
+		tblColumnEDIT.setCellFactory(p -> new TableCell<Company, Company>() {
 			private final Button button = new Button();
 			@Override
 			protected void updateItem(Company entity, boolean empty) {
 				button.setGraphic(new ImageView("/assets/icons/edit16.png"));
+				button.setStyle(" -fx-background-color:transparent;");
+				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
 				if(entity == null) {
 					setGraphic(null);
@@ -129,9 +115,8 @@ public class CompanyViewController implements Initializable{
 				
 				setGraphic(button);
 				button.setOnAction( e -> {
-					Stage stage = Utils.getCurrentStage(e);
-					stage.setTitle("Alteração de empresa");
-					loadView(entity, "/gui/company/CompanyViewRegister.fxml", Utils.getCurrentScene(e));
+					Stage stage = new Stage();
+					loadModalView(entity, "Alteração de banco", stage);
 				});
 			}
 		});
@@ -139,13 +124,15 @@ public class CompanyViewController implements Initializable{
 	
 	
 	private void initRemoveButtons() {
-		columnDELETE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		columnDELETE.setCellFactory(param -> new TableCell<Company, Company>() {
+		tblColumnDELETE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tblColumnDELETE.setCellFactory(param -> new TableCell<Company, Company>() {
 			private final Button button = new Button();
 			
 			@Override
 			protected void updateItem(Company entity, boolean empty) {
 				button.setGraphic(new ImageView("/assets/icons/trash16.png"));
+				button.setStyle(" -fx-background-color:transparent;");
+				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
 				if(entity == null) {
 					setGraphic(null);
@@ -173,6 +160,42 @@ public class CompanyViewController implements Initializable{
 				Alerts.showAlert("Erro ao remover registro", null, e.getMessage(), AlertType.ERROR);
 			}
 		}
-	}	
+	}
+	
+	
+	private synchronized <T> void loadModalView(Company entity, String title, Stage stage) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/company/CompanyViewRegister.fxml"));
+			Window window = btnNew.getScene().getWindow();
+			Pane pane = loader.load();	
+
+			Scene scene = new Scene(pane);
+			scene.getStylesheets().addAll(BootstrapFX.bootstrapFXStylesheet()); 
+			stage.setTitle(title);
+			stage.setScene(scene);
+			stage.setResizable(false);
+			stage.initOwner(window);
+			stage.initModality(Modality.WINDOW_MODAL);
+			stage.setHeight(225.0);
+			stage.setWidth(600.0);
+			
+			CompanyViewRegisterController controller = loader.getController();
+			controller.setCompany(entity);
+			controller.setCompanyService(new CompanyService());
+			controller.updateFormData();
+			
+			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent event) {
+					updateTableView();
+				}
+			});
+			
+			stage.showAndWait();
+		} catch (IOException e) {
+			e.printStackTrace();
+			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
+		}
+	}
 
 }

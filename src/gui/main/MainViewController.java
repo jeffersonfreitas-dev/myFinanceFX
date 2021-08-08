@@ -11,6 +11,7 @@ import gui.bank.BankViewController;
 import gui.bankAccount.BankAccountViewController;
 import gui.bankAgence.BankAgenceViewController;
 import gui.clifor.CliforViewController;
+import gui.company.CompanyViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,12 +29,11 @@ import model.service.BankAccountService;
 import model.service.BankAgenceService;
 import model.service.BankService;
 import model.service.CliforService;
+import model.service.CompanyService;
 import utils.Alerts;
 
 public class MainViewController implements Initializable{
 	
-	@FXML
-	private Label nome;
 	@FXML
 	private Label versao;
 	@FXML
@@ -46,12 +46,10 @@ public class MainViewController implements Initializable{
 
 	
 	@FXML
-	private MenuItem mnuItenAbout;
+	private Hyperlink linkAbout;
 	@FXML
-	public void onMnuItemAboutAction(ActionEvent event) {
-//		FXMLLoader loader = getLoaderView("/gui/about/AboutView.fxml");
-//		Window parentScene = mnuMain.getScene().getWindow();
-//		loadModalView(loader, "Sobre o sistema", parentScene, 310.0, 460.0, x -> {});
+	public void onlinkAboutAction(ActionEvent event) {
+		loadView("/gui/about/AboutView.fxml",  "Sobre o sistema", x -> {}, "");
 	}
 	
 	@FXML
@@ -85,15 +83,13 @@ public class MainViewController implements Initializable{
 	}
 	
 	@FXML
-	private MenuItem mnuItemCompany;
+	private Hyperlink linkCompany;
 	@FXML
-	public void onMnuItemCompanyAction() {
-//		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/company/CompanyView.fxml"));
-//		Window parentScene = mnuMain.getScene().getWindow();
-//		loadModalView(loader, "Lista de empresas", parentScene, 600.0, 800.0, (CompanyViewController controller) -> {
-//			controller.setCompanyService(new CompanyService());
-//			controller.updateTableView();
-//		});
+	public void onlinkCompanyAction() {
+		loadView("/gui/company/CompanyView.fxml", "Lista de empresas", (CompanyViewController controller) -> {
+			controller.setCompanyService(new CompanyService());
+			controller.updateTableView();
+		}, "");
 	}
 	
 //	@FXML
@@ -238,8 +234,6 @@ public class MainViewController implements Initializable{
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		nome.getStyleClass().setAll("h1");
-		
 		nomeTela.setText("DASHBOARD");
 		nomeTela.getStyleClass().addAll("h3", "strong", "text-primary");
 		nomeUsuario.getStyleClass().addAll("h5", "strong");

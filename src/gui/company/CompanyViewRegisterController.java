@@ -1,6 +1,5 @@
 package gui.company;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -9,16 +8,13 @@ import java.util.Set;
 import database.exceptions.DatabaseException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.entities.Company;
 import model.exceptions.RecordAlreadyRecordedException;
 import model.exceptions.ValidationException;
@@ -45,21 +41,25 @@ public class CompanyViewRegisterController implements Initializable{
 	private Button btnSave;
 	@FXML
 	public void onBtnSaveAction(ActionEvent event) {
-		if(service == null) {
-			throw new IllegalStateException("O serviço não foi instanciado");
+		if(entity == null || service == null) {
+			throw new IllegalStateException("Entidade e/ou Serviço não instanciado.");
 		}
-		
 		try {
 			Company company = getFormData();
 			service.saveOrUpdate(company);
+			onBtnCancelAction(event);
 			Stage stage = Utils.getCurrentStage(event);
-			stage.setTitle("Lista de empresas");
-			loadView("/gui/company/CompanyView.fxml", stage.getScene());
+			stage.getOnCloseRequest().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+			stage.close();
+			
 		} catch (RecordAlreadyRecordedException e) {
 			Alerts.showAlert("Registro já cadastrado", null, e.getMessage(), AlertType.INFORMATION);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
 		} catch (ValidationException e) {
 			e.printStackTrace();
-			setMessagesError(e.getErrors());
+			setErrorsMessage(e.getErrors());
 		} catch (DatabaseException e) {
 			e.printStackTrace();
 			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
@@ -67,15 +67,12 @@ public class CompanyViewRegisterController implements Initializable{
 	}
 
 
-
-
 	@FXML
 	private Button btnCancel;
 	@FXML
 	public void onBtnCancelAction(ActionEvent event) {
 		Stage stage = Utils.getCurrentStage(event);
-		stage.setTitle("Lista de empresas");
-		loadView("/gui/company/CompanyView.fxml", stage.getScene());
+		stage.close();
 	}
 
 	@FXML
@@ -93,36 +90,17 @@ public class CompanyViewRegisterController implements Initializable{
 	private void initializationNodes() {
 		Constraints.setTextFieldInteger(txtId);
 		Constraints.setTextFieldMaxLength(txtName, 60);
-		btnSave.setGraphic(new ImageView("/assets/icons/save16.png"));
-		btnCancel.setGraphic(new ImageView("/assets/icons/cancel16.png"));
+		btnCancel.getStyleClass().add("btn-danger");
+		btnSave.getStyleClass().add("btn-success");
 	}
 	
-	
-	private void loadView(String pathView, Scene scene) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(pathView));
-			VBox box = loader.load();
-			
-			VBox mainBox = (VBox) scene.getRoot();
-			mainBox.getChildren().clear();
-			mainBox.getChildren().addAll(box.getChildren());
-			
-			CompanyViewController controller = loader.getController();
-			controller.setCompanyService(new CompanyService());
-			controller.updateTableView();
-		}catch(IOException e) {
-			e.printStackTrace();
-			Alerts.showAlert("Erro", "Erro ao carregar a janela", e.getMessage(), AlertType.ERROR);
-		}
-	}	
-
 	
 	private Company getFormData() {
 		Company c = new Company();
 		ValidationException exception = new ValidationException("");
 		c.setId(Utils.tryParseToInt(txtId.getText()));
 		
-		if(txtName == null || txtName.getText().trim().equals("")) {
+		if(txtName.getText() == null || txtName.getText().trim().equals("")) {
 			exception.setError("name", "O campo nome não pode ser vazio");
 		}
 		c.setName(txtName.getText());
@@ -134,7 +112,7 @@ public class CompanyViewRegisterController implements Initializable{
 	}
 	
 	
-	private void setMessagesError(Map<String, String> errors) {
+	private void setErrorsMessage(Map<String, String> errors) {
 		Set<String> keys = errors.keySet();
 		
 		if(keys.contains("name")) {

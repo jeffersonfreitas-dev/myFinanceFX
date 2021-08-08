@@ -22,16 +22,16 @@
          <children>
             <Pane prefHeight="76.0" prefWidth="200.0">
                <children>
-                  <Label fx:id="nome" alignment="CENTER" layoutY="8.0" text="MyFinance" textAlignment="CENTER" textFill="WHITE" wrapText="true">
-                     <font>
-                        <Font size="30.0" />
-                     </font>
-                  </Label>
                   <Label fx:id="versao" layoutX="5.0" layoutY="55.0" text="v1.0" textFill="WHITE">
                      <font>
                         <Font size="10.0" />
                      </font>
                   </Label>
+                  <Hyperlink fx:id="linkAbout" layoutX="20.0" layoutY="15.0" onAction="#onlinkAboutAction" prefHeight="46.0" prefWidth="168.0" text="MyFinance" textFill="#c9bdbd">
+                     <font>
+                        <Font name="System Bold" size="26.0" />
+                     </font>
+                  </Hyperlink>
                </children></Pane>
             <Pane prefHeight="439.0" prefWidth="200.0">
                <children>
@@ -40,6 +40,7 @@
                   <Hyperlink fx:id="linkBankAccount" layoutX="14.0" layoutY="60.0" onAction="#onlinkBankAccountAction" text="Conta bancária" textFill="#c9bdbd" />
                   <Hyperlink fx:id="linkBankAgence" layoutX="14.0" layoutY="83.0" onAction="#onlinkBankAgenceAction" text="Agencia bancária" textFill="#c9bdbd" />
                   <Hyperlink fx:id="linkClifor" layoutX="14.0" layoutY="106.0" onAction="#onlinkCliforAction" text="Clifor" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkCompany" layoutX="16.0" layoutY="129.0" onAction="#onlinkCompanyAction" text="Empresa" textFill="#c9bdbd" />
                </children></Pane>
          </children>
       </VBox>
@@ -53,11 +54,6 @@
                      <children>
                         <MenuBar fx:id="mnuMain">
                           <menus>
-                            <Menu mnemonicParsing="false" text="Cadastros">
-                                 <items>
-                                    <MenuItem fx:id="mnuItemCompany" mnemonicParsing="false" onAction="#onMnuItemCompanyAction" text="Empresa" />
-                                 </items>
-                            </Menu>
                               <Menu mnemonicParsing="false" text="Financeiro">
                                  <items>
                                     <MenuItem fx:id="mnuItemBankStatement" mnemonicParsing="false" onAction="#onMnuItemBankStatementAction" text="Extrato" />
@@ -67,11 +63,6 @@
                                     <MenuItem mnemonicParsing="false" text="Transferencia bancária" />
                                  </items>
                               </Menu>
-                            <Menu mnemonicParsing="false" text="Ajuda">
-                              <items>
-                                <MenuItem fx:id="mnuItenAbout" mnemonicParsing="false" onAction="#onMnuItemAboutAction" text="Sobre o sistema" />
-                              </items>
-                            </Menu>
                           </menus>
                         </MenuBar>
                      </children>

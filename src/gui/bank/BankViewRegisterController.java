@@ -122,8 +122,6 @@ public class BankViewRegisterController implements Initializable{
 	}
 
 
-	
-
 	public void updateFormData() {
 		if(entity == null) {
 			throw new IllegalStateException("Entidade não foi instanciada");
