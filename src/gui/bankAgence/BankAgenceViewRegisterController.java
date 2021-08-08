@@ -1,6 +1,5 @@
 package gui.bankAgence;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -12,9 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -22,9 +19,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import model.entities.Bank;
 import model.entities.BankAgence;
@@ -61,8 +57,6 @@ public class BankAgenceViewRegisterController implements Initializable{
 	@FXML
 	private TextField txtAgence;
 	@FXML
-	private TextField txtDV;
-	@FXML
 	private ComboBox<Bank> cmbBank;
 	private void initializeComboBoxBank() {
 		Callback<ListView<Bank>, ListCell<Bank>> factory = lv -> new ListCell<Bank>() {
@@ -80,25 +74,29 @@ public class BankAgenceViewRegisterController implements Initializable{
 	private Button btnSave;
 	@FXML
 	private void onBtnSaveAction(ActionEvent event) {
-		if(service == null || entity == null) {
+		if(entity == null || service == null) {
 			throw new IllegalStateException("Entidade e/ou Serviço não instanciado.");
 		}
 		try {
-			Stage stage = Utils.getCurrentStage(event);
 			BankAgence agence = getFormData();
 			service.saveOrUpdate(agence);
-			stage.setTitle("Lista de agencias bancárias");
-			loadView("/gui/bankAgence/BankAgenceView.fxml", stage.getScene());
-		}catch(RecordAlreadyRecordedException e) {
+			onBtnCancelAction(event);
+			Stage stage = Utils.getCurrentStage(event);
+			stage.getOnCloseRequest().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+			stage.close();
+			
+		} catch (RecordAlreadyRecordedException e) {
 			Alerts.showAlert("Registro já cadastrado", null, e.getMessage(), AlertType.INFORMATION);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
 		} catch (ValidationException e) {
 			e.printStackTrace();
-			setErrorMessages(e.getErrors());
+			setErrorsMessage(e.getErrors());
 		} catch (DatabaseException e) {
 			e.printStackTrace();
 			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
 		}
-		
 	}
 
 	@FXML
@@ -106,28 +104,9 @@ public class BankAgenceViewRegisterController implements Initializable{
 	@FXML
 	public void onBtnCancelAction(ActionEvent event) {
 		Stage stage = Utils.getCurrentStage(event);
-		stage.setTitle("Lista de agencias bancárias");
-		loadView("/gui/bankAgence/BankAgenceView.fxml", stage.getScene());
+		stage.close();
 	}
 	
-
-	private void loadView(String absolutPath, Scene scene) {
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(absolutPath));
-			VBox box = loader.load();
-			
-			BankAgenceViewController controller = loader.getController();
-			controller.setBankAgenceService(new BankAgenceService());
-			controller.updateTableView();
-			
-			VBox mainBox = (VBox) scene.getRoot();
-			mainBox.getChildren().clear();
-			mainBox.getChildren().addAll(box);
-		}catch(IOException e) {
-			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
-		}
-	}
-
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -136,11 +115,10 @@ public class BankAgenceViewRegisterController implements Initializable{
 
 
 	private void initializeNodes() {
-		btnSave.setGraphic(new ImageView("/assets/icons/save16.png"));
-		btnCancel.setGraphic(new ImageView("/assets/icons/cancel16.png"));
+		btnCancel.getStyleClass().add("btn-danger");
+		btnSave.getStyleClass().add("btn-success");
 		Constraints.setTextFieldInteger(txtId);
-		Constraints.setTextFieldMaxLength(txtDV, 4);
-		Constraints.setTextFieldMaxLength(txtDV, 1);
+		Constraints.setTextFieldMaxLength(txtAgence, 30);
 		initializeComboBoxBank();
 	}
 	
@@ -168,7 +146,7 @@ public class BankAgenceViewRegisterController implements Initializable{
 	}
 	
 	
-	private void setErrorMessages(Map<String, String> errors) {
+	private void setErrorsMessage(Map<String, String> errors) {
 		Set<String> keys = errors.keySet();
 		lblErrorAgence.setText("");
 		lblErrorBank.setText("");
@@ -187,7 +165,6 @@ public class BankAgenceViewRegisterController implements Initializable{
 		}
 		txtId.setText(String.valueOf(entity.getId()));
 		txtAgence.setText(entity.getAgence());
-		txtDV.setText(entity.getDv());
 		
 		if(entity.getBank() == null) {
 			cmbBank.getSelectionModel().selectFirst();

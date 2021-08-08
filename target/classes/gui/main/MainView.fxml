@@ -39,6 +39,7 @@
                   <Hyperlink fx:id="linkBank" layoutX="14.0" layoutY="49.0" onAction="#onlinkBankAction" text="Banco" textFill="#c9bdbd" />
                   <Hyperlink fx:id="linkAccountPlan" layoutX="14.0" layoutY="72.0" onAction="#onlinkAccountPlanAction" text="Plano de conta" textFill="#c9bdbd" />
                   <Hyperlink fx:id="linkBankAccount" layoutX="14.0" layoutY="95.0" onAction="#onlinkBankAccountAction" text="Conta bancária" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkBankAgence" layoutX="14.0" layoutY="118.0" onAction="#onlinkBankAgenceAction" text="Agencia bancária" textFill="#c9bdbd" />
                </children></Pane>
          </children>
       </VBox>
@@ -54,7 +55,6 @@
                           <menus>
                             <Menu mnemonicParsing="false" text="Cadastros">
                                  <items>
-                                    <MenuItem fx:id="mnuItemBankAgence" mnemonicParsing="false" onAction="#onMnuItemBankAgenceAction" text="Agencia bancária" />
                                   <MenuItem fx:id="mnuItemClifor" mnemonicParsing="false" onAction="#onMnuItemCliforAction" text="Cliente e fornecedor" />
                                     <MenuItem fx:id="mnuItemCompany" mnemonicParsing="false" onAction="#onMnuItemCompanyAction" text="Empresa" />
                                  </items>

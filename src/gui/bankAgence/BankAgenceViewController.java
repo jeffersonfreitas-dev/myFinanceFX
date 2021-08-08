@@ -6,15 +6,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import org.kordamp.bootstrapfx.BootstrapFX;
+
 import database.exceptions.DatabaseException;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -24,14 +28,15 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.entities.Bank;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 import model.entities.BankAgence;
 import model.service.BankAgenceService;
 import model.service.BankService;
 import utils.Alerts;
-import utils.Utils;
 
 public class BankAgenceViewController implements Initializable {
 
@@ -45,10 +50,9 @@ public class BankAgenceViewController implements Initializable {
 	private Button btnNew;
 	@FXML
 	public void onBtnNewAction(ActionEvent event) {
-		Stage stage = Utils.getCurrentStage(event);
-		stage.setTitle("Cadastro de agencias bancárias");
-		BankAgence agence = new BankAgence();
-		loadView(agence, "/gui/bankAgence/BankAgenceViewRegister.fxml", stage.getScene());
+		Stage stage = new Stage();
+		BankAgence entity = new BankAgence();
+		loadModalView(entity, "Cadastro de agencias bancárias", stage);
 	}
 
 	@FXML
@@ -56,15 +60,13 @@ public class BankAgenceViewController implements Initializable {
 	@FXML
 	private TableColumn<BankAgence, String> tblColumnAgence;
 	@FXML
-	private TableColumn<BankAgence, String> tblColumnDV;
-	@FXML
 	private TableColumn<BankAgence, String> tblColumnBank;
 	@FXML
 	private TableView<BankAgence> tblView;
 	@FXML
 	private TableColumn<BankAgence, BankAgence> tblColumnEDIT;
 	@FXML
-	private TableColumn<BankAgence, BankAgence> tblColumnREMOVE;
+	private TableColumn<BankAgence, BankAgence> tblColumnDELETE;
 
 	private ObservableList<BankAgence> obsList;
 
@@ -86,16 +88,10 @@ public class BankAgenceViewController implements Initializable {
 
 	
 	private void initializationNodes() {
-		btnNew.setGraphic(new ImageView("/assets/icons/new16.png"));
+		btnNew.getStyleClass().add("btn-primary");
 		tblColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tblColumnAgence.setCellValueFactory(new PropertyValueFactory<>("agence"));
-		tblColumnDV.setCellValueFactory(new PropertyValueFactory<>("dv"));
-		tblColumnBank.setCellValueFactory(d -> {
-			BankAgence agence = d.getValue();
-			Bank bank = agence.getBank();
-			String result = bank.getName();
-			return new ReadOnlyStringWrapper(result);
-		});
+		tblColumnBank.setCellValueFactory(  d -> {return new ReadOnlyStringWrapper(d.getValue().getBank().getName());});
 	}
 
 	private void initEditButtons() {
@@ -106,6 +102,8 @@ public class BankAgenceViewController implements Initializable {
 			@Override
 			protected void updateItem(BankAgence entity, boolean empty) {
 				button.setGraphic(new ImageView("/assets/icons/edit16.png"));
+				button.setStyle(" -fx-background-color:transparent;");
+				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
 				if (entity == null) {
 					setGraphic(null);
@@ -114,22 +112,23 @@ public class BankAgenceViewController implements Initializable {
 
 				setGraphic(button);
 				button.setOnAction(e -> {
-					Stage stage = Utils.getCurrentStage(e);
-					stage.setTitle("Alteração da agencia");
-					loadView(entity, "/gui/bankAgence/BankAgenceViewRegister.fxml", Utils.getCurrentScene(e));
+					Stage stage = new Stage();
+					loadModalView(entity, "Alteração de agencia bancária", stage);
 				});
 			}
 		});
 	}
 
 	private void initRemoveButtons() {
-		tblColumnREMOVE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		tblColumnREMOVE.setCellFactory(param -> new TableCell<BankAgence, BankAgence>() {
+		tblColumnDELETE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tblColumnDELETE.setCellFactory(param -> new TableCell<BankAgence, BankAgence>() {
 			private final Button button = new Button();
 
 			@Override
 			protected void updateItem(BankAgence entity, boolean empty) {
 				button.setGraphic(new ImageView("/assets/icons/trash16.png"));
+				button.setStyle(" -fx-background-color:transparent;");
+				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
 				if (entity == null) {
 					setGraphic(null);
@@ -160,24 +159,39 @@ public class BankAgenceViewController implements Initializable {
 	}
 	
 	
-	private void loadView(BankAgence agence, String absolutePath, Scene scene) {
+	private synchronized <T> void loadModalView(BankAgence entity, String title, Stage stage) {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(absolutePath));
-			VBox box = loader.load();
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/bankAgence/BankAgenceViewRegister.fxml"));
+			Window window = btnNew.getScene().getWindow();
+			Pane pane = loader.load();	
+
+			Scene scene = new Scene(pane);
+			scene.getStylesheets().addAll(BootstrapFX.bootstrapFXStylesheet()); 
+			stage.setTitle(title);
+			stage.setScene(scene);
+			stage.setResizable(false);
+			stage.initOwner(window);
+			stage.initModality(Modality.WINDOW_MODAL);
+			stage.setHeight(270.0);
+			stage.setWidth(600.0);
 			
 			BankAgenceViewRegisterController controller = loader.getController();
+			controller.setBankAgence(entity);
 			controller.setBankAgenceServices(new BankAgenceService(), new BankService());
-			controller.loadAssociateObjects();
-			controller.setBankAgence(agence);
 			controller.updateFormData();
+			controller.loadAssociateObjects();
 			
-			VBox mainBox = (VBox) scene.getRoot();
-			mainBox.getChildren().clear();
-			mainBox.getChildren().addAll(box.getChildren());
+			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent event) {
+					updateTableView();
+				}
+			});
+			
+			stage.showAndWait();
 		} catch (IOException e) {
 			e.printStackTrace();
-			Alerts.showAlert("Erro", "Erro ao carregar a janela", e.getMessage(), AlertType.ERROR);
+			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
 		}
-		
 	}
 }

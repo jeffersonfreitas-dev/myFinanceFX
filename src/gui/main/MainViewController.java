@@ -9,6 +9,7 @@ import application.Main;
 import gui.accountPlan.AccountPlanViewController;
 import gui.bank.BankViewController;
 import gui.bankAccount.BankAccountViewController;
+import gui.bankAgence.BankAgenceViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +24,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import model.service.AccountPlanService;
 import model.service.BankAccountService;
+import model.service.BankAgenceService;
 import model.service.BankService;
 import utils.Alerts;
 
@@ -71,15 +73,13 @@ public class MainViewController implements Initializable{
 	}
 	
 	@FXML
-	private MenuItem mnuItemBankAgence;
+	private Hyperlink linkBankAgence;
 	@FXML
-	public void onMnuItemBankAgenceAction() {
-//		FXMLLoader loader = getLoaderView("/gui/bankAgence/BankAgenceView.fxml");
-//		Window parentScene = mnuMain.getScene().getWindow();
-//		loadModalView(loader, "Lista de agencias bancárias", parentScene, 600.0, 800.0, (BankAgenceViewController controller) -> {
-//			controller.setBankAgenceService(new BankAgenceService());
-//			controller.updateTableView();
-//		});
+	public void onlinkBankAgenceAction() {
+		loadView("/gui/bankAgence/BankAgenceView.fxml", "Lista de agencias bancárias", (BankAgenceViewController controller) -> {
+			controller.setBankAgenceService(new BankAgenceService());
+			controller.updateTableView();
+		}, "");
 	}
 	
 	@FXML
