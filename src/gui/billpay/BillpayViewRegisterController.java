@@ -24,7 +24,6 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
@@ -45,12 +44,30 @@ import utils.Utils;
 public class BillpayViewRegisterController implements Initializable{
 	
 	private BillpayService service;
+	public void setBillpayService(BillpayService billpayService) {
+		this.service = billpayService;
+	}
+
 	private CompanyService companyService;
+	public void setCompanyService(CompanyService companyService) {
+		this.companyService = companyService;
+	}
+
 	private CliforService cliforService;
+	public void setCliforService(CliforService cliforService) {
+		this.cliforService = cliforService;
+	}
+
 	private AccountPlanService accountService;
+	public void setAccountPlanService(AccountPlanService accountPlanService) {
+		this.accountService = accountPlanService;
+	}
+
 	private Billpay entity;
-	
-	
+	public void setBillpay(Billpay billpay) {
+		this.entity = billpay;
+	}	
+
 	@FXML
 	private TextField txtId;
 	@FXML
@@ -61,8 +78,6 @@ public class BillpayViewRegisterController implements Initializable{
 	private DatePicker pkDueDate;
 	@FXML
 	private TextField txtValue;
-	@FXML
-	private TextField txtFulfillment;
 	@FXML
 	private TextArea txtHistoric;
 	
@@ -117,8 +132,6 @@ public class BillpayViewRegisterController implements Initializable{
 	@FXML
 	private Label lblErrorValue;
 	@FXML
-	private Label lblErrorPortion;
-	@FXML
 	private Label lblErrorHistoric;
 	@FXML
 	private Label lblErrorCompany;
@@ -126,35 +139,37 @@ public class BillpayViewRegisterController implements Initializable{
 	private Label lblErrorClifor;
 	@FXML
 	private Label lblErrorAccountPlan;
+	private ObservableList<Company> obsCompany;
+	private ObservableList<Clifor> obsClifor;
+	private ObservableList<AccountPlan> obsAccount;
 	@FXML
 	private Button btnSave;
 	@FXML
 	public void onBtnSaveAction(ActionEvent event) {
-		if(service == null || entity == null) {
-			throw new IllegalStateException("Serviço e/ou Entidade não instanciado");
+		if(entity == null || service == null) {
+			throw new IllegalStateException("Entidade e/ou Serviço não instanciado.");
 		}
-		
 		try {
-			Billpay bill = getFormDate();
-			service.saveOrUpdate(bill);
+			Billpay entity = getFormDate();
+			service.saveOrUpdate(entity);
+			onBtnCancelAction(event);
 			Stage stage = Utils.getCurrentStage(event);
 			stage.getOnCloseRequest().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
-
 			stage.close();
+			
 		} catch (RecordAlreadyRecordedException e) {
 			Alerts.showAlert("Registro já cadastrado", null, e.getMessage(), AlertType.INFORMATION);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
 		} catch (ValidationException e) {
 			e.printStackTrace();
 			setErrorsMessage(e.getErrors());
 		} catch (DatabaseException e) {
 			e.printStackTrace();
 			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
-
-
 
 	@FXML
 	private Button btnCancel;
@@ -164,22 +179,16 @@ public class BillpayViewRegisterController implements Initializable{
 		stage.close();
 	}
 	
-	
-	private ObservableList<Company> obsCompany;
-	private ObservableList<Clifor> obsClifor;
-	private ObservableList<AccountPlan> obsAccount;
-	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		initializationNodes();
 	}
 
 	private void initializationNodes() {
-		btnSave.setGraphic(new ImageView("/assets/icons/save16.png"));
-		btnCancel.setGraphic(new ImageView("/assets/icons/cancel16.png"));	
+		btnCancel.getStyleClass().add("btn-danger");
+		btnSave.getStyleClass().add("btn-success");	
 		Constraints.setTextFieldDouble(txtValue);
 		Constraints.setTextFieldMaxLength(txtInvoice, 20);
-		Constraints.setTextFieldInteger(txtFulfillment);
 		Constraints.setTextFieldInteger(txtId);
 		Utils.formatDatePicker(pkDueDate, "dd/MM/yyyy");
 		Utils.formatDatePicker(pkEmission, "dd/MM/yyyy");
@@ -191,25 +200,7 @@ public class BillpayViewRegisterController implements Initializable{
 		txtValue.setPromptText("0,00");
 	}
 
-	public void setBillpayService(BillpayService billpayService) {
-		this.service = billpayService;
-	}
 
-	public void setCompanyService(CompanyService companyService) {
-		this.companyService = companyService;
-	}
-
-	public void setAccountPlanService(AccountPlanService accountPlanService) {
-		this.accountService = accountPlanService;
-	}
-
-	public void setCliforService(CliforService cliforService) {
-		this.cliforService = cliforService;
-	}
-
-	public void setBillpay(Billpay billpay) {
-		this.entity = billpay;
-	}
 	
 	public void updateFormData() {
 		if(entity == null) {
@@ -218,7 +209,6 @@ public class BillpayViewRegisterController implements Initializable{
 		
 		txtId.setText(String.valueOf(entity.getId()));
 		txtInvoice.setText(entity.getInvoice());
-		txtFulfillment.setText(String.valueOf(entity.getFulfillment()));
 		txtHistoric.setText(entity.getHistoric());
 		txtValue.setText(String.format("%.2f", entity.getValue()));
 		
@@ -266,14 +256,6 @@ public class BillpayViewRegisterController implements Initializable{
 		cmbCompany.setItems(obsCompany);
 	}
 	
-	public void setConfigPortiont(Integer integer) {
-		if(integer == null) {
-			txtFulfillment.setVisible(true);
-			txtFulfillment.setText("1");
-		}else {
-			txtFulfillment.setVisible(false);
-		}
-	}
 	
 	private Billpay getFormDate() {
 		Billpay bill = new Billpay();
@@ -287,18 +269,18 @@ public class BillpayViewRegisterController implements Initializable{
 		bill.setInvoice(txtInvoice.getText());
 		
 		if(pkEmission.getValue() == null) {
-			exception.setError("emission", "Informe uma data de emissão válida");
+			exception.setError("emission", "Informe uma data válida");
 		}else {
 			bill.setDate(Date.from(pkEmission.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 		}
 		
 		if(pkDueDate.getValue() == null) {
-			exception.setError("dueDate", "Informe uma data de vencimento válida");
+			exception.setError("dueDate", "Informe um vencimento válido");
 		}else {
 			bill.setDueDate(Date.from(pkDueDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 			
 			if(bill.getDueDate().before(bill.getDate())) {
-				exception.setError("dueDate", "Data de vencimento menor que a emissão");
+				exception.setError("dueDate", "Vencimento menor que a emissão");
 			}
 		}
 		
@@ -306,17 +288,6 @@ public class BillpayViewRegisterController implements Initializable{
 			exception.setError("value", "Informe um valor para a conta");
 		}else {
 			bill.setValue(Double.parseDouble(txtValue.getText().replace(",", ".")));
-		}
-
-		if(bill.getId() == null) {
-			
-			if(txtFulfillment.getText() == null || txtFulfillment.getText().trim().equals("")) {
-				exception.setError("portion", "Informe a quantidade de parcelas");
-			}
-			bill.setFulfillment(Integer.valueOf(txtFulfillment.getText()));
-		}else {
-			bill.setPortion(entity.getPortion());
-			bill.setFulfillment(entity.getFulfillment());
 		}
 
 		if(txtHistoric.getText() == null || txtHistoric.getText().trim().equals("")) {
@@ -356,7 +327,6 @@ public class BillpayViewRegisterController implements Initializable{
 		lblErrorEmission.setText("");
 		lblErrorHistoric.setText("");
 		lblErrorInvoice.setText("");
-		lblErrorPortion.setText("");
 		lblErrorValue.setText("");
 		
 		if(keys.contains("accountPlan")) {
@@ -379,9 +349,6 @@ public class BillpayViewRegisterController implements Initializable{
 		}
 		if(keys.contains("invoice")) {
 			lblErrorInvoice.setText(errors.get("invoice"));
-		}
-		if(keys.contains("portion")) {
-			lblErrorPortion.setText(errors.get("portion"));
 		}
 		if(keys.contains("value")) {
 			lblErrorValue.setText(errors.get("value"));

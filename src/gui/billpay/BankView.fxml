@@ -30,6 +30,7 @@
             <TableColumn fx:id="tblColumnDueDate" editable="false" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" resizable="false" style="-fx-alignment: center;" text="Vencimento" />
             <TableColumn fx:id="tblColumnProvider" editable="false" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" resizable="false" style="-fx-alignment: center-left;" text="Fornecedor" />
             <TableColumn fx:id="tblColumnHistoric" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Histórico" />
+            <TableColumn fx:id="tblColumnPortion" editable="false" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" resizable="false" style="-fx-alignment: center;" text="Parc" />
             <TableColumn fx:id="tblColumnValue" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" style="-fx-alignment: center-right;" text="Valor" />
             <TableColumn fx:id="tblColumnPAY" editable="false" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" resizable="false" sortable="false" style="-fx-alignment: center;" />
             <TableColumn fx:id="tblColumnEDIT" editable="false" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" resizable="false" sortable="false" style="-fx-alignment: center;" />

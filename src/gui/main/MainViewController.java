@@ -10,6 +10,7 @@ import gui.accountPlan.AccountPlanViewController;
 import gui.bank.BankViewController;
 import gui.bankAccount.BankAccountViewController;
 import gui.bankAgence.BankAgenceViewController;
+import gui.billpay.BillpayViewController;
 import gui.clifor.CliforViewController;
 import gui.company.CompanyViewController;
 import javafx.event.ActionEvent;
@@ -28,6 +29,7 @@ import model.service.AccountPlanService;
 import model.service.BankAccountService;
 import model.service.BankAgenceService;
 import model.service.BankService;
+import model.service.BillpayService;
 import model.service.CliforService;
 import model.service.CompanyService;
 import utils.Alerts;
@@ -141,13 +143,13 @@ public class MainViewController implements Initializable{
 	
 	
 	@FXML
-	private MenuItem mnuItemBillpay;
+	private Hyperlink linkBillpay;
 	@FXML
-	private void onMnuItemBillpayAction() {
-//		loadView("/gui/billpay/BillpayView.fxml", (BillpayViewController controller) -> {
-//			controller.setBillpayService(new BillpayService());
-//			controller.updateTableView();
-//		}, "");
+	public void onlinkBillpayAction() {
+		loadView("/gui/billpay/BillpayView.fxml", "Lista de contas a pagar", (BillpayViewController controller) -> {
+			controller.setBillpayService(new BillpayService());
+			controller.updateTableView();
+		}, "");
 	}
 
 	@FXML

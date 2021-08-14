@@ -32,6 +32,8 @@ public class BillpayService {
 			throw new RecordAlreadyRecordedException("Já existe uma conta a pagar com esta nota para esta empresa cadastrada.");
 		}
 		
+		entity.setFulfillment(1);
+		
 		if(entity.getId() == null) {
 			Calendar cal = Calendar.getInstance();
 			for(int i = 0; i < entity.getFulfillment(); i++) {

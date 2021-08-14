@@ -40,7 +40,8 @@
                   <Hyperlink fx:id="linkBankAccount" layoutX="14.0" layoutY="60.0" onAction="#onlinkBankAccountAction" text="Conta bancária" textFill="#c9bdbd" />
                   <Hyperlink fx:id="linkBankAgence" layoutX="14.0" layoutY="83.0" onAction="#onlinkBankAgenceAction" text="Agencia bancária" textFill="#c9bdbd" />
                   <Hyperlink fx:id="linkClifor" layoutX="14.0" layoutY="106.0" onAction="#onlinkCliforAction" text="Clifor" textFill="#c9bdbd" />
-                  <Hyperlink fx:id="linkCompany" layoutX="16.0" layoutY="129.0" onAction="#onlinkCompanyAction" text="Empresa" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkCompany" layoutX="14.0" layoutY="129.0" onAction="#onlinkCompanyAction" text="Empresa" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkBillpay" layoutX="14.0" layoutY="152.0" onAction="#onlinkBillpayAction" text="Conta a pagar" textFill="#c9bdbd" />
                </children></Pane>
          </children>
       </VBox>
@@ -57,7 +58,6 @@
                               <Menu mnemonicParsing="false" text="Financeiro">
                                  <items>
                                     <MenuItem fx:id="mnuItemBankStatement" mnemonicParsing="false" onAction="#onMnuItemBankStatementAction" text="Extrato" />
-                                    <MenuItem fx:id="mnuItemBillpay" mnemonicParsing="false" onAction="#onMnuItemBillpayAction" text="Conta à pagar" />
                                     <MenuItem fx:id="mnuItemReceivable" mnemonicParsing="false" onAction="#onMnuItemReceivableAction" text="Conta à receber" />
                                     <MenuItem fx:id="mnuItemMoviment" mnemonicParsing="false" onAction="#onMnuItemMovimentAction" text="Movimento" />
                                     <MenuItem mnemonicParsing="false" text="Transferencia bancária" />

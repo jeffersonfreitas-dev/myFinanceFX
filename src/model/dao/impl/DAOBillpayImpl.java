@@ -26,8 +26,8 @@ public class DAOBillpayImpl implements DAOBillpay{
 	@Override
 	public void insert(Billpay entity) {
 		PreparedStatement stmt = null;
-		String sql = "INSERT INTO billpay (invoice, historic, date, due_date, value, portion, fulfillment, status, id_clifor, id_company, id_account_plan) VALUES "
-				+ "(upper(?), upper(?), ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO billpay (invoice, historic, date, due_date, value, status, id_clifor, id_company, id_account_plan) VALUES "
+				+ "(upper(?), upper(?), ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, entity.getInvoice());
@@ -35,12 +35,10 @@ public class DAOBillpayImpl implements DAOBillpay{
 			stmt.setDate(3, new java.sql.Date(entity.getDate().getTime()));
 			stmt.setDate(4, new java.sql.Date(entity.getDueDate().getTime()));
 			stmt.setDouble(5, entity.getValue());
-			stmt.setInt(6, entity.getPortion());
-			stmt.setInt(7, entity.getFulfillment());
-			stmt.setString(8, entity.getStatus());
-			stmt.setInt(9, entity.getClifor().getId());
-			stmt.setInt(10, entity.getCompany().getId());
-			stmt.setInt(11, entity.getAccountPlan().getId());
+			stmt.setString(6, entity.getStatus());
+			stmt.setInt(7, entity.getClifor().getId());
+			stmt.setInt(8, entity.getCompany().getId());
+			stmt.setInt(9, entity.getAccountPlan().getId());
 			int result = stmt.executeUpdate();
 			if(result < 1) {
 				throw new DatabaseException("Falha ao salvar o registro");
@@ -57,7 +55,7 @@ public class DAOBillpayImpl implements DAOBillpay{
 	@Override
 	public void update(Billpay entity) {
 		PreparedStatement stmt = null;
-		String sql = "UPDATE billpay SET invoice = upper(?), historic = upper(?), date = ?, due_date = ?, value = ?, portion =?, fulfillment = ?,"
+		String sql = "UPDATE billpay SET invoice = upper(?), historic = upper(?), date = ?, due_date = ?, value = ?,"
 				+ " status = ?, id_clifor = ?, id_company = ?, id_account_plan = ? WHERE id = ?";
 		try {
 			stmt = conn.prepareStatement(sql);
@@ -66,13 +64,11 @@ public class DAOBillpayImpl implements DAOBillpay{
 			stmt.setDate(3, new java.sql.Date(entity.getDate().getTime()));
 			stmt.setDate(4, new java.sql.Date(entity.getDueDate().getTime()));
 			stmt.setDouble(5, entity.getValue());
-			stmt.setInt(6, entity.getPortion());
-			stmt.setInt(7, entity.getFulfillment());
-			stmt.setString(8, entity.getStatus());
-			stmt.setInt(9, entity.getClifor().getId());
-			stmt.setInt(10, entity.getCompany().getId());
-			stmt.setInt(11, entity.getAccountPlan().getId());
-			stmt.setInt(12, entity.getId());
+			stmt.setString(6, entity.getStatus());
+			stmt.setInt(7, entity.getClifor().getId());
+			stmt.setInt(8, entity.getCompany().getId());
+			stmt.setInt(9, entity.getAccountPlan().getId());
+			stmt.setInt(10, entity.getId());
 			int result = stmt.executeUpdate();
 			if(result < 1) {
 				throw new DatabaseException("Falha ao atualizar o registro");
@@ -195,10 +191,8 @@ public class DAOBillpayImpl implements DAOBillpay{
 		bill.setCompany(getCompany(rs));
 		bill.setDate(new java.util.Date(rs.getDate("date").getTime()));
 		bill.setDueDate(new java.util.Date(rs.getDate("due_date").getTime()));
-		bill.setFulfillment(rs.getInt("fulfillment"));
 		bill.setHistoric(rs.getString("historic"));
 		bill.setInvoice(rs.getString("invoice"));
-		bill.setPortion(rs.getInt("portion"));
 		bill.setStatus(rs.getString("status"));
 		bill.setValue(rs.getDouble("value"));
 		return bill;
