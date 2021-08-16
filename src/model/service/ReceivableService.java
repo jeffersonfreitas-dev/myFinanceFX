@@ -32,6 +32,8 @@ public class ReceivableService {
 			throw new RecordAlreadyRecordedException("Já existe uma conta a receber com esta nota para esta empresa cadastrada.");
 		}
 		
+		entity.setFulfillment(1);
+		
 		if(entity.getId() == null) {
 			Calendar cal = Calendar.getInstance();
 			for(int i = 0; i < entity.getFulfillment(); i++) {
@@ -46,14 +48,16 @@ public class ReceivableService {
 				receb.setInvoice(entity.getInvoice() + "/"+(i+1));
 				receb.setValue(entity.getValue() / entity.getFulfillment());
 				receb.setPortion(i+1);
-				receb.setStatus("ABERTO");
+				receb.setStatus("A");
 				cal.add(Calendar.MONTH, i);
 				receb.setDueDate(cal.getTime());
 				dao.insert(receb);
 			}
 			
 		}else {
+			entity.setPortion(1);
 			dao.update(entity);
+			
 		}
 		
 	}

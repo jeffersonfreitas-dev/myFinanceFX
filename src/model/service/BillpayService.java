@@ -48,7 +48,7 @@ public class BillpayService {
 				bill.setInvoice(entity.getInvoice() + "/"+(i+1));
 				bill.setValue(entity.getValue() / entity.getFulfillment());
 				bill.setPortion(i+1);
-				bill.setStatus("ABERTO");
+				bill.setStatus("A");
 				cal.add(Calendar.MONTH, i);
 				bill.setDueDate(cal.getTime());
 				dao.insert(bill);

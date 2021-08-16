@@ -81,14 +81,14 @@ public class MovimentServiceTest {
 		movs.add(mov);
 		Mockito.when(dao.findByAllOpenMoviment()).thenReturn(movs);
 		
-		service.save(mov);
+		service.saveOrUpdate(mov);
 	}
 	
 	
 	@Test(expected = ValidationException.class)
 	public void retornaErroQuandoObjetoParaSalvarEstaNulo() {
 		Moviment mov = null;
-		service.save(mov);
+		service.saveOrUpdate(mov);
 	}
 	
 	

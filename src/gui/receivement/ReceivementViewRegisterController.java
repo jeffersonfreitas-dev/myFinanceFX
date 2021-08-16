@@ -22,7 +22,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
@@ -85,6 +84,8 @@ public class ReceivementViewRegisterController implements Initializable{
 	
 	@FXML
 	private Label lblErroAccount;
+	@FXML
+	private Label lblErroData;
 	@FXML
 	private Button btnReceivement;
 	@FXML
@@ -161,8 +162,8 @@ public class ReceivementViewRegisterController implements Initializable{
 
 
 	private void initializationNodes() {
-		btnReceivement.setGraphic(new ImageView("/assets/icons/payment16.png"));
-		btnCancel.setGraphic(new ImageView("/assets/icons/cancel16.png"));
+		btnCancel.getStyleClass().add("btn-danger");
+		btnReceivement.getStyleClass().add("btn-success");
 		Utils.formatDatePicker(pkDate, "dd/MM/yyyy");
 		pkDate.setPromptText("DD/MM/AAAA");
 		initializeComboBoxAccount();
@@ -178,7 +179,7 @@ public class ReceivementViewRegisterController implements Initializable{
 		}
 		
 		if(keys.contains("date")) {
-			lblErroAccount.setText(errors.get("date"));
+			lblErroData.setText(errors.get("date"));
 		}
 	}
 

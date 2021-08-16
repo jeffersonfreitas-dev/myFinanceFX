@@ -44,7 +44,7 @@ public class PaymentService {
 		try {
 			if(movimentOpen() && dateInMoviment(entity.getDate())) {
 				Billpay bill = billService.findById(entity.getBillpay().getId());
-				bill.setStatus("PAGO");
+				bill.setStatus("P");
 				billService.saveOrUpdate(bill);
 				Integer idPayment = dao.insert(entity);
 				Payment payment = dao.findById(idPayment);

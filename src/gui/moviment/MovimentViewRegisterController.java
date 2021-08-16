@@ -16,7 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.entities.Moviment;
@@ -41,36 +40,37 @@ public class MovimentViewRegisterController implements Initializable{
 	@FXML
 	private TextField txtId;
 	@FXML
-	private DatePicker pkDate;
+	private DatePicker pkDateInicio;
 	@FXML
 	private DatePicker pkDateFim;
 	@FXML
-	private Label lblErroAccount;
+	private Label lblErroInicio;
+	@FXML
+	private Label lblErroFim;
 	@FXML
 	private Button btnSave;
 	@FXML
 	public void onBtnSaveAction(ActionEvent event) {
 		if(entity == null || service == null) {
-			throw new IllegalStateException("Serviço e/ou Entidade não instanciado");
+			throw new IllegalStateException("Entidade e/ou Serviço não instanciado.");
 		}
-		
 		try {
-			Moviment mov = getFormDate();
-			
-			service.save(mov);
+			Moviment entity = getFormDate();
+			service.saveOrUpdate(entity);
+			onBtnCancelAction(event);
 			Stage stage = Utils.getCurrentStage(event);
 			stage.getOnCloseRequest().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
 			stage.close();
-		} catch (ValidationException e) {
-			e.printStackTrace();
-			setErrorsMessage(e.getErrors());
+			
+		} catch (RecordAlreadyRecordedException e) {
+			Alerts.showAlert("Registro já cadastrado", null, e.getMessage(), AlertType.INFORMATION);
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
-		} catch (DatabaseException e) {
+		} catch (ValidationException e) {
 			e.printStackTrace();
-			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
-		} catch (RecordAlreadyRecordedException e) {
+			setErrorsMessage(e.getErrors());
+		} catch (DatabaseException e) {
 			e.printStackTrace();
 			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
 		}
@@ -85,10 +85,10 @@ public class MovimentViewRegisterController implements Initializable{
 		ValidationException exception = new ValidationException("");
 		mov.setId(Utils.tryParseToInt(txtId.getText()));
 		
-		if(pkDate.getValue() == null) {
+		if(pkDateInicio.getValue() == null) {
 			exception.setError("date", "Informe a data inicial");
 		}else {
-			mov.setDateBeginner(Date.from(pkDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+			mov.setDateBeginner(Date.from(pkDateInicio.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 		}
 		
 		if(pkDateFim.getValue() == null) {
@@ -119,10 +119,10 @@ public class MovimentViewRegisterController implements Initializable{
 	
 
 	private void initializationNodes() {
-		btnSave.setGraphic(new ImageView("/assets/icons/save16.png"));
-		btnCancel.setGraphic(new ImageView("/assets/icons/cancel16.png"));
-		Utils.formatDatePicker(pkDate, "dd/MM/yyyy");
-		pkDate.setPromptText("DD/MM/AAAA");
+		btnCancel.getStyleClass().add("btn-danger");
+		btnSave.getStyleClass().add("btn-success");
+		Utils.formatDatePicker(pkDateInicio, "dd/MM/yyyy");
+		pkDateInicio.setPromptText("DD/MM/AAAA");
 		Utils.formatDatePicker(pkDateFim, "dd/MM/yyyy");
 		pkDateFim.setPromptText("DD/MM/AAAA");
 
@@ -132,13 +132,14 @@ public class MovimentViewRegisterController implements Initializable{
 	private void setErrorsMessage(Map<String, String> errors) {
 		Set<String> keys = errors.keySet();
 		
-		lblErroAccount.setText("");
+		lblErroInicio.setText("");
+		lblErroFim.setText("");
 		
 		if(keys.contains("date")) {
-			lblErroAccount.setText(errors.get("date"));
+			lblErroInicio.setText(errors.get("date"));
 		}
 		if(keys.contains("dateFim")) {
-			lblErroAccount.setText(errors.get("dateFim"));
+			lblErroFim.setText(errors.get("dateFim"));
 		}
 	}
 

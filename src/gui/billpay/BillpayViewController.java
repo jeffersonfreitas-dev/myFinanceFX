@@ -115,13 +115,10 @@ public class BillpayViewController implements Initializable{
 		tblColumnHistoric.setCellValueFactory(new PropertyValueFactory<>("historic"));
 		tblColumnValue.setCellValueFactory(new PropertyValueFactory<>("value"));
 		Utils.formatTableColumnDouble(tblColumnValue, 2);
-		tblColumnStatus.setCellValueFactory(v -> {	String s = v.getValue().getStatus(); Utils.formatTableColumnStatus(tblColumnStatus, s);
-			return new ReadOnlyStringWrapper(s);
-		});
+		tblColumnStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 		tblColumnProvider.setCellValueFactory(v -> {	String s = v.getValue().getClifor().getName();
 		return new ReadOnlyStringWrapper(s);
 		});
-		
 	}
 
 
@@ -136,7 +133,6 @@ public class BillpayViewController implements Initializable{
 		initRemoveButtons();
 		initEditButtons();
 		initPaymentButtons();
-
 	}
 	
 	
@@ -150,7 +146,7 @@ public class BillpayViewController implements Initializable{
 				button.setStyle(" -fx-background-color:transparent;");
 				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
-				if(entity == null || entity.getStatus().equals("PAGO")) {
+				if(entity == null || entity.getStatus().equals("P")) {
 					setGraphic(null);
 					return;
 				}
@@ -158,7 +154,7 @@ public class BillpayViewController implements Initializable{
 				setGraphic(button);
 				button.setOnAction( e -> {
 					Stage stage = new Stage();
-					loadModalView("/gui/billpay/BillpayViewRegister.fxml", 585.0, 600.0, entity, "Alteração de contas a pagar", stage, (BillpayViewRegisterController controller) -> {
+					loadModalView("/gui/billpay/BillpayViewRegister.fxml", 600.0, 585.0, entity, "Alteração de contas a pagar", stage, (BillpayViewRegisterController controller) -> {
 						controller.setBillpay(entity);
 						controller.setBillpayService(new BillpayService());
 						controller.setCliforService(new CliforService());
@@ -184,14 +180,14 @@ public class BillpayViewController implements Initializable{
 				button.setStyle(" -fx-background-color:transparent;");
 				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
-				if(entity == null || entity.getStatus().equals("PAGO")) {
+				if(entity == null || entity.getStatus().equals("P")) {
 					setGraphic(null);
 					return;
 				}
 				setGraphic(button);
 				button.setOnAction(e -> {
 					Stage stage = new Stage();
-					loadModalView("/gui/payment/PaymentViewRegister.fxml", 600.0, 270.0, entity, "Pagamento de contas a pagar", stage, (PaymentViewRegisterController controller) -> {
+					loadModalView("/gui/payment/PaymentViewRegister.fxml", 600.0, 270.0, entity, "Pagamento de contas", stage, (PaymentViewRegisterController controller) -> {
 						controller.setBillpayService(new BillpayService());
 						controller.setAccountService(new BankAccountService());
 						controller.setService(new PaymentService());
@@ -216,7 +212,7 @@ public class BillpayViewController implements Initializable{
 				button.setStyle(" -fx-background-color:transparent;");
 				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
-				if(entity == null || entity.getStatus().equals("PAGO")) {
+				if(entity == null || entity.getStatus().equals("P")) {
 					setGraphic(null);
 					return;
 				}

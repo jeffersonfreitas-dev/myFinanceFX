@@ -24,7 +24,6 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
@@ -45,10 +44,29 @@ import utils.Utils;
 public class ReceivableViewRegisterController implements Initializable{
 	
 	private ReceivableService service;
+	public void setReceivableService(ReceivableService receivableService) {
+		this.service = receivableService;
+	}
+
 	private CompanyService companyService;
+	public void setCompanyService(CompanyService companyService) {
+		this.companyService = companyService;
+	}
+
 	private CliforService cliforService;
+	public void setCliforService(CliforService cliforService) {
+		this.cliforService = cliforService;
+	}
+
 	private AccountPlanService accountService;
+	public void setAccountPlanService(AccountPlanService accountPlanService) {
+		this.accountService = accountPlanService;
+	}
+
 	private Receivable entity;
+	public void setReceivable(Receivable receivable) {
+		this.entity = receivable;
+	}	
 	
 	
 	@FXML
@@ -61,8 +79,6 @@ public class ReceivableViewRegisterController implements Initializable{
 	private DatePicker pkDueDate;
 	@FXML
 	private TextField txtValue;
-	@FXML
-	private TextField txtFulfillment;
 	@FXML
 	private TextArea txtHistoric;
 	
@@ -117,8 +133,6 @@ public class ReceivableViewRegisterController implements Initializable{
 	@FXML
 	private Label lblErrorValue;
 	@FXML
-	private Label lblErrorPortion;
-	@FXML
 	private Label lblErrorHistoric;
 	@FXML
 	private Label lblErrorCompany;
@@ -130,27 +144,28 @@ public class ReceivableViewRegisterController implements Initializable{
 	private Button btnSave;
 	@FXML
 	public void onBtnSaveAction(ActionEvent event) {
-		if(service == null || entity == null) {
-			throw new IllegalStateException("Serviço e/ou Entidade não instanciado");
+		if(entity == null || service == null) {
+			throw new IllegalStateException("Entidade e/ou Serviço não instanciado.");
 		}
-		
 		try {
-			Receivable recep = getFormDate();
-			service.saveOrUpdate(recep);
+			Receivable entity = getFormDate();
+			service.saveOrUpdate(entity);
+			onBtnCancelAction(event);
 			Stage stage = Utils.getCurrentStage(event);
 			stage.getOnCloseRequest().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
-
 			stage.close();
+			
 		} catch (RecordAlreadyRecordedException e) {
 			Alerts.showAlert("Registro já cadastrado", null, e.getMessage(), AlertType.INFORMATION);
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
 		} catch (ValidationException e) {
 			e.printStackTrace();
 			setErrorsMessage(e.getErrors());
 		} catch (DatabaseException e) {
 			e.printStackTrace();
 			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -175,11 +190,10 @@ public class ReceivableViewRegisterController implements Initializable{
 	}
 
 	private void initializationNodes() {
-		btnSave.setGraphic(new ImageView("/assets/icons/save16.png"));
-		btnCancel.setGraphic(new ImageView("/assets/icons/cancel16.png"));	
+		btnCancel.getStyleClass().add("btn-danger");
+		btnSave.getStyleClass().add("btn-success");	
 		Constraints.setTextFieldDouble(txtValue);
 		Constraints.setTextFieldMaxLength(txtInvoice, 20);
-		Constraints.setTextFieldInteger(txtFulfillment);
 		Constraints.setTextFieldInteger(txtId);
 		Utils.formatDatePicker(pkDueDate, "dd/MM/yyyy");
 		Utils.formatDatePicker(pkEmission, "dd/MM/yyyy");
@@ -191,26 +205,6 @@ public class ReceivableViewRegisterController implements Initializable{
 		txtValue.setPromptText("0,00");
 	}
 
-	public void setReceivableService(ReceivableService receivableService) {
-		this.service = receivableService;
-	}
-
-	public void setCompanyService(CompanyService companyService) {
-		this.companyService = companyService;
-	}
-
-	public void setAccountPlanService(AccountPlanService accountPlanService) {
-		this.accountService = accountPlanService;
-	}
-
-	public void setCliforService(CliforService cliforService) {
-		this.cliforService = cliforService;
-	}
-
-	public void setReceivable(Receivable receivable) {
-		this.entity = receivable;
-	}
-	
 	public void updateFormData() {
 		if(entity == null) {
 			throw new IllegalStateException("Entidade não instanciada");
@@ -218,7 +212,6 @@ public class ReceivableViewRegisterController implements Initializable{
 		
 		txtId.setText(String.valueOf(entity.getId()));
 		txtInvoice.setText(entity.getInvoice());
-		txtFulfillment.setText(String.valueOf(entity.getFulfillment()));
 		txtHistoric.setText(entity.getHistoric());
 		txtValue.setText(String.format("%.2f", entity.getValue()));
 		
@@ -266,14 +259,6 @@ public class ReceivableViewRegisterController implements Initializable{
 		cmbCompany.setItems(obsCompany);
 	}
 	
-	public void setConfigPortiont(Integer integer) {
-		if(integer == null) {
-			txtFulfillment.setVisible(true);
-			txtFulfillment.setText("1");
-		}else {
-			txtFulfillment.setVisible(false);
-		}
-	}
 	
 	private Receivable getFormDate() {
 		Receivable recep = new Receivable();
@@ -287,18 +272,18 @@ public class ReceivableViewRegisterController implements Initializable{
 		recep.setInvoice(txtInvoice.getText());
 		
 		if(pkEmission.getValue() == null) {
-			exception.setError("emission", "Informe uma data de emissão válida");
+			exception.setError("emission", "Informe uma data válida");
 		}else {
 			recep.setDate(Date.from(pkEmission.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 		}
 		
 		if(pkDueDate.getValue() == null) {
-			exception.setError("dueDate", "Informe uma data de vencimento válida");
+			exception.setError("dueDate", "Informe um vencimento válido");
 		}else {
 			recep.setDueDate(Date.from(pkDueDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 			
 			if(recep.getDueDate().before(recep.getDate())) {
-				exception.setError("dueDate", "Data de vencimento menor que a emissão");
+				exception.setError("dueDate", "Vencimento menor que a emissão");
 			}
 		}
 		
@@ -306,17 +291,6 @@ public class ReceivableViewRegisterController implements Initializable{
 			exception.setError("value", "Informe um valor para a conta");
 		}else {
 			recep.setValue(Double.parseDouble(txtValue.getText().replace(",", ".")));
-		}
-
-		if(recep.getId() == null) {
-			
-			if(txtFulfillment.getText() == null || txtFulfillment.getText().trim().equals("")) {
-				exception.setError("portion", "Informe a quantidade de parcelas");
-			}
-			recep.setFulfillment(Integer.valueOf(txtFulfillment.getText()));
-		}else {
-			recep.setPortion(entity.getPortion());
-			recep.setFulfillment(entity.getFulfillment());
 		}
 
 		if(txtHistoric.getText() == null || txtHistoric.getText().trim().equals("")) {
@@ -356,7 +330,6 @@ public class ReceivableViewRegisterController implements Initializable{
 		lblErrorEmission.setText("");
 		lblErrorHistoric.setText("");
 		lblErrorInvoice.setText("");
-		lblErrorPortion.setText("");
 		lblErrorValue.setText("");
 		
 		if(keys.contains("accountPlan")) {
@@ -379,9 +352,6 @@ public class ReceivableViewRegisterController implements Initializable{
 		}
 		if(keys.contains("invoice")) {
 			lblErrorInvoice.setText(errors.get("invoice"));
-		}
-		if(keys.contains("portion")) {
-			lblErrorPortion.setText(errors.get("portion"));
 		}
 		if(keys.contains("value")) {
 			lblErrorValue.setText(errors.get("value"));

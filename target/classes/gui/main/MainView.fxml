@@ -22,11 +22,6 @@
          <children>
             <Pane prefHeight="76.0" prefWidth="200.0">
                <children>
-                  <Label fx:id="versao" layoutX="5.0" layoutY="55.0" text="v1.0" textFill="WHITE">
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                  </Label>
                   <Hyperlink fx:id="linkAbout" layoutX="20.0" layoutY="15.0" onAction="#onlinkAboutAction" prefHeight="46.0" prefWidth="168.0" text="MyFinance" textFill="#c9bdbd">
                      <font>
                         <Font name="System Bold" size="26.0" />
@@ -35,13 +30,33 @@
                </children></Pane>
             <Pane prefHeight="439.0" prefWidth="200.0">
                <children>
-                  <Hyperlink fx:id="linkBank" layoutX="14.0" layoutY="14.0" onAction="#onlinkBankAction" text="Banco" textFill="#c9bdbd" />
-                  <Hyperlink fx:id="linkAccountPlan" layoutX="14.0" layoutY="37.0" onAction="#onlinkAccountPlanAction" text="Plano de conta" textFill="#c9bdbd" />
-                  <Hyperlink fx:id="linkBankAccount" layoutX="14.0" layoutY="60.0" onAction="#onlinkBankAccountAction" text="Conta bancária" textFill="#c9bdbd" />
-                  <Hyperlink fx:id="linkBankAgence" layoutX="14.0" layoutY="83.0" onAction="#onlinkBankAgenceAction" text="Agencia bancária" textFill="#c9bdbd" />
-                  <Hyperlink fx:id="linkClifor" layoutX="14.0" layoutY="106.0" onAction="#onlinkCliforAction" text="Clifor" textFill="#c9bdbd" />
-                  <Hyperlink fx:id="linkCompany" layoutX="14.0" layoutY="129.0" onAction="#onlinkCompanyAction" text="Empresa" textFill="#c9bdbd" />
-                  <Hyperlink fx:id="linkBillpay" layoutX="14.0" layoutY="152.0" onAction="#onlinkBillpayAction" text="Conta a pagar" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkBank" layoutX="17.0" layoutY="290.0" onAction="#onlinkBankAction" text="Banco" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkAccountPlan" layoutX="19.0" layoutY="354.0" onAction="#onlinkAccountPlanAction" text="Plano de conta" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkBankAccount" layoutX="16.0" layoutY="270.0" onAction="#onlinkBankAccountAction" text="Conta bancária" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkBankAgence" layoutX="17.0" layoutY="247.0" onAction="#onlinkBankAgenceAction" text="Agencia bancária" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkClifor" layoutX="18.0" layoutY="331.0" onAction="#onlinkCliforAction" text="Cliente/Fornecedor" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkCompany" layoutX="17.0" layoutY="310.0" onAction="#onlinkCompanyAction" text="Empresa" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkBillpay" layoutX="16.0" layoutY="121.0" onAction="#onlinkBillpayAction" text="Conta a pagar" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkReceivable" layoutX="17.0" layoutY="144.0" onAction="#onlinkReceivableAction" text="Conta a receber" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkMoviment" layoutX="16.0" layoutY="98.0" onAction="#onlinkMovimentAction" text="Movimento" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkDashboard" layoutX="17.0" layoutY="41.0" onAction="#onlinkDashboard" text="Dashboard" textFill="#c9bdbd" />
+                  <Label layoutX="6.0" layoutY="79.0" text="Movimentação" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <Hyperlink fx:id="linkReceivable1" layoutX="17.0" layoutY="167.0" onAction="#onlinkReceivableAction" text="Extrato" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkReceivable11" layoutX="16.0" layoutY="190.0" onAction="#onlinkReceivableAction" text="Transferencia" textFill="#c9bdbd" />
+                  <Label layoutX="6.0" layoutY="228.0" text="Cadastro" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="7.0" layoutY="24.0" text="Início" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
                </children></Pane>
          </children>
       </VBox>
@@ -58,8 +73,6 @@
                               <Menu mnemonicParsing="false" text="Financeiro">
                                  <items>
                                     <MenuItem fx:id="mnuItemBankStatement" mnemonicParsing="false" onAction="#onMnuItemBankStatementAction" text="Extrato" />
-                                    <MenuItem fx:id="mnuItemReceivable" mnemonicParsing="false" onAction="#onMnuItemReceivableAction" text="Conta à receber" />
-                                    <MenuItem fx:id="mnuItemMoviment" mnemonicParsing="false" onAction="#onMnuItemMovimentAction" text="Movimento" />
                                     <MenuItem mnemonicParsing="false" text="Transferencia bancária" />
                                  </items>
                               </Menu>

@@ -8,29 +8,28 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import org.kordamp.bootstrapfx.BootstrapFX;
+
 import database.exceptions.DatabaseException;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -51,45 +50,41 @@ public class MovimentViewController implements Initializable{
 	private Button btnNew;
 	@FXML
 	public void onBtnNewAction() {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/moviment/MovimentViewRegister.fxml")); 
-		Window window = btnNew.getScene().getWindow();
-		Moviment moviment = new Moviment();
-		loadViewModal(moviment, loader, window, "Cadastro de movimentação", 250.0, 500.0, (MovimentViewRegisterController controller) -> {
+
+		Stage stage = new Stage();
+		Moviment entity = new Moviment();
+		loadModalView("/gui/moviment/MovimentViewRegister.fxml", 600.0, 270.0, entity, "Cadastro de movimentação", stage, (MovimentViewRegisterController controller) -> {
 			controller.setService(new MovimentService());
-			controller.setMoviment(moviment);
-		});
+			controller.setMoviment(entity);				
+//			controller.updateFormData();
+			});
 	}
 
 
 	@FXML
-	private Button btnClose;
+	private TableView<Moviment> tblView;
 	@FXML
-	public void onBtnCloseAction(ActionEvent event) {
-		Stage stage = Utils.getCurrentStage(event);
-		loadView(stage);
-	}
-
-
+	private TableColumn<Moviment, Integer> tblColumnCode;
 	@FXML
-	private TableView<Moviment> tblMoviment;
+	private TableColumn<Moviment, Date> tblColumnDateBeginner;
 	@FXML
-	private TableColumn<Moviment, Integer> columnCode;
+	private TableColumn<Moviment, Date> tblColumnDateFinish;
 	@FXML
-	private TableColumn<Moviment, Date> columnDateBeginner;
+	private TableColumn<Moviment, Double> tblColumnValueFinish;
 	@FXML
-	private TableColumn<Moviment, Date> columnDateFinish;
+	private TableColumn<Moviment, Double> tblColumnBalance;
 	@FXML
-	private TableColumn<Moviment, Double> columnValueFinish;
+	private TableColumn<Moviment, Double> tblColumnValueBeginner;
 	@FXML
-	private TableColumn<Moviment, Double> columnBalance;
+	private TableColumn<Moviment, String> tblColumnName;
 	@FXML
-	private TableColumn<Moviment, Double> columnValueBeginner;
+	private TableColumn<Moviment, String> tblColumnCompany;
 	@FXML
-	private TableColumn<Moviment, String> columnName;
+	private TableColumn<Moviment, Moviment> tblColumnDELETE;
 	@FXML
-	private TableColumn<Moviment, Moviment> columnClose;
+	private TableColumn<Moviment, Moviment> tblColumnCLOSE;
 	@FXML
-	private TableColumn<Moviment, String> columnStatus;
+	private TableColumn<Moviment, String> tblColumnStatus;
 	
 	private ObservableList<Moviment> obsList = null;
 
@@ -101,27 +96,20 @@ public class MovimentViewController implements Initializable{
 
 
 	private void initializationNodes() {
-	
-		btnNew.setGraphic(new ImageView("/assets/icons/medium/Newfile.png"));
-		btnNew.getStyleClass().add("button");
-		btnNew.setDefaultButton(true);
-		
-		btnClose.setGraphic(new ImageView("/assets/icons/cancel16.png"));
-		btnClose.setCancelButton(true);
-		
-		columnCode.setCellValueFactory(new PropertyValueFactory<>("id"));
-		columnDateBeginner.setCellValueFactory(new PropertyValueFactory<>("dateBeginner"));
-		Utils.formatTableColumnDate(columnDateBeginner, "dd/MM/yyyy");
-		columnDateFinish.setCellValueFactory(new PropertyValueFactory<>("dateFinish"));
-		Utils.formatTableColumnDate(columnDateFinish, "dd/MM/yyyy");
-		columnName.setCellValueFactory(new PropertyValueFactory<>("name"));
-		columnBalance.setCellValueFactory(new PropertyValueFactory<>("balanceMoviment"));
-		Utils.formatTableColumnDouble(columnValueBeginner, 2);
-		columnValueFinish.setCellValueFactory(new PropertyValueFactory<>("valueFinish"));
-		Utils.formatTableColumnDouble(columnValueFinish, 2);
-		columnValueBeginner.setCellValueFactory(new PropertyValueFactory<>("valueBeginner"));
-		Utils.formatTableColumnDouble(columnValueBeginner, 2);
-		columnStatus.setCellValueFactory(v -> {
+		btnNew.getStyleClass().add("btn-primary");		
+		tblColumnCode.setCellValueFactory(new PropertyValueFactory<>("id"));
+		tblColumnDateBeginner.setCellValueFactory(new PropertyValueFactory<>("dateBeginner"));
+		Utils.formatTableColumnDate(tblColumnDateBeginner, "dd/MM/yyyy");
+		tblColumnDateFinish.setCellValueFactory(new PropertyValueFactory<>("dateFinish"));
+		Utils.formatTableColumnDate(tblColumnDateFinish, "dd/MM/yyyy");
+		tblColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
+		tblColumnBalance.setCellValueFactory(new PropertyValueFactory<>("balanceMoviment"));
+		Utils.formatTableColumnDouble(tblColumnValueBeginner, 2);
+		tblColumnValueFinish.setCellValueFactory(new PropertyValueFactory<>("valueFinish"));
+		Utils.formatTableColumnDouble(tblColumnValueFinish, 2);
+		tblColumnValueBeginner.setCellValueFactory(new PropertyValueFactory<>("valueBeginner"));
+		Utils.formatTableColumnDouble(tblColumnValueBeginner, 2);
+		tblColumnStatus.setCellValueFactory(v -> {
 			String result = "";
 			result = v.getValue().isClosed() ? "F" : "A";
 			return new ReadOnlyStringWrapper(result);
@@ -135,62 +123,23 @@ public class MovimentViewController implements Initializable{
 		}
 		List<Moviment> list = service.findAll();
 		obsList = FXCollections.observableArrayList(list);
-		tblMoviment.setItems(obsList);
+		tblView.setItems(obsList);
 		initializationNodes();
 		initClosingButtons();
+		initRemoveButtons();
 	}
 	
-	
-	private synchronized <T> void loadViewModal(Moviment moviment, FXMLLoader loader, Window parent, String title, double height, double width,
-			Consumer<T> initialization) {
-		try {
-			Pane pane = loader.load();
-			Stage stage = new Stage();
-			stage.setTitle(title);
-			stage.setScene(new Scene(pane));
-			stage.setResizable(false);
-			stage.initOwner(parent);
-			stage.initModality(Modality.WINDOW_MODAL);
-			stage.setHeight(height);
-			stage.setWidth(width);
-			
-			T controller = loader.getController();
-			initialization.accept(controller);
-			
-			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-				@Override
-				public void handle(WindowEvent event) {
-					updateTableView();
-				}
-			});
-			stage.showAndWait();
-		} catch (IOException e) {
-			e.printStackTrace();
-			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
-		}
-	}	
-	
-	
-	private void loadView(Stage stage) {
-		try {
-			VBox mainBox =  (VBox) ((ScrollPane) stage.getScene().getRoot()).getContent();
-			Node mnu = mainBox.getChildren().get(0);
-			mainBox.getChildren().clear();
-			mainBox.getChildren().add(mnu);
-		} catch (Exception e) {
-			e.printStackTrace();
-			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
-		}
-	}
-	
+
 	private void initClosingButtons() {
-		columnClose.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		columnClose.setCellFactory(param -> new TableCell<Moviment, Moviment>() {
+		tblColumnCLOSE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tblColumnCLOSE.setCellFactory(param -> new TableCell<Moviment, Moviment>() {
 			private final Button button = new Button();
 			
 			@Override
 			protected void updateItem(Moviment entity, boolean empty) {
 				button.setGraphic(new ImageView("/assets/icons/payment16.png"));
+				button.setStyle(" -fx-background-color:transparent;");
+				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
 				if(entity == null || entity.isClosed()) {
 					setGraphic(null);
@@ -219,5 +168,79 @@ public class MovimentViewController implements Initializable{
 			
 		}
 	}
+	
+	private void initRemoveButtons() {
+		tblColumnDELETE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tblColumnDELETE.setCellFactory(param -> new TableCell<Moviment, Moviment>() {
+			private final Button button = new Button();
+			
+			@Override
+			protected void updateItem(Moviment entity, boolean empty) {
+				button.setGraphic(new ImageView("/assets/icons/trash16.png"));
+				button.setStyle(" -fx-background-color:transparent;");
+				button.setCursor(Cursor.HAND);
+				super.updateItem(entity, empty);
+				if(entity == null || entity.isClosed()) {
+					setGraphic(null);
+					return;
+				}
+				setGraphic(button);
+				button.setOnAction(e -> removeEntity(entity));
+			}
+		});
+	}
+	
+	
+	private void removeEntity(Moviment entity) {
+		Optional<ButtonType> result = Alerts.showConfirmation("Confirmação", "Você tem certeza que deseja remover este item?");
+		
+		if(result.get() == ButtonType.OK) {
+			if(service == null) {
+				throw new IllegalStateException("Serviço não instanciado");
+			}
+			try {
+				service.remove(entity);
+				updateTableView();
+			} catch (DatabaseException e) {
+				e.printStackTrace();
+				Alerts.showAlert("Erro ao remover registro", null, e.getMessage(), AlertType.ERROR);
+			}
+		}
+	}
+	
+	
+	private synchronized <T> void loadModalView(String path, Double width, Double height, Moviment entity, String title, Stage stage, Consumer<T> initialization) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+			Window window = btnNew.getScene().getWindow();
+			Pane pane = loader.load();	
+
+			Scene scene = new Scene(pane);
+			scene.getStylesheets().addAll(BootstrapFX.bootstrapFXStylesheet()); 
+			stage.setTitle(title);
+			stage.setScene(scene);
+			stage.setResizable(false);
+			stage.initOwner(window);
+			stage.initModality(Modality.WINDOW_MODAL);
+			stage.setHeight(height);
+			stage.setWidth(width);
+			
+			
+			T controller = loader.getController();
+			initialization.accept(controller);
+			
+			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent event) {
+					updateTableView();
+				}
+			});
+			
+			stage.showAndWait();
+		} catch (IOException e) {
+			e.printStackTrace();
+			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
+		}
+	}	
 
 }

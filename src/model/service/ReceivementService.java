@@ -35,7 +35,7 @@ public class ReceivementService {
 		try {
 			if(movimentOpen() && dateInMoviment(entity.getDate())) {
 				Receivable receb = receivableService.findById(entity.getReceivable().getId());
-				receb.setStatus("RECEBIDO");
+				receb.setStatus("R");
 				receivableService.saveOrUpdate(receb);
 				Integer id = dao.insert(entity);
 				Receivement receivement = dao.findById(id);
@@ -65,7 +65,7 @@ public class ReceivementService {
 		if(isAfterBeginner && isBeforeFinish){
 			return true;
 		}else {
-			throw new DatabaseException("A data do pagamento está fora do periodo do movimento aberto");
+			throw new DatabaseException("A data do recebimento está fora do periodo do movimento aberto");
 		}
 	}
 

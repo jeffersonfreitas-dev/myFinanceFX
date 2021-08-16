@@ -13,6 +13,8 @@ import gui.bankAgence.BankAgenceViewController;
 import gui.billpay.BillpayViewController;
 import gui.clifor.CliforViewController;
 import gui.company.CompanyViewController;
+import gui.moviment.MovimentViewController;
+import gui.receivable.ReceivableViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,6 +34,8 @@ import model.service.BankService;
 import model.service.BillpayService;
 import model.service.CliforService;
 import model.service.CompanyService;
+import model.service.MovimentService;
+import model.service.ReceivableService;
 import utils.Alerts;
 
 public class MainViewController implements Initializable{
@@ -54,6 +58,13 @@ public class MainViewController implements Initializable{
 		loadView("/gui/about/AboutView.fxml",  "Sobre o sistema", x -> {}, "");
 	}
 	
+	@FXML
+	private Hyperlink linkDashboard;
+	@FXML
+	public void onlinkDashboard() {
+		loadView("/gui/dashboard/Dashboard.fxml",  "DASHBOARD", x -> {}, "");
+	}
+
 	@FXML
 	private Hyperlink linkBank;
 	@FXML
@@ -153,24 +164,24 @@ public class MainViewController implements Initializable{
 	}
 
 	@FXML
-	private MenuItem mnuItemMoviment;
+	private Hyperlink linkMoviment;
 	@FXML
-	private void onMnuItemMovimentAction() {
-//		loadView("/gui/moviment/MovimentView.fxml", (MovimentViewController controller) -> {
-//			controller.setMovimentService(new MovimentService());
-//			controller.updateTableView();
-//		}, "../moviment/Moviment.css");
+	private void onlinkMovimentAction() {
+		loadView("/gui/moviment/MovimentView.fxml", "Lista de movimentações", (MovimentViewController controller) -> {
+			controller.setMovimentService(new MovimentService());
+			controller.updateTableView();
+		}, "");
 	}
 	
 	
 	@FXML
-	private MenuItem mnuItemReceivable;
+	private Hyperlink linkReceivable;
 	@FXML
-	private void onMnuItemReceivableAction() {
-//		loadView("/gui/receivable/ReceivableView.fxml", (ReceivableViewController controller) -> {
-//			controller.setReceivableService(new ReceivableService());
-//			controller.updateTableView();
-//		}, "");
+	private void onlinkReceivableAction() {
+		loadView("/gui/receivable/ReceivableView.fxml", "Lista de contas a receber", (ReceivableViewController controller) -> {
+			controller.setReceivableService(new ReceivableService());
+			controller.updateTableView();
+		}, "");
 	}
 	
 //	private synchronized <T> void loadModalView(String path, String title, double heigth, double width, Consumer<T> initialization) {

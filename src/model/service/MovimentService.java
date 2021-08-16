@@ -27,7 +27,7 @@ public class MovimentService {
 	}
 
 
-	public void save(Moviment moviment) {
+	public void saveOrUpdate(Moviment moviment) {
 		if(moviment == null) {
 			throw new ValidationException("O objeto movimento está nulo");
 		}
@@ -49,7 +49,7 @@ public class MovimentService {
 			
 			moviment.setName(d.getYear() +"/"+d.getMonthValue());
 			Integer id = dao.insert(moviment);
-			Moviment movv = dao.findById(id);
+			dao.findById(id);
 			createMovimentInitialInBankStatmentent(moviment, accounts);
 		}else {
 			throw new IllegalStateException("Data final menor que data inicial");
@@ -101,5 +101,10 @@ public class MovimentService {
 		moviment.setBalanceMoviment(moviment.getValueFinish() - moviment.getValueBeginner());
 		moviment.setClosed(true);
 		dao.update(moviment);
+	}
+
+
+	public void remove(Moviment entity) {
+		
 	}
 }
