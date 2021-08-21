@@ -13,6 +13,7 @@ import gui.bankAgence.BankAgenceViewController;
 import gui.billpay.BillpayViewController;
 import gui.clifor.CliforViewController;
 import gui.company.CompanyViewController;
+import gui.dashboard.DashboardController;
 import gui.moviment.MovimentViewController;
 import gui.receivable.ReceivableViewController;
 import javafx.event.ActionEvent;
@@ -34,6 +35,7 @@ import model.service.BankService;
 import model.service.BillpayService;
 import model.service.CliforService;
 import model.service.CompanyService;
+import model.service.DashboardService;
 import model.service.MovimentService;
 import model.service.ReceivableService;
 import utils.Alerts;
@@ -62,7 +64,7 @@ public class MainViewController implements Initializable{
 	private Hyperlink linkDashboard;
 	@FXML
 	public void onlinkDashboard() {
-		loadView("/gui/dashboard/Dashboard.fxml",  "DASHBOARD", x -> {}, "");
+		loadViewteste("/gui/dashboard/Dashboard.fxml",  "DASHBOARD");
 	}
 
 	@FXML
@@ -245,9 +247,33 @@ public class MainViewController implements Initializable{
 		}
 	}
 
+	
+	//////////TESTEE TEM QUE APAGAR
+	private synchronized <T> void loadViewteste(String absolutePath, String tela) {
+		try {
+			FXMLLoader loader = getLoaderView(absolutePath);
+			VBox box = loader.load();
+			BorderPane mainScene = (BorderPane) Main.getMainScene().getRoot();
+			BorderPane secound = (BorderPane) mainScene.getCenter();
+			Node top = secound.getTop();
+			Node bottom = secound.getBottom();
+			DashboardController controller = loader.getController();
+			controller.setDashboardService(new DashboardService());
+			VBox box2 = controller.updateView(box);
+			secound.getChildren().clear();
+			secound.setTop(top);
+			secound.setBottom(bottom);
+			secound.setCenter(box2);
+			nomeTela.setText(tela);
+		}catch(IOException e) {
+			e.printStackTrace();
+			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
+		}
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		nomeTela.setText("DASHBOARD");
+		nomeTela.setText("");
 		nomeTela.getStyleClass().addAll("h3", "strong", "text-primary");
 		nomeUsuario.getStyleClass().addAll("h5", "strong");
 	}

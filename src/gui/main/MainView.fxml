@@ -87,7 +87,14 @@
             <Pane nodeOrientation="LEFT_TO_RIGHT" prefHeight="392.0" prefWidth="710.0" BorderPane.alignment="CENTER">
                <BorderPane.margin>
                   <Insets bottom="1.0" top="1.0" />
-               </BorderPane.margin></Pane>
+               </BorderPane.margin>
+               <children>
+                  <Label contentDisplay="CENTER" layoutX="299.0" layoutY="178.0" style="-fx-text-fill: #CCC;" text="MyFinance 1.0" textAlignment="CENTER">
+                     <font>
+                        <Font name="System Bold" size="40.0" />
+                     </font>
+                  </Label>
+               </children></Pane>
          </center>
          <top>
             <HBox prefHeight="73.0" prefWidth="710.0" BorderPane.alignment="CENTER">

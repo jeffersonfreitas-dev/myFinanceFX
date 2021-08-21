@@ -9,6 +9,7 @@ import model.dao.impl.DAOBankStatementImpl;
 import model.dao.impl.DAOBillpayImpl;
 import model.dao.impl.DAOCliforImpl;
 import model.dao.impl.DAOCompanyImpl;
+import model.dao.impl.DAODashboardImpl;
 import model.dao.impl.DAOMovimentImpl;
 import model.dao.impl.DAOPaymentImpl;
 import model.dao.impl.DAOReceivableImpl;
@@ -62,6 +63,10 @@ public class DAOFactory {
 	
 	public static DAOMoviment createMovimentDAO() {
 		return new DAOMovimentImpl(Database.getConnection());
+	}
+
+	public static DAODashboard createDashboardDAO() {
+		return new DAODashboardImpl(Database.getConnection());
 	}
 
 }
