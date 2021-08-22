@@ -6,9 +6,10 @@
 
 <VBox minHeight="200.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="556.0" prefWidth="672.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.dashboard.DashboardController">
    <children>
-      <HBox prefHeight="318.0" prefWidth="672.0">
+      <HBox prefHeight="241.0" prefWidth="672.0" VBox.vgrow="NEVER">
          <children>
-            <PieChart fx:id="pie" prefHeight="400.0" prefWidth="400.0" />
+            <PieChart fx:id="pie" prefHeight="271.0" prefWidth="338.0" style="-fx-border-color: #CCC; -fx-border-width: 0.5px;" HBox.hgrow="NEVER" />
+            <PieChart fx:id="pieRec" prefHeight="271.0" prefWidth="338.0" style="-fx-border-color: #CCC; -fx-border-width: 0.5px;" />
          </children>
       </HBox>
    </children>

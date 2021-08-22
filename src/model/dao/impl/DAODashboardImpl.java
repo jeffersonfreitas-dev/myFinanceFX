@@ -38,7 +38,32 @@ public class DAODashboardImpl implements DAODashboard {
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao salvar o registro -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao gerar a consulta -> " + e.getMessage());
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
+	}
+
+	@Override
+	public List<ChartBillpayStatus> receivableStatusTotal() {
+		List<ChartBillpayStatus> list = new ArrayList<ChartBillpayStatus>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "select sum(value) as valor, status from receivable group by status order by status";
+		try {
+			stmt = conn.prepareStatement(sql);
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				ChartBillpayStatus c = new ChartBillpayStatus();
+				c.setStatus(rs.getString("status"));
+				c.setValor(rs.getDouble("valor"));
+				list.add(c);
+			}
+			return list;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException("Ocorreu um erro ao gerar a consulta -> " + e.getMessage());
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);

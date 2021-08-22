@@ -16,6 +16,11 @@ public class DashboardService {
 		List<ChartBillpayStatus> result = dao.billpayStatusTotal();
 		return result;
 	}
+
+	public List<ChartBillpayStatus> grafStatusContaReceber(){
+		List<ChartBillpayStatus> result = dao.receivableStatusTotal();
+		return result;
+	}
 	
 	
 }
