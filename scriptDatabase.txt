@@ -250,4 +250,25 @@ CREATE SEQUENCE public.moviment_sequence
 
 ALTER TABLE bank_statement ADD COLUMN initial_value BOOLEAN;
 
+
+CREATE SEQUENCE public.transferencia_sequence
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+  
+ CREATE TABLE transferencia (
+	id bigint not null default nextval('transferencia_sequence'::regclass),
+	date date not null,
+	closed boolean,
+	value decimal(10,2) not null,
+	observation character varying(255),
+	id_account_origin bigint,
+	id_account_destination bigint,
+	constraint pk_moviment primary key (id),
+	constraint fk_origim foreign key (id_account_origin) references bank_account(id),
+	constraint fk_detination foreign key (id_account_destination) references bank_account(id)
+); 
+
   

@@ -1,30 +1,37 @@
 package gui.bankStatement;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
+
+import org.kordamp.bootstrapfx.BootstrapFX;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import model.entities.BankAccount;
 import model.entities.BankStatement;
 import model.entities.Moviment;
+import model.service.BankAccountService;
 import model.service.BankStatementService;
+import model.service.MovimentService;
 import utils.Alerts;
 import utils.Utils;
 
@@ -39,23 +46,18 @@ public class BankStatementViewController implements Initializable{
 	private Button btnNew;
 	@FXML
 	public void onBtnNewAction(ActionEvent event) {
-		Alerts.showAlert("Aviso", "Aviso de implementação", "Esta função não foi implementada!", AlertType.INFORMATION);
+		loadModalView("/gui/bankStatement/BankStatementViewChooseAccount.fxml", "Escolha a conta para exibir o extrato", 270.0, 600.0, (BankStatementViewChooseAccountController controller) ->{
+			controller.setBankStatementService(new BankStatementService());
+			controller.setBankAccountService(new BankAccountService());
+			controller.setMovimentService(new MovimentService());
+			controller.loadAssociateObjects();
+		});
 	}
 
 
-	@FXML
-	private Button btnClose;
-	@FXML
-	public void onBtnCloseAction(ActionEvent event) {
-		Stage stage = Utils.getCurrentStage(event);
-		loadView(stage);
-	}
-
 
 	@FXML
-	private TableView<BankStatement> tblBankStatement;
-	@FXML
-	private TableColumn<BankStatement, Integer> columnCode;
+	private TableView<BankStatement> tblView;
 	@FXML
 	private TableColumn<BankStatement, Date> columnDate;
 	@FXML
@@ -66,10 +68,6 @@ public class BankStatementViewController implements Initializable{
 	private TableColumn<BankStatement, Double> columnValue;
 	@FXML
 	private TableColumn<BankStatement, Double> columnBalance;
-	@FXML
-	private TableColumn<BankStatement, String> columnAccount;
-	@FXML
-	private TableColumn<BankStatement, String> columnStatus;
 	
 	private ObservableList<BankStatement> obsList = null;
 
@@ -82,9 +80,7 @@ public class BankStatementViewController implements Initializable{
 
 	private void initializationNodes() {
 	
-		btnNew.setGraphic(new ImageView("/assets/icons/new16.png"));
-		btnClose.setGraphic(new ImageView("/assets/icons/cancel16.png"));
-		columnCode.setCellValueFactory(new PropertyValueFactory<>("id"));
+		btnNew.getStyleClass().add("btn-info");
 		columnDate.setCellValueFactory(new PropertyValueFactory<>("date"));
 		Utils.formatTableColumnDate(columnDate, "dd/MM/yyyy");
 		columnHistoric.setCellValueFactory(new PropertyValueFactory<>("historic"));
@@ -96,9 +92,6 @@ public class BankStatementViewController implements Initializable{
 			String result = "";
 			result = v.getValue().isCredit() ? "C" : "D";
 			return new ReadOnlyStringWrapper(result);
-		});
-		columnAccount.setCellValueFactory(v -> {
-			return new ReadOnlyStringWrapper(v.getValue().getBankAccount().getCode());
 		});
 	}
 
@@ -128,51 +121,36 @@ public class BankStatementViewController implements Initializable{
 			
 		}
 		obsList = FXCollections.observableArrayList(list);
-		tblBankStatement.setItems(obsList);
+		tblView.setItems(obsList);
 		initializationNodes();
 	}
 	
 	
-//	private synchronized <T> void loadViewModal(Billpay billpay, FXMLLoader loader, Window parent, String title, double height, double width,
-//			Consumer<T> initialization) {
-//		try {
-//			Pane pane = loader.load();
-//			Stage stage = new Stage();
-//			stage.setTitle(title);
-//			stage.setScene(new Scene(pane));
-//			stage.setResizable(false);
-//			stage.initOwner(parent);
-//			stage.initModality(Modality.WINDOW_MODAL);
-//			stage.setHeight(height);
-//			stage.setWidth(width);
-//			
-//			T controller = loader.getController();
-//			initialization.accept(controller);
-//			
-//			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-//				@Override
-//				public void handle(WindowEvent event) {
-//					updateTableView();
-//				}
-//			});
-//			stage.showAndWait();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
-//		}
-//	}	
-	
-	
-	private void loadView(Stage stage) {
+	private synchronized <T> void loadModalView(String path, String title, double heigth, double width, Consumer<T> initialization) {
 		try {
-			VBox mainBox =  (VBox) ((ScrollPane) stage.getScene().getRoot()).getContent();
-			Node mnu = mainBox.getChildren().get(0);
-			mainBox.getChildren().clear();
-			mainBox.getChildren().add(mnu);
-		} catch (Exception e) {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+			Pane pane = loader.load();	
+			Window window = btnNew.getScene().getWindow();
+			Stage stage = new Stage();
+			stage.setTitle(title);
+			Scene scene = new Scene(pane);
+			scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet()); 
+			stage.setScene(scene);
+			stage.setResizable(false);
+			stage.initOwner(window);
+			stage.initModality(Modality.WINDOW_MODAL);
+			stage.setHeight(heigth);
+			stage.setWidth(width);
+			
+			T controller = loader.getController();
+			initialization.accept(controller);
+			
+			stage.showAndWait();
+		} catch (IOException e) {
 			e.printStackTrace();
 			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
 		}
 	}
-
+	
+	
 }

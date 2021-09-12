@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -11,40 +12,57 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.bankStatement.BankStatementViewChooseAccountController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.bankStatement.BankStatementViewChooseAccountController">
    <children>
-      <GridPane prefHeight="141.0" prefWidth="475.0">
+      <GridPane prefHeight="183.0" prefWidth="575.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="81.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="590.0" minWidth="10.0" prefWidth="394.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="74.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="517.0" minWidth="10.0" prefWidth="501.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="53.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="57.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="63.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label prefHeight="11.0" prefWidth="81.0" text="Movimento:" />
-            <Label text="Conta:" GridPane.rowIndex="1" />
-            <Label fx:id="lblErros" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Label text="Movimento:" GridPane.rowIndex="1" />
+            <Label text="Conta:" GridPane.rowIndex="3" />
+            <Label fx:id="lblErros" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets left="5.0" />
                </GridPane.margin>
                <font>
-                  <Font name="System Bold" size="12.0" />
+                  <Font name="System Bold" size="10.0" />
                </font>
             </Label>
-            <ComboBox fx:id="cmbAccount" prefHeight="25.0" prefWidth="415.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <ComboBox fx:id="cmbMovimentation" prefHeight="25.0" prefWidth="415.0" GridPane.columnIndex="1" />
+            <ComboBox fx:id="cmbAccount" prefHeight="35.0" prefWidth="508.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <ComboBox fx:id="cmbMovimentation" prefHeight="35.0" prefWidth="274.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
          <VBox.margin>
             <Insets bottom="20.0" left="5.0" right="20.0" top="20.0" />
          </VBox.margin>
       </GridPane>
-      <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0">
+      <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="49.0" prefWidth="600.0">
         <items>
-          <Button fx:id="btnOpen" mnemonicParsing="false" onAction="#onBtnOpenAction" text="Entrar" />
-            <Button fx:id="btnClose" layoutX="10.0" layoutY="13.0" mnemonicParsing="false" onAction="#onBtnCloseAction" text="Sair" />
+          <Button fx:id="btnOpen" defaultButton="true" mnemonicParsing="false" onAction="#onBtnOpenAction" prefHeight="31.0" prefWidth="91.0" text="Entrar">
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+            <Button fx:id="btnClose" cancelButton="true" layoutX="10.0" layoutY="13.0" mnemonicParsing="false" onAction="#onBtnCloseAction" prefHeight="31.0" prefWidth="91.0" text="Sair">
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding>
+               <opaqueInsets>
+                  <Insets bottom="100.0" left="100.0" right="100.0" top="100.0" />
+               </opaqueInsets>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
         </items>
          <VBox.margin>
             <Insets />

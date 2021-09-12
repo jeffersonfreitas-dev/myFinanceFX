@@ -14,7 +14,6 @@ import database.exceptions.DatabaseException;
 import model.dao.DAOBankStatement;
 import model.entities.BankAccount;
 import model.entities.BankStatement;
-import model.entities.Moviment;
 import model.entities.Payment;
 import model.entities.Receivement;
 

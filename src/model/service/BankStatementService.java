@@ -28,7 +28,7 @@ public class BankStatementService {
 		ext.setBankAccount(payment.getBankAccount());
 		ext.setCredit(false);
 		ext.setDate(payment.getDate());
-		ext.setHistoric("Pagamento realizado referente conta nº " + payment.getBillpay().getInvoice());
+		ext.setHistoric("Pagamento da conta nº " + payment.getBillpay().getInvoice() + " - " + payment.getBillpay().getClifor().getName());
 		ext.setPayment(payment);
 		ext.setReceivement(null);
 		ext.setValue(payment.getBillpay().getValue());
@@ -78,7 +78,7 @@ public class BankStatementService {
 		ext.setBankAccount(receivement.getBankAccount());
 		ext.setCredit(true);
 		ext.setDate(receivement.getDate());
-		ext.setHistoric("Recebimento realizado referente conta nº " + receivement.getReceivable().getInvoice());
+		ext.setHistoric("Recebimento da conta nº " + receivement.getReceivable().getInvoice() + " - " + receivement.getReceivable().getClifor().getName());
 		ext.setPayment(null);
 		ext.setReceivement(receivement);
 		ext.setValue(receivement.getReceivable().getValue());

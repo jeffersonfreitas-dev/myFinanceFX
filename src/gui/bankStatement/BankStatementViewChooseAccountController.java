@@ -13,15 +13,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -86,11 +85,16 @@ public class BankStatementViewChooseAccountController implements Initializable{
 	private Button btnOpen;
 	@FXML
 	public void onBtnOpenAction(ActionEvent event) {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/bankStatement/BankStatementView.fxml"));
-		loadView(loader);
-		Stage stage = Utils.getCurrentStage(event);
-		stage.close();
-		
+		if(cmbAccount.getValue() == null || cmbMovimentation.getValue() == null) {
+			lblErros.setText("Movimentação e conta bancária são obrigatórios!");
+		}else {
+			lblErros.setText("");
+			
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/bankStatement/BankStatementView.fxml"));
+			loadView(loader);
+			Stage stage = Utils.getCurrentStage(event);
+			stage.close();
+		}
 	}
 	
 
@@ -140,14 +144,15 @@ public class BankStatementViewChooseAccountController implements Initializable{
 	private void loadView(FXMLLoader loader) {
 		try {
 			VBox box = loader.load();
-			Scene scene = Main.getMainScene();
-			
-			VBox mainBox = (VBox) ((ScrollPane) scene.getRoot()).getContent();
-			Node node = mainBox.getChildren().get(0);
-			mainBox.getChildren().clear();
-			mainBox.getChildren().add(node);
-			mainBox.getChildren().addAll(box.getChildren());
-			mainBox.prefWidthProperty().bind(Main.getMainScene().widthProperty().multiply(1));
+			BorderPane mainScene = (BorderPane) Main.getMainScene().getRoot();
+			BorderPane secound = (BorderPane) mainScene.getCenter();
+			Node top = secound.getTop();
+			Node bottom = secound.getBottom();
+			secound.getChildren().clear();
+			secound.setTop(top);
+			secound.setBottom(bottom);
+			secound.setCenter(box);
+//			nomeTela.setText("Lista de contas a pagar");
 			BankStatementViewController controller = loader.getController();
 			controller.setBankStatementService(new BankStatementService());
 			controller.updateTableView(cmbAccount.getValue(), cmbMovimentation.getValue());
@@ -156,5 +161,7 @@ public class BankStatementViewChooseAccountController implements Initializable{
 			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
 		}
 	}
+	
+	
 
 }

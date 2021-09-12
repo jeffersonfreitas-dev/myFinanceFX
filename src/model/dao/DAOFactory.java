@@ -14,6 +14,7 @@ import model.dao.impl.DAOMovimentImpl;
 import model.dao.impl.DAOPaymentImpl;
 import model.dao.impl.DAOReceivableImpl;
 import model.dao.impl.DAOReceivementImpl;
+import model.dao.impl.DAOTransferenciaImpl;
 
 public class DAOFactory {
 	
@@ -67,6 +68,10 @@ public class DAOFactory {
 
 	public static DAODashboard createDashboardDAO() {
 		return new DAODashboardImpl(Database.getConnection());
+	}
+
+	public static DAOTransferencia createTransferenciaDAO() {
+		return new DAOTransferenciaImpl(Database.getConnection());
 	}
 
 }

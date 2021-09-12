@@ -216,11 +216,11 @@ public class ReceivableViewRegisterController implements Initializable{
 		txtValue.setText(String.format("%.2f", entity.getValue()));
 		
 		if(entity.getDueDate() != null) {
-			pkDueDate.setValue(LocalDate.ofInstant(entity.getDueDate().toInstant(), ZoneId.systemDefault()));
+			pkDueDate.setValue(convertToLocalDateViaInstant(entity.getDueDate()));
 		}
 		
 		if(entity.getDate() != null) {
-			pkEmission.setValue(LocalDate.ofInstant(entity.getDate().toInstant(), ZoneId.systemDefault()));
+			pkEmission.setValue(convertToLocalDateViaInstant(entity.getDate()));
 		}
 		
 		if(entity.getAccountPlan() == null) {
@@ -356,6 +356,12 @@ public class ReceivableViewRegisterController implements Initializable{
 		if(keys.contains("value")) {
 			lblErrorValue.setText(errors.get("value"));
 		}
+	}
+	
+	private LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
+	    return dateToConvert.toInstant()
+	      .atZone(ZoneId.systemDefault())
+	      .toLocalDate();
 	}
 	
 

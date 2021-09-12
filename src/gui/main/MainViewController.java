@@ -5,11 +5,14 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import org.kordamp.bootstrapfx.BootstrapFX;
+
 import application.Main;
 import gui.accountPlan.AccountPlanViewController;
 import gui.bank.BankViewController;
 import gui.bankAccount.BankAccountViewController;
 import gui.bankAgence.BankAgenceViewController;
+import gui.bankStatement.BankStatementViewChooseAccountController;
 import gui.billpay.BillpayViewController;
 import gui.clifor.CliforViewController;
 import gui.company.CompanyViewController;
@@ -21,17 +24,22 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import model.service.AccountPlanService;
 import model.service.BankAccountService;
 import model.service.BankAgenceService;
 import model.service.BankService;
+import model.service.BankStatementService;
 import model.service.BillpayService;
 import model.service.CliforService;
 import model.service.CompanyService;
@@ -107,17 +115,6 @@ public class MainViewController implements Initializable{
 		}, "");
 	}
 	
-//	@FXML
-//	private MenuItem mnuItemAccountPlan;
-//	@FXML
-//	public void onMnuItemAccountPlanAction() {
-//		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/accountPlan/AccountPlanView.fxml"));
-//		Window parentScene = mnuMain.getScene().getWindow();
-//		loadModalView(loader, "Lista de planos de conta", parentScene, 600.0, 800.0, (AccountPlanViewController controller) -> {
-//			controller.setAccountPlanService(new AccountPlanService());
-//			controller.updateTableView();
-//		});
-//	}
 	
 	@FXML
 	private Hyperlink linkBankAccount;
@@ -138,23 +135,22 @@ public class MainViewController implements Initializable{
 			controller.updateTableView();
 		}, "");
 	}
-	
+
 	
 	@FXML
-	private MenuItem mnuItemBankStatement;
+	private Hyperlink linkBankStatement; 
 	@FXML
-	private void onMnuItemBankStatementAction() {
-//		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/bankStatement/BankStatementViewChooseAccount.fxml"));
-//		Window window = mnuMain.getScene().getWindow();
-//		loadModalView(loader, "Escolha a conta para exibir o extrato", window, 230.0, 500.0, (BankStatementViewChooseAccountController controller) ->{
-//			controller.setBankStatementService(new BankStatementService());
-//			controller.setBankAccountService(new BankAccountService());
-//			controller.setMovimentService(new MovimentService());
-//			controller.loadAssociateObjects();
-//		});
+	public void onlinkBankStatementAction() {
+		loadModalView("/gui/bankStatement/BankStatementViewChooseAccount.fxml", "Escolha a conta para exibir o extrato", 270.0, 600.0, (BankStatementViewChooseAccountController controller) ->{
+			controller.setBankStatementService(new BankStatementService());
+			controller.setBankAccountService(new BankAccountService());
+			controller.setMovimentService(new MovimentService());
+			controller.loadAssociateObjects();
+		});
 	}
 	
 	
+
 	@FXML
 	private Hyperlink linkBillpay;
 	@FXML
@@ -186,38 +182,47 @@ public class MainViewController implements Initializable{
 		}, "");
 	}
 	
-//	private synchronized <T> void loadModalView(String path, String title, double heigth, double width, Consumer<T> initialization) {
-//		try {
-//			FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
-//			Window window = mnuMain.getScene().getWindow();
-//			Pane pane = loader.load();	
-//			Stage stage = new Stage();
-//			stage.setTitle(title);
-//			Scene scene = new Scene(pane);
-//			scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet()); 
-//			stage.setScene(scene);
-//			stage.setResizable(false);
-//			stage.initOwner(window);
-//			stage.initModality(Modality.WINDOW_MODAL);
-//			stage.setHeight(heigth);
-//			stage.setWidth(width);
-//			
-//			T controller = loader.getController();
-//			initialization.accept(controller);
-//			
-////			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-////				@Override
-////				public void handle(WindowEvent event) {
-////					updateTableView();
-////				}
-////			});
-//			
-//			stage.showAndWait();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
-//		}
-//	}
+
+	@FXML
+	private Hyperlink linkTransferencia;
+	@FXML
+	private void onlinkTransferenciaAction() {
+		loadView("/gui/transferencia/TransferenciaView.fxml", "Lista de transferências", x -> {}, "");
+	}
+	
+	
+	private synchronized <T> void loadModalView(String path, String title, double heigth, double width, Consumer<T> initialization) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+			Pane pane = loader.load();	
+			Window window = versao.getScene().getWindow();
+			Stage stage = new Stage();
+			stage.setTitle(title);
+			Scene scene = new Scene(pane);
+			scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet()); 
+			stage.setScene(scene);
+			stage.setResizable(false);
+			stage.initOwner(window);
+			stage.initModality(Modality.WINDOW_MODAL);
+			stage.setHeight(heigth);
+			stage.setWidth(width);
+			
+			T controller = loader.getController();
+			initialization.accept(controller);
+			
+//			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+//				@Override
+//				public void handle(WindowEvent event) {
+//					updateTableView();
+//				}
+//			});
+			
+			stage.showAndWait();
+		} catch (IOException e) {
+			e.printStackTrace();
+			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
+		}
+	}
 
 
 	private FXMLLoader getLoaderView(String absolutePath) {
@@ -248,7 +253,7 @@ public class MainViewController implements Initializable{
 	}
 
 	
-	//////////TESTEE TEM QUE APAGAR
+	//////////TESTE TEM QUE APAGAR
 	private synchronized <T> void loadViewteste(String absolutePath, String tela) {
 		try {
 			FXMLLoader loader = getLoaderView(absolutePath);
