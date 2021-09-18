@@ -2,8 +2,10 @@ package model.service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
+import database.exceptions.DatabaseException;
 import model.dao.DAOBankAccount;
 import model.dao.DAOFactory;
 import model.dao.DAOMoviment;
@@ -103,8 +105,42 @@ public class MovimentService {
 		dao.update(moviment);
 	}
 
+	
+	public boolean movimentOpen() {
+		List<Moviment> moviments = dao.findByAllOpenMoviment();
+		
+		if(moviments.isEmpty()) {
+			throw new DatabaseException("Não existe nenhum movimento aberto");
+		}
+		return true;
+	}
+	
+	
+	public boolean dateInMoviment(Date date) {
+		List<Moviment> moviments = dao.findByAllOpenMoviment();
+		if(moviments.isEmpty()) {
+			throw new DatabaseException("Não existe nenhum movimento aberto");
+		}
+		
+		Moviment moviment = moviments.get(0);
+		
+		boolean isBeforeFinish = date.before(moviment.getDateFinish());
+		boolean isAfterBeginner = date.after(moviment.getDateBeginner());
+		
+		if(isAfterBeginner && isBeforeFinish){
+			return true;
+		}else {
+			throw new DatabaseException("Período fora do movimento aberto");
+		}
+	}	
 
+	
 	public void remove(Moviment entity) {
 		
+	}
+
+
+	public List<Moviment> findByAllOpenMoviment() {
+		return dao.findByAllOpenMoviment();
 	}
 }

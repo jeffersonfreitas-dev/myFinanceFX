@@ -19,6 +19,7 @@ import gui.company.CompanyViewController;
 import gui.dashboard.DashboardController;
 import gui.moviment.MovimentViewController;
 import gui.receivable.ReceivableViewController;
+import gui.transferencia.TransferenciaViewController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -46,6 +47,7 @@ import model.service.CompanyService;
 import model.service.DashboardService;
 import model.service.MovimentService;
 import model.service.ReceivableService;
+import model.service.TransferenciaService;
 import utils.Alerts;
 
 public class MainViewController implements Initializable{
@@ -187,7 +189,10 @@ public class MainViewController implements Initializable{
 	private Hyperlink linkTransferencia;
 	@FXML
 	private void onlinkTransferenciaAction() {
-		loadView("/gui/transferencia/TransferenciaView.fxml", "Lista de transferências", x -> {}, "");
+		loadView("/gui/transferencia/TransferenciaView.fxml", "Lista de transferências", (TransferenciaViewController controller) -> {
+			controller.setTransferenciaService(new TransferenciaService());
+			controller.updateTableView();
+		}, "");
 	}
 	
 	

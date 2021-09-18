@@ -10,6 +10,7 @@ import model.entities.BankStatement;
 import model.entities.Moviment;
 import model.entities.Payment;
 import model.entities.Receivement;
+import model.entities.Transferencia;
 
 public class BankStatementService {
 	
@@ -84,6 +85,46 @@ public class BankStatementService {
 		ext.setValue(receivement.getReceivable().getValue());
 		ext.setInitialValue(false);
 		dao.insert(ext);
+	}
+
+
+	public void createBankStatementByTransferencia(Transferencia entity) {
+		try {
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		if(entity == null) {
+			throw new IllegalStateException("Entidade Transferência está nulo");
+		}
+		
+		//Origem
+		BankStatement ext = new BankStatement();
+		ext.setBankAccount(entity.getOriginAccount());
+		ext.setCredit(false);
+		ext.setDate(entity.getDate());
+		ext.setHistoric("Transferência para a conta nº " + entity.getDestinationAccount().getCode());
+		ext.setPayment(null);
+		ext.setReceivement(null);
+		ext.setTransferencia(entity);
+		ext.setValue(entity.getValue());
+		ext.setInitialValue(false);
+		dao.insert(ext);
+
+		
+		//Destino
+		BankStatement ext2 = new BankStatement();
+		ext2.setBankAccount(entity.getDestinationAccount());
+		ext2.setCredit(true);
+		ext2.setDate(entity.getDate());
+		ext2.setHistoric("Transferência recebida da conta nº " + entity.getOriginAccount().getCode());
+		ext2.setPayment(null);
+		ext2.setReceivement(null);
+		ext2.setTransferencia(entity);
+		ext2.setValue(entity.getValue());
+		ext2.setInitialValue(false);
+		dao.insert(ext2);
 	}
 
 

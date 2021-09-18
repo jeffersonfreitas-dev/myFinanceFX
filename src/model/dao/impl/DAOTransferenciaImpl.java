@@ -19,12 +19,13 @@ public class DAOTransferenciaImpl implements DAOTransferencia{
 	public DAOTransferenciaImpl(Connection conn) {
 		this.conn = conn;
 	}
-
 	
+	
+
 	@Override
 	public void insert(Transferencia entity) {
 		PreparedStatement stmt = null;
-		String sql = "INSERT INTO transferencia (date, observation, value, id_account_origin, id_account_destination, close) VALUES "
+		String sql = "INSERT INTO transferencia (date, observation, value, id_account_origin, id_account_destination, closed) VALUES "
 				+ "(?, upper(?), ?, ?, ?, ?)";
 		try {
 			stmt = conn.prepareStatement(sql);
@@ -33,7 +34,7 @@ public class DAOTransferenciaImpl implements DAOTransferencia{
 			stmt.setDouble(3, entity.getValue());
 			stmt.setInt(4, entity.getOriginAccount().getId());
 			stmt.setInt(5, entity.getDestinationAccount().getId());
-			stmt.setBoolean(6, false);
+			stmt.setBoolean(6, entity.isClose());
 			int result = stmt.executeUpdate();
 			if(result < 1) {
 				throw new DatabaseException("Falha ao salvar o registro");
@@ -51,7 +52,7 @@ public class DAOTransferenciaImpl implements DAOTransferencia{
 	public void update(Transferencia entity) {
 		PreparedStatement stmt = null;
 		String sql = "UPDATE transferencia SET date = ?, observation = upper(?), value = ?, id_account_origin = ?, id_account_destination = ?,"
-				+ " close = ? WHERE id = ?";
+				+ " closed = ? WHERE id = ?";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setDate(1, new java.sql.Date(entity.getDate().getTime()));
@@ -124,7 +125,7 @@ public class DAOTransferenciaImpl implements DAOTransferencia{
 		List<Transferencia> list = new ArrayList<Transferencia>();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT t.*, o.id as cod_origem, d.id as cod_destination FROM transferencia t INNER JOIN bank_account o ON t.id_account_origin = o.id "
+		String sql = "SELECT t.*, o.id as cod_origem, o.code as code_origem, d.id as cod_destination, d.code as code_destination FROM transferencia t INNER JOIN bank_account o ON t.id_account_origin = o.id "
 				+ "INNER JOIN bank_account d ON t.id_account_destination = d.id order by t.date";
 		try {
 			stmt = conn.prepareStatement(sql);
@@ -159,13 +160,15 @@ public class DAOTransferenciaImpl implements DAOTransferencia{
 
 	private BankAccount getOriginAccount(ResultSet rs) throws SQLException {
 		BankAccount account = new BankAccount();
-		account.setId(rs.getInt("cod_origin"));
+		account.setId(rs.getInt("cod_origem"));
+		account.setCode(rs.getString("code_origem"));
 		return account;
 	}
 
 	private BankAccount getDestinationAccount(ResultSet rs) throws SQLException {
 		BankAccount account = new BankAccount();
 		account.setId(rs.getInt("cod_destination"));
+		account.setCode(rs.getString("code_destination"));
 		return account;
 	}
 

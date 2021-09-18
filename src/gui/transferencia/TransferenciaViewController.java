@@ -1,39 +1,56 @@
 package gui.transferencia;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
+
+import org.kordamp.bootstrapfx.BootstrapFX;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 import model.entities.Transferencia;
-import model.service.BankStatementService;
+import model.service.BankAccountService;
+import model.service.TransferenciaService;
+import utils.Alerts;
 import utils.Utils;
 
 public class TransferenciaViewController implements Initializable{
 	
-//	private TransferenciaService service;
-//	public void setBankStatementService(BankStatementService service) {
-//		this.service = service;
-//	}
+	private TransferenciaService service;
+	public void setTransferenciaService(TransferenciaService service) {
+		this.service = service;
+	}
 	
 	@FXML
 	private Button btnNew;
 	@FXML
 	public void onBtnNewAction(ActionEvent event) {
-//		loadModalView("/gui/bankStatement/BankStatementViewChooseAccount.fxml", "Escolha a conta para exibir o extrato", 270.0, 600.0, (BankStatementViewChooseAccountController controller) ->{
-//			controller.setBankStatementService(new BankStatementService());
-//			controller.setBankAccountService(new BankAccountService());
-//			controller.setMovimentService(new MovimentService());
-//			controller.loadAssociateObjects();
-//		});
+		loadModalView("/gui/transferencia/TransferenciaViewRegister.fxml", "Cadastro de transferencia", 480.0, 600.0, (TransferenciaViewRegisterController controller) ->{
+			controller.setTransferenciaService(new TransferenciaService());
+			controller.setTransferencia(new Transferencia());
+			controller.setBankAccountService(new BankAccountService());
+			controller.loadAssociateObjects();
+		});
 	}
 
 
@@ -81,61 +98,50 @@ public class TransferenciaViewController implements Initializable{
 	}
 
 	
-//	public void updateTableView(BankAccount bankAccount, Moviment moviment) {
-//		if(service == null) {
-//			throw new IllegalStateException("O serviço não foi instanciado");
-//		}
-//		
-//		Double total = 0.0;
-//		
-//		List<BankStatement> list = service.findAllByAccountAndMoviment(bankAccount, moviment.getDateBeginner(), moviment.getDateFinish());
-//		for(BankStatement s : list) {
-//			
-//			if(s.isInitialValue()) {
-//				s.setBalance(s.getValue());
-//				total = s.getValue();
-//			}else {
-//				if(s.isCredit()) {
-//					s.setBalance(total + s.getValue());
-//					total = total + s.getValue();
-//				}else {
-//					s.setBalance(total - s.getValue());
-//					total = total - s.getValue();
-//				}
-//			}
-//			
-//		}
-//		obsList = FXCollections.observableArrayList(list);
-//		tblView.setItems(obsList);
-//		initializationNodes();
-//	}
+	public void updateTableView() {
+		if(service == null) {
+			throw new IllegalStateException("O serviço não foi instanciado");
+		}
+		List<Transferencia> list = service.findAll();
+		obsList = FXCollections.observableArrayList(list);
+		tblView.setItems(obsList);
+		initializationNodes();
+	}
 	
 	
-//	private synchronized <T> void loadModalView(String path, String title, double heigth, double width, Consumer<T> initialization) {
-//		try {
-//			FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
-//			Pane pane = loader.load();	
-//			Window window = btnNew.getScene().getWindow();
-//			Stage stage = new Stage();
-//			stage.setTitle(title);
-//			Scene scene = new Scene(pane);
-//			scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet()); 
-//			stage.setScene(scene);
-//			stage.setResizable(false);
-//			stage.initOwner(window);
-//			stage.initModality(Modality.WINDOW_MODAL);
-//			stage.setHeight(heigth);
-//			stage.setWidth(width);
-//			
-//			T controller = loader.getController();
-//			initialization.accept(controller);
-//			
-//			stage.showAndWait();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
-//		}
-//	}
+	private synchronized <T> void loadModalView(String path, String title, double heigth, double width, Consumer<T> initialization) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+			Pane pane = loader.load();	
+			Window window = btnNew.getScene().getWindow();
+			Stage stage = new Stage();
+			stage.setTitle(title);
+			Scene scene = new Scene(pane);
+			scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet()); 
+			stage.setScene(scene);
+			stage.setResizable(false);
+			stage.initOwner(window);
+			stage.initModality(Modality.WINDOW_MODAL);
+			stage.setHeight(heigth);
+			stage.setWidth(width);
+			
+			T controller = loader.getController();
+			initialization.accept(controller);
+			
+			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent event) {
+					updateTableView();
+				}
+			});
+			
+			
+			stage.showAndWait();
+		} catch (IOException e) {
+			e.printStackTrace();
+			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
+		}
+	}
 	
 	
 }

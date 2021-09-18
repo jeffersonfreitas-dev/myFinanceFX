@@ -26,9 +26,9 @@
         <columns>
           <TableColumn fx:id="columnDate" editable="false" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" style="-fx-alignment: center;" text="Data" />
             <TableColumn fx:id="columnObservation" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Observações" />
-            <TableColumn fx:id="columnOrigin" editable="false" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" style="-fx-alignment: center-left;" text="Origem" />
-            <TableColumn fx:id="columnDestination" editable="false" maxWidth="105.0" minWidth="105.0" prefWidth="105.0" resizable="false" style="-fx-alignment: center-left;" text="Destino" />
-            <TableColumn fx:id="columnValue" editable="false" maxWidth="105.0" minWidth="105.0" prefWidth="105.0" resizable="false" style="-fx-alignment: center-rigth;" text="Valor" />
+            <TableColumn fx:id="columnOrigin" editable="false" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" style="-fx-alignment: center;" text="Origem" />
+            <TableColumn fx:id="columnDestination" editable="false" maxWidth="105.0" minWidth="105.0" prefWidth="105.0" resizable="false" style="-fx-alignment: center;" text="Destino" />
+            <TableColumn fx:id="columnValue" editable="false" maxWidth="105.0" minWidth="105.0" prefWidth="105.0" resizable="false" style="-fx-alignment: center-right;" text="Valor" />
             <TableColumn fx:id="tblColumnDELETE" editable="false" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" resizable="false" sortable="false" style="-fx-alignment: center;" />
         </columns>
          <VBox.margin>

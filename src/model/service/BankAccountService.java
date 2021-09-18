@@ -35,4 +35,8 @@ public class BankAccountService {
 		}
 	}
 
+	public BankAccount findById(Integer id) {
+		return dao.findById(id);
+	}
+
 }

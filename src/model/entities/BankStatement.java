@@ -14,6 +14,7 @@ public class BankStatement implements Serializable {
 	private BankAccount bankAccount;
 	private Payment payment;
 	private Receivement receivement;
+	private Transferencia transferencia;
 	private boolean initialValue;
 	private Double balance;
 
@@ -95,6 +96,14 @@ public class BankStatement implements Serializable {
 
 	public void setBalance(Double balance) {
 		this.balance = balance;
+	}
+
+	public Transferencia getTransferencia() {
+		return transferencia;
+	}
+
+	public void setTransferencia(Transferencia transferencia) {
+		this.transferencia = transferencia;
 	}
 
 	@Override

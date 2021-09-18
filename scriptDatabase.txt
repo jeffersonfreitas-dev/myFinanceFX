@@ -271,4 +271,7 @@ CREATE SEQUENCE public.transferencia_sequence
 	constraint fk_detination foreign key (id_account_destination) references bank_account(id)
 ); 
 
+alter table bank_statement add column id_transferencia integer;
+alter table bank_statement add constraint fk_transf foreign key (id_transferencia) references transferencia(id);
+
   
