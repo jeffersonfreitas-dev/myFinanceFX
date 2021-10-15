@@ -70,7 +70,7 @@ public class TransferenciaViewRegisterController implements Initializable{
 			@Override
 			protected void updateItem(BankAccount item, boolean empty) {
 				super.updateItem(item, empty);
-				setText(empty ? "" : item.getCode());
+				setText(empty ? "" : item.getCode() + " / " + item.getAccount() + " / " + item.getBankAgence().getBank().getName());
 			}
 		};
 		cmbBankAccountOrigin.setCellFactory(factory);
@@ -85,7 +85,7 @@ public class TransferenciaViewRegisterController implements Initializable{
 			@Override
 			protected void updateItem(BankAccount item, boolean empty) {
 				super.updateItem(item, empty);
-				setText(empty ? "" : item.getCode());
+				setText(empty ? "" : item.getCode() + " / " + item.getAccount() + " / " + item.getBankAgence().getBank().getName());
 			}
 		};
 		cmbBankAccountDestination.setCellFactory(factory);

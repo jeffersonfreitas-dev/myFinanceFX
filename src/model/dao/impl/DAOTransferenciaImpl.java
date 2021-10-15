@@ -160,6 +160,7 @@ public class DAOTransferenciaImpl implements DAOTransferencia{
 		transf.setId(rs.getInt("id"));
 		transf.setDate(new java.util.Date(rs.getDate("date").getTime()));
 		transf.setValue(rs.getDouble("value"));
+		transf.setObservation(rs.getString("observation"));
 		transf.setOriginAccount(getOriginAccount(rs));
 		transf.setDestinationAccount(getDestinationAccount(rs));
 		return transf;

@@ -103,6 +103,11 @@ public class TransferenciaViewController implements Initializable{
 			throw new IllegalStateException("O serviço não foi instanciado");
 		}
 		List<Transferencia> list = service.findAll();
+		
+		for(Transferencia t : list) {
+			System.out.println(t.getObservation());
+		}
+		
 		obsList = FXCollections.observableArrayList(list);
 		tblView.setItems(obsList);
 		initializationNodes();
