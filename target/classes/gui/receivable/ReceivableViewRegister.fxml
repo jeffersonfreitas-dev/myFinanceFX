@@ -58,45 +58,16 @@
             <Label text="Cliente:" GridPane.rowIndex="9" />
             <Label text="P. de Conta:" GridPane.rowIndex="11" />
             <Label text="Histórico:" GridPane.rowIndex="13" />
-            <ComboBox fx:id="cmbCompany" prefHeight="35.0" prefWidth="600.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <ComboBox fx:id="cmbClifor" prefHeight="35.0" prefWidth="600.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-            <ComboBox fx:id="cmbAccount" prefHeight="35.0" prefWidth="600.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-            <TextArea fx:id="txtHistoric" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="13" />
-            <Label fx:id="lblErrorValue" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="4">
-               <font>
-                  <Font name="System Bold" size="10.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblErrorCompany" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="8">
-               <font>
-                  <Font name="System Bold" size="10.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblErrorClifor" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="10">
-               <font>
-                  <Font name="System Bold" size="10.0" />
-               </font>
-            </Label>
-            <Label fx:id="lblErrorAccountPlan" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="12">
-               <font>
-                  <Font name="System Bold" size="10.0" />
-               </font>
-            </Label>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <children>
-                  <TextField fx:id="txtValue" prefHeight="35.0" prefWidth="200.0" />
-               </children>
-            </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
                   <TextField fx:id="txtInvoice" prefHeight="35.0" prefWidth="200.0" />
                </children>
-            </HBox>
-            <Label fx:id="lblErrorHistoric" prefHeight="11.0" prefWidth="499.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="14">
-               <font>
-                  <Font name="System Bold" size="10.0" />
-               </font>
-            </Label>
+            </HBox> 
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <children>
+                  <TextField fx:id="txtValue" prefHeight="35.0" prefWidth="200.0" />
+               </children>
+            </HBox>  
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <children>
                   <DatePicker fx:id="pkDueDate" prefHeight="35.0" prefWidth="220.0" />
@@ -128,7 +99,37 @@
                      </HBox.margin>
                   </Label>
                </children>
-            </HBox>
+            </HBox>                                 
+            <ComboBox fx:id="cmbCompany" prefHeight="35.0" prefWidth="600.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <ComboBox fx:id="cmbClifor" prefHeight="35.0" prefWidth="600.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <ComboBox fx:id="cmbAccount" prefHeight="35.0" prefWidth="600.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+            <TextArea fx:id="txtHistoric" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+            <Label fx:id="lblErrorValue" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <font>
+                  <Font name="System Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblErrorCompany" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="8">
+               <font>
+                  <Font name="System Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblErrorClifor" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="10">
+               <font>
+                  <Font name="System Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblErrorAccountPlan" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="12">
+               <font>
+                  <Font name="System Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblErrorHistoric" prefHeight="11.0" prefWidth="499.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="14">
+               <font>
+                  <Font name="System Bold" size="10.0" />
+               </font>
+            </Label>
+
          </children>
          <VBox.margin>
             <Insets bottom="20.0" left="5.0" right="20.0" top="20.0" />

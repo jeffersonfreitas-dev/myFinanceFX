@@ -124,16 +124,34 @@ public class MovimentService {
 		
 		Moviment moviment = moviments.get(0);
 		
-		boolean isBeforeFinish = date.before(moviment.getDateFinish());
-		boolean isAfterBeginner = date.after(moviment.getDateBeginner());
+		boolean isBeforeFinish = isBeforeAndEqualsFinish(date, moviment.getDateFinish());
+		boolean isAfterBeginner = isAfterAndEqualsBeginer(date, moviment.getDateBeginner());
 		
 		if(isAfterBeginner && isBeforeFinish){
 			return true;
 		}else {
 			throw new DatabaseException("Período fora do movimento aberto");
 		}
+	}
+
+
+	private boolean isBeforeAndEqualsFinish(Date date, Date moviment) {
+		if(date.before(moviment) || date.equals(moviment)) {
+			return true;
+		}else {
+			return false;
+		}
 	}	
 
+	
+	private boolean isAfterAndEqualsBeginer(Date date, Date moviment) {
+		if(date.after(moviment) || date.equals(moviment)) {
+			return true;
+		}else {
+			return false;
+		}
+	}	
+	
 	
 	public void remove(Moviment entity) {
 		

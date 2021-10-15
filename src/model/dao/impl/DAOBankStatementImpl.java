@@ -31,7 +31,7 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 	public void insert(BankStatement entity) {
 		PreparedStatement stmt = null;
 		String sql = "INSERT INTO bank_statement (date, credit, value, historic, id_payment, id_bank_account, id_receivement, initial_value, id_transferencia) VALUES"
-				+ "(?, ?, ?, upper(?), ?, ?, ?, ?)";
+				+ "(?, ?, ?, upper(?), ?, ?, ?, ?, ?)";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setDate(1, new java.sql.Date(entity.getDate().getTime()));

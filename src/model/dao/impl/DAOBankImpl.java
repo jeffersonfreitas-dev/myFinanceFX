@@ -1,16 +1,23 @@
 package model.dao.impl;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import database.Database;
 import database.exceptions.DatabaseException;
 import model.dao.DAOBank;
 import model.entities.Bank;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 
 public class DAOBankImpl implements DAOBank{
 	

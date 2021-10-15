@@ -37,8 +37,8 @@
                   <Font name="System Bold" size="10.0" />
                </font>
             </Label>
-            <ComboBox fx:id="cmbAccount" prefHeight="35.0" prefWidth="508.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <ComboBox fx:id="cmbMovimentation" prefHeight="35.0" prefWidth="274.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ComboBox fx:id="cmbAccount" prefHeight="35.0" prefWidth="508.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
          <VBox.margin>
             <Insets bottom="20.0" left="5.0" right="20.0" top="20.0" />

@@ -256,8 +256,8 @@ public class TransferenciaViewRegisterController implements Initializable{
 		if(keys.contains("destination")) {
 			lblErrorBankAccountDestination.setText(errors.get("destination"));
 		}
-		if(keys.contains("Date")) {
-			lblErrorDate.setText(errors.get("Date"));
+		if(keys.contains("date")) {
+			lblErrorDate.setText(errors.get("date"));
 		}
 		if(keys.contains("observation")) {
 			lblErrorObservation.setText(errors.get("observation"));

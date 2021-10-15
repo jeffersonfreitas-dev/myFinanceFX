@@ -32,7 +32,6 @@ public class BankService {
 		}
 	}
 
-
 	public void remove(Bank bank) {
 		dao.deleteById(bank.getId());
 	}

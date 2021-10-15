@@ -15,13 +15,20 @@
 			<version>3.5.0</version>
 			<scope>test</scope>
 		</dependency>
-	
 
-    <dependency>
-        <groupId>org.kordamp.bootstrapfx</groupId>
-        <artifactId>bootstrapfx-core</artifactId>
-        <version>0.4.0</version>
-    </dependency>
+
+		<dependency>
+			<groupId>org.kordamp.bootstrapfx</groupId>
+			<artifactId>bootstrapfx-core</artifactId>
+			<version>0.4.0</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.13.0</version>
+		</dependency>
 
 	</dependencies>
 

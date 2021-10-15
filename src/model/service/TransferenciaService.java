@@ -4,11 +4,7 @@ import java.util.List;
 
 import javafx.scene.control.Alert.AlertType;
 import model.dao.DAOFactory;
-import model.dao.DAOMoviment;
 import model.dao.DAOTransferencia;
-import model.entities.BankAccount;
-import model.entities.Billpay;
-import model.entities.Payment;
 import model.entities.Transferencia;
 import utils.Alerts;
 
@@ -40,9 +36,10 @@ public class TransferenciaService {
 				boolean movimentOpen = movimentService.movimentOpen();
 				boolean dateInMoviment = movimentService.dateInMoviment(entity.getDate());
 				if(movimentOpen && dateInMoviment) {
+					Integer id = dao.insert(entity);
+					entity = dao.findById(id);
 					statementService.createBankStatementByTransferencia(entity);
 				}
-				dao.insert(entity);
 			} catch (Exception e) {
 				e.printStackTrace();
 				Alerts.showAlert("Erro ao salvar", "Transfência não realizada", e.getMessage(), AlertType.ERROR);

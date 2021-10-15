@@ -44,6 +44,16 @@
             <Label text="Origem:" GridPane.rowIndex="5" />
             <Label text="Destino:" GridPane.rowIndex="7" />
             <Label text="Observação:" GridPane.rowIndex="9" />
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <TextField fx:id="txtValue" prefHeight="35.0" prefWidth="200.0" />
+               </children>
+            </HBox>     
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <children>
+                  <DatePicker fx:id="pkDate" prefHeight="35.0" prefWidth="220.0" />
+               </children>
+            </HBox>                   
             <ComboBox fx:id="cmbBankAccountOrigin" prefHeight="35.0" prefWidth="600.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <ComboBox fx:id="cmbBankAccountDestination" prefHeight="35.0" prefWidth="600.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <TextArea fx:id="txtObservation" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
@@ -62,21 +72,13 @@
                   <Font name="System Bold" size="10.0" />
                </font>
             </Label>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <children>
-                  <TextField fx:id="txtValue" prefHeight="35.0" prefWidth="200.0" />
-               </children>
-            </HBox>
+
             <Label fx:id="lblErrorObservation" prefHeight="11.0" prefWidth="499.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="10">
                <font>
                   <Font name="System Bold" size="10.0" />
                </font>
             </Label>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <children>
-                  <DatePicker fx:id="pkDate" prefHeight="35.0" prefWidth="220.0" />
-               </children>
-            </HBox>
+
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
                   <Label fx:id="lblErrorDate" prefHeight="15.0" prefWidth="705.0" textFill="RED">

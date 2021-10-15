@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,12 +24,13 @@ public class DAOTransferenciaImpl implements DAOTransferencia{
 	
 
 	@Override
-	public void insert(Transferencia entity) {
+	public Integer insert(Transferencia entity) {
 		PreparedStatement stmt = null;
+		ResultSet rs = null;
 		String sql = "INSERT INTO transferencia (date, observation, value, id_account_origin, id_account_destination, closed) VALUES "
 				+ "(?, upper(?), ?, ?, ?, ?)";
 		try {
-			stmt = conn.prepareStatement(sql);
+			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			stmt.setDate(1, new java.sql.Date(entity.getDate().getTime()));
 			stmt.setString(2, entity.getObservation());
 			stmt.setDouble(3, entity.getValue());
@@ -39,6 +41,12 @@ public class DAOTransferenciaImpl implements DAOTransferencia{
 			if(result < 1) {
 				throw new DatabaseException("Falha ao salvar o registro");
 			}
+			
+			rs = stmt.getGeneratedKeys();
+			if(rs.next()) {
+				return rs.getInt(1);
+			}
+			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new DatabaseException("Ocorreu um erro ao executar o comando insert -> " + e.getMessage());
@@ -98,7 +106,7 @@ public class DAOTransferenciaImpl implements DAOTransferencia{
 	public Transferencia findById(Integer id) {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT t.*, o.id as cod_origem, d.id as cod_destination FROM transferencia t INNER JOIN bank_account o ON t.id_account_origin = o.id "
+		String sql = "SELECT t.*, o.id as cod_origem, o.code as code_origem, d.id as cod_destination, d.code as code_destination FROM transferencia t INNER JOIN bank_account o ON t.id_account_origin = o.id "
 				+ "INNER JOIN bank_account d ON t.id_account_destination = d.id WHERE t.id = ?";
 		try {
 			stmt = conn.prepareStatement(sql);

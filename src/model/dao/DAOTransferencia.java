@@ -6,7 +6,7 @@ import model.entities.Transferencia;
 
 public interface DAOTransferencia {
 	
-	void insert (Transferencia entity);
+	Integer insert (Transferencia entity);
 	void update (Transferencia entity);
 	void deleteById (Integer id);
 	Transferencia findById(Integer id);

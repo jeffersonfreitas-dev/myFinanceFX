@@ -1,6 +1,8 @@
 package gui.billpay;
 
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -165,7 +167,7 @@ public class BillpayViewRegisterController implements Initializable{
 		} catch (ValidationException e) {
 			e.printStackTrace();
 			setErrorsMessage(e.getErrors());
-		} catch (DatabaseException e) {
+		} catch (DatabaseException | ParseException e) {
 			e.printStackTrace();
 			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
 		}
@@ -257,7 +259,7 @@ public class BillpayViewRegisterController implements Initializable{
 	}
 	
 	
-	private Billpay getFormDate() {
+	private Billpay getFormDate() throws ParseException {
 		Billpay bill = new Billpay();
 		ValidationException exception = new ValidationException("");
 		bill.setId(Utils.tryParseToInt(txtId.getText()));
@@ -273,11 +275,17 @@ public class BillpayViewRegisterController implements Initializable{
 		}else {
 			bill.setDate(Date.from(pkEmission.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 		}
-		
-		if(pkDueDate.getValue() == null) {
+		pkDueDate.getEditor().getText();
+		if(pkDueDate.getValue() == null && pkDueDate.getEditor().getText() == null) {
 			exception.setError("dueDate", "Informe um vencimento válido");
 		}else {
-			bill.setDueDate(Date.from(pkDueDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
+			if(pkDueDate.getEditor().getText() != null) {
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				bill.setDueDate(sdf.parse(pkDueDate.getEditor().getText()));
+			}else {
+				bill.setDueDate(Date.from(pkDueDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+			}
 			
 			if(bill.getDueDate().before(bill.getDate())) {
 				exception.setError("dueDate", "Vencimento menor que a emissão");
