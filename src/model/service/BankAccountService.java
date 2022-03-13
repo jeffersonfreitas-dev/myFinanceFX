@@ -21,11 +21,7 @@ public class BankAccountService {
 	}
 
 	public void saveOrUpdate(BankAccount entity) {
-		BankAccount account = dao.findByAccountAndCompanyId(entity.getAccount(), entity.getCompany().getId());
-		
-		if(account != null && !account.equals(entity)) {
-			throw new RecordAlreadyRecordedException("Número de conta já cadastrada para esta empresa!");
-		}
+		verifyIfRecordAlreadyRegistered(entity);
 		
 		if(entity.getId() == null) {
 			entity.setBalance(0.0);
@@ -35,8 +31,21 @@ public class BankAccountService {
 		}
 	}
 
+
 	public BankAccount findById(Integer id) {
 		return dao.findById(id);
 	}
 
+	
+	private void verifyIfRecordAlreadyRegistered(BankAccount entity) {
+		BankAccount account = dao.findByAccountAndCompanyId(entity.getAccount(), entity.getCompany().getId());
+		if(account != null && !account.equals(entity)) {
+			throw new RecordAlreadyRecordedException("Número de conta já cadastrado para esta empresa!");
+		}
+		
+		BankAccount name = dao.findByNome(entity.getCode());
+		if(name != null && !name.equals(entity)) {
+			throw new RecordAlreadyRecordedException("Já existe uma conta com este nome cadastrada!");
+		}
+	}
 }

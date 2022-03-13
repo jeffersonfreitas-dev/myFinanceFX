@@ -12,5 +12,6 @@ public interface DAOBankAccount {
 	BankAccount findById(Integer id);
 	List<BankAccount> findAllOrderByAccount();
 	BankAccount findByAccountAndCompanyId(String account, Integer id_company);
+	BankAccount findByNome(String code);
 
 }

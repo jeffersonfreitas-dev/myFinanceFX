@@ -170,6 +170,31 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 		}
 	}
 	
+	
+	@Override
+	public BankAccount findByNome(String code) {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT acc.*, a.id as cod_agence, a.agence, a.dv, a.id_bank, c.id as cod_comp, c.name as name_comp, b.id as cod_bank, b.code as code_bank, b.name as name_bank FROM bank_account acc INNER JOIN bank_agence a ON acc.id_bank_agence = a.id INNER JOIN"
+				+ " company c ON acc.id_company = c.id INNER JOIN bank b ON a.id_bank = b.id WHERE acc.code = upper(?)";
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, code);
+			rs = stmt.executeQuery();
+			if(rs.next()) {
+				BankAccount acc = getBankAccount(rs);
+				return acc;
+			}
+			return null;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException("Ocorreu um erro ao procurar o registro cadastrado no banco de dados com o nome " + code);
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
+	}	
+	
 
 	private BankAccount getBankAccount(ResultSet rs) throws SQLException {
 		BankAccount account = new BankAccount();
@@ -201,6 +226,9 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 
 	private Bank getBank(ResultSet rs) throws SQLException {
 		return new Bank(rs.getInt("cod_bank"), rs.getString("code_bank"), rs.getString("name_bank"));
-	}	
+	}
+
+
+
 
 }

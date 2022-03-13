@@ -34,6 +34,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import model.entities.BankAccount;
+import model.exceptions.RecordAlreadyRecordedException;
 import model.service.BankAccountService;
 import model.service.BankAgenceService;
 import model.service.CompanyService;
@@ -203,6 +204,9 @@ public class BankAccountViewController implements Initializable{
 			try {
 				service.remove(entity);
 				updateTableView();
+			} catch (RecordAlreadyRecordedException e) {
+				e.printStackTrace();
+				Alerts.showAlert("Erro ao remover registro", null, e.getMessage(), AlertType.ERROR);
 			} catch (DatabaseException e) {
 				e.printStackTrace();
 				Alerts.showAlert("Erro ao remover registro", null, e.getMessage(), AlertType.ERROR);
