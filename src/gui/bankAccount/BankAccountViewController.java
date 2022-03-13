@@ -66,6 +66,8 @@ public class BankAccountViewController implements Initializable{
 	@FXML
 	private TableColumn<BankAccount, String> tblColumnBank;
 	@FXML
+	private TableColumn<BankAccount, String> tblColumnTipo;
+	@FXML
 	private TableColumn<BankAccount, String> tblColumnCompany;
 	@FXML
 	private TableColumn<BankAccount, BankAccount> tblColumnEDIT;
@@ -83,6 +85,7 @@ public class BankAccountViewController implements Initializable{
 	private void initializationNodes() {
 		tblColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tblColumnCode.setCellValueFactory(new PropertyValueFactory<>("code"));
+		tblColumnTipo.setCellValueFactory(new PropertyValueFactory<>("type"));
 		tblColumnAccount.setCellValueFactory(new PropertyValueFactory<>("account"));
 		tblColumnBank.setCellValueFactory( v -> {
 			String col = v.getValue().getBankAgence().getAgence() + " - " + v.getValue().getBankAgence().getBank().getName();

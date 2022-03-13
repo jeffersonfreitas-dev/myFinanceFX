@@ -26,7 +26,7 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 	@Override
 	public void insert(BankAccount entity) {
 		PreparedStatement stmt = null;
-		String sql = "INSERT INTO bank_account (code, account, id_bank_agence, id_company, balance) VALUES (upper(?), upper(?), ?, ?, ?)";
+		String sql = "INSERT INTO bank_account (code, account, id_bank_agence, id_company, balance, type) VALUES (upper(?), upper(?), ?, ?, ?, ?)";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, entity.getCode());
@@ -34,6 +34,7 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 			stmt.setInt(3, entity.getBankAgence().getId());
 			stmt.setInt(4, entity.getCompany().getId());
 			stmt.setDouble(5, entity.getBalance());
+			stmt.setString(6, entity.getType());
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
@@ -41,7 +42,7 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando insert conta bancária -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao inserir o registro no banco de dados");
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -51,7 +52,7 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 	@Override
 	public void update(BankAccount entity) {
 		PreparedStatement stmt = null;
-		String sql = "UPDATE bank_account SET code = upper(?), account = upper(?), id_bank_agence = ?, id_company = ?, balance = ? WHERE id = ?";
+		String sql = "UPDATE bank_account SET code = upper(?), account = upper(?), id_bank_agence = ?, id_company = ?, balance = ?, type = ? WHERE id = ?";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, entity.getCode());
@@ -59,15 +60,16 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 			stmt.setInt(3, entity.getBankAgence().getId());
 			stmt.setInt(4, entity.getCompany().getId());
 			stmt.setDouble(5, entity.getBalance());
-			stmt.setInt(6, entity.getId());
+			stmt.setString(6, entity.getType());
+			stmt.setInt(7, entity.getId());
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Falha ao atualizar o registro");
+				throw new DatabaseException("Ocorreu um erro ao atualizar o registro");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando update conta bancária -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao atualizar o registro");
 		}finally {
 			Database.closeStatement(stmt);
 		}		
@@ -83,11 +85,11 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Falha ao deletar o registro");
+				throw new DatabaseException("Ocorreu um erro ao deletar o registro");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando delete conta bancária -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao deletar o registro");
 		}finally {
 			Database.closeStatement(stmt);
 		}	
@@ -110,7 +112,7 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findById conta bancária -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao procurar o registro no banco de dados com o código nº " + id);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -135,7 +137,7 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findAll conta bancária -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao listar os registros cadastrados no banco de dados");
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -161,7 +163,7 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findById conta bancária -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao procurar o registro cadastrado no banco de dados com a conta nº " + account + " e empresa nº " + id_company);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -177,6 +179,7 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 		account.setBankAgence(getBankAgence(rs));
 		account.setCompany(getCompany(rs));
 		account.setBalance(rs.getDouble("balance"));
+		account.setType(rs.getString("type"));
 		return account;
 	}
 

@@ -1,4 +1,8 @@
 /META-INF/
 /application/
 /assets/
+/database/
 /gui/
+/model/
+/test/
+/utils/

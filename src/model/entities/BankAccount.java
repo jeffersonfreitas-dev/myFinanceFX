@@ -10,17 +10,19 @@ public class BankAccount implements Serializable {
 	private String account;
 	private BankAgence bankAgence;
 	private Company company;
+	private String type;
 	private Double balance;
 
 	public BankAccount() {
 	}
 
-	public BankAccount(Integer id, String code, String account, BankAgence bankAgence, Company company) {
+	public BankAccount(Integer id, String code, String account, BankAgence bankAgence, Company company, String type) {
 		this.id = id;
 		this.code = code;
 		this.account = account;
 		this.bankAgence = bankAgence;
 		this.company = company;
+		this.type = type;
 	}
 
 	public Integer getId() {
@@ -69,6 +71,15 @@ public class BankAccount implements Serializable {
 
 	public void setBalance(Double balance) {
 		this.balance = balance;
+	}
+	
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	@Override

@@ -122,6 +122,20 @@ public class BankAccountViewRegisterController implements Initializable{
 		cmbCompany.setButtonCell(factory.call(null));
 	}
 	@FXML
+	private ComboBox<String> cmbTipoConta = new ComboBox<String>();
+	private void initializeComboBoxType() {
+		Callback<ListView<String>, ListCell<String>> factory = lv -> new ListCell<String>() {
+			@Override
+			protected void updateItem(String item, boolean empty) {
+				super.updateItem(item, empty);
+				setText(empty ? "" : item);
+			}
+		};
+		cmbTipoConta.setCellFactory(factory);
+		cmbTipoConta.setButtonCell(factory.call(null));
+	}
+	
+	@FXML
 	private Label lblErrorCode;
 	@FXML
 	private Label lblErrorAccount;
@@ -132,6 +146,13 @@ public class BankAccountViewRegisterController implements Initializable{
 	
 	private ObservableList<BankAgence> obsAgence;
 	private ObservableList<Company> obsCompanies;
+	private ObservableList<String> obsTipos = FXCollections.observableArrayList(
+			new String("APLICAÇÃO"),		
+			new String("CORRENTE"),		
+			new String("INVESTIMENTO"),		
+			new String("OUTRO"),		
+			new String("POUPANÇA")		
+		);
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -147,6 +168,7 @@ public class BankAccountViewRegisterController implements Initializable{
 		Constraints.setTextFieldMaxLength(txtAccount, 20);
 		initializeComboBoxAgence();
 		initializeComboBoxCompany();
+		initializeComboBoxType();
 	}
 	
 	
@@ -156,7 +178,7 @@ public class BankAccountViewRegisterController implements Initializable{
 		account.setId(Utils.tryParseToInt(txtId.getText()));
 		
 		if(txtCode.getText() == null || txtCode.getText().trim().equals("")) {
-			exception.setError("code", "O código da conta não pode ser vazio");
+			exception.setError("code", "O nome da conta não pode ser vazio");
 		}
 		account.setCode(txtCode.getText());
 		
@@ -165,6 +187,11 @@ public class BankAccountViewRegisterController implements Initializable{
 		}
 		account.setAccount(txtAccount.getText());
 		
+		if(cmbTipoConta.getValue() == null) {
+			exception.setError("type", "Selecione um tipo de conta");
+		}
+		account.setType(cmbTipoConta.getValue());
+
 		if(cmbCompany.getValue() == null) {
 			exception.setError("company", "Selecione uma empresa");
 		}
@@ -173,6 +200,7 @@ public class BankAccountViewRegisterController implements Initializable{
 		if(cmbAgence.getValue() == null) {
 			exception.setError("agence", "Selecione uma agencia bancária");
 		}
+
 		account.setBankAgence(cmbAgence.getValue());
 		
 		if(exception.getErrors().size() > 0) {
@@ -195,6 +223,10 @@ public class BankAccountViewRegisterController implements Initializable{
 		if(keys.contains("account")) {
 			lblErrorAccount.setText(errors.get("account"));
 		}
+
+		if(keys.contains("type") && !keys.contains("account")) {
+			lblErrorAccount.setText(errors.get("type"));
+		}
 		if(keys.contains("company")) {
 			lblErrorCompany.setText(errors.get("company"));
 		}
@@ -214,6 +246,7 @@ public class BankAccountViewRegisterController implements Initializable{
 		obsCompanies = FXCollections.observableArrayList(companies);
 		cmbAgence.setItems(obsAgence);
 		cmbCompany.setItems(obsCompanies);
+		cmbTipoConta.setItems(obsTipos);
 	}
 
 
@@ -230,6 +263,12 @@ public class BankAccountViewRegisterController implements Initializable{
 			cmbAgence.getSelectionModel().selectFirst();
 		}else {
 			cmbAgence.setValue(entity.getBankAgence());
+		}
+
+		if(entity.getType() == null) {
+			cmbTipoConta.getSelectionModel().selectFirst();
+		}else {
+			cmbTipoConta.setValue(entity.getType());
 		}
 		
 		if(entity.getCompany() == null) {
