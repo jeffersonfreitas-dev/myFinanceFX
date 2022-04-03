@@ -14,6 +14,10 @@ public class AccountPlanService {
 	public List<AccountPlan> findAll() {
 		return dao.findAllOrderByName();
 	}
+	
+	public List<AccountPlan> findAllPagination(Integer limit){
+		return dao.findAllPagination(limit);
+	}
 
 	public void remove(AccountPlan entity) {
 		dao.deleteById(entity.getId());

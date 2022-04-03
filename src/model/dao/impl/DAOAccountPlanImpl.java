@@ -162,5 +162,31 @@ public class DAOAccountPlanImpl implements DAOAccountPlan{
 			Database.closeResultSet(rs);
 		}
 	}
+	
+	
+	@Override
+	public List<AccountPlan> findAllPagination(Integer limit) {
+		List<AccountPlan> list = new ArrayList<AccountPlan>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT * FROM account_plan ORDER BY name limit ?";	
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, limit);
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				AccountPlan ap = new AccountPlan(rs.getInt("id"), rs.getString("name"), rs.getBoolean("credit"));
+				list.add(ap);
+			}
+			return list;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException("Ocorreu um erro ao executar o comando findId plano de conta -> " + e.getMessage());
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
+	}
+
 
 }

@@ -28,9 +28,18 @@
             <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="ID:" />
-            <Label text="Agencia:" GridPane.rowIndex="1" />
-            <Label text="Banco:" GridPane.rowIndex="3" />
+            <Label text="ID:">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Label>
+            <Label text="Agencia:" GridPane.rowIndex="1">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Label>
+            <Label text="Banco:" GridPane.rowIndex="3">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Label>
             <TextField fx:id="txtId" disable="true" editable="false" focusTraversable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" GridPane.columnIndex="1" />
             <TextField fx:id="txtAgence" prefHeight="35.0" prefWidth="500.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label fx:id="lblErrorAgence" prefHeight="8.0" prefWidth="500.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
