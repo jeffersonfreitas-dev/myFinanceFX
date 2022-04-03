@@ -30,11 +30,11 @@ public class DAOCompanyImpl implements DAOCompany{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("O registro não foi salvo");
+				throw new DatabaseException("Falha ao salvar o registro. Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao salvar o registro -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao salvar o registro");
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -52,11 +52,11 @@ public class DAOCompanyImpl implements DAOCompany{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("O registro não foi alterado");
+				throw new DatabaseException("Falha ao atualizar o registro. Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao alterar o registro -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao atualizar o registro");
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -73,7 +73,7 @@ public class DAOCompanyImpl implements DAOCompany{
 			stmt.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao deletar o registro -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao deletar o registro");
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -98,7 +98,7 @@ public class DAOCompanyImpl implements DAOCompany{
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao procurar o registro -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao procurar o registro no banco de dados com o código nº " + id);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -122,7 +122,7 @@ public class DAOCompanyImpl implements DAOCompany{
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao procurar os registros -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao listar os registros cadastrados no banco de dados");
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -146,7 +146,7 @@ public class DAOCompanyImpl implements DAOCompany{
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao procurar os registros -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao procurar o registro no banco de dados com o nome " + name);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);

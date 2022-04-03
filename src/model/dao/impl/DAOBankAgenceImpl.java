@@ -36,11 +36,11 @@ public class DAOBankAgenceImpl implements DAOBankAgence{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Nenhuma linha afetada na operação de inserção");
+				throw new DatabaseException("Falha ao salvar o registro. Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando insert agencia -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao inserir o registro no banco de dados");
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -61,11 +61,11 @@ public class DAOBankAgenceImpl implements DAOBankAgence{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Nenhuma linha afetada na operação de alteração");
+				throw new DatabaseException("Falha ao atualizar o registro. Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando update agencia -> " + e.getMessage());			
+			throw new DatabaseException("Ocorreu um erro ao atualizar o registro no banco de dados");			
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -82,12 +82,12 @@ public class DAOBankAgenceImpl implements DAOBankAgence{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Nenhuma linha afetada na operação de exclusão");
+				throw new DatabaseException("Falha ao deletar o registro. Nenhuma linha afetada");
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando deleteById agencia -> " + e.getMessage());			
+			throw new DatabaseException("Ocorreu um erro ao deletar o registro no banco de dados");			
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -113,7 +113,7 @@ public class DAOBankAgenceImpl implements DAOBankAgence{
 			return null;
 		}catch(SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findById agencia -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao procurar o registro no banco de dados com o código nº " + id);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -146,7 +146,7 @@ public class DAOBankAgenceImpl implements DAOBankAgence{
 			return list;
 		}catch(SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findAllOrderByAgence agencia -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao listar os registros cadastrados no banco de dados");
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -190,7 +190,7 @@ public class DAOBankAgenceImpl implements DAOBankAgence{
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findByAgenceAndBankId agencia -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao procurar o registro cadastrado no banco de dados com a agencia nº " + agence + " e banco com código nº " + id_bank);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);

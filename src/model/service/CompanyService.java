@@ -19,7 +19,7 @@ public class CompanyService {
 		Company result = dao.findByName(company.getName());
 		
 		if(result != null && !result.equals(company)) {
-			throw new RecordAlreadyRecordedException("Já existe uma empresa cadastrada com este mesmo nome");
+			throw new RecordAlreadyRecordedException("Já existe uma empresa cadastrada com este nome");
 		}
 		
 		if(company.getId() == null) {

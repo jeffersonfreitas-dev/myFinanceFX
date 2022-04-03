@@ -38,7 +38,7 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Falha ao salvar o registro");
+				throw new DatabaseException("Falha ao salvar o registro. Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -65,7 +65,7 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Ocorreu um erro ao atualizar o registro");
+				throw new DatabaseException("Falha ao atualizar o registro. Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -85,7 +85,7 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Ocorreu um erro ao deletar o registro");
+				throw new DatabaseException("Falha ao deletar o registro. Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

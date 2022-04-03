@@ -22,7 +22,7 @@ public class BankService {
 		Bank isRecorded = dao.findByCodeOrName(bank.getCode(), bank.getName());
 		
 		if(isRecorded != null && !bank.equals(isRecorded)) {
-			throw new RecordAlreadyRecordedException("Registro já cadastrado no banco de dados!");
+			throw new RecordAlreadyRecordedException("Já existe um banco com este código e nome cadastrado!");
 		}
 		
 		if(bank.getId() == null) {

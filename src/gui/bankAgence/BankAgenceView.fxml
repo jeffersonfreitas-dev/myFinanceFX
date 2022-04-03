@@ -25,7 +25,7 @@
       <TableView fx:id="tblView" nodeOrientation="LEFT_TO_RIGHT" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn fx:id="tblColumnId" editable="false" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" resizable="false" style="-fx-alignment: center; -fx-border-fill: transparent;" text="ID" />
-          <TableColumn fx:id="tblColumnAgence" editable="false" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" resizable="false" style="-fx-alignment: center;" text="Agencia/DV" />
+          <TableColumn fx:id="tblColumnAgence" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" style="-fx-alignment: center-left;" text="Agencia/DV" />
             <TableColumn fx:id="tblColumnBank" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Banco" />
             <TableColumn fx:id="tblColumnEDIT" editable="false" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" resizable="false" sortable="false" style="-fx-alignment: center;" />
             <TableColumn fx:id="tblColumnDELETE" editable="false" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" resizable="false" sortable="false" style="-fx-alignment: center;" />

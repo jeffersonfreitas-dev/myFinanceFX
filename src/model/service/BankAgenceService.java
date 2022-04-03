@@ -24,7 +24,7 @@ public class BankAgenceService {
 		BankAgence agence = dao.findByAgenceAndBankId(entity.getAgence(), entity.getBank().getId());
 		
 		if(agence != null && !agence.equals(entity)) {
-			throw new RecordAlreadyRecordedException("Agencia e banco já cadastrado!");
+			throw new RecordAlreadyRecordedException("Já existe uma agencia com este código cadastrada para este banco");
 		}
 		
 		if(entity.getId() == null) {

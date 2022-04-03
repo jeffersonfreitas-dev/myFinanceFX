@@ -32,11 +32,11 @@ public class DAOBankImpl implements DAOBank{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Nenhuma linha afetada na operação de salvar");
+				throw new DatabaseException("Falha ao salvar o registro. Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao salvar o registro -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao inserir o registro no banco de dados");
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -55,11 +55,11 @@ public class DAOBankImpl implements DAOBank{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Nenhuma linha afetada na operação de atualizar");
+				throw new DatabaseException("Falha ao atualizar o registro. Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao atualizar o registro -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao atualizar o registro");
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -76,11 +76,11 @@ public class DAOBankImpl implements DAOBank{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Nenhuma linha afetada na operação de exclusão");
+				throw new DatabaseException("Falha ao deletar o registro. Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao deletar o registro -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao deletar o registro");
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -105,7 +105,7 @@ public class DAOBankImpl implements DAOBank{
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Erro ao executar: findById do banco -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao procurar o registro no banco de dados com o código nº " + id);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -131,7 +131,7 @@ public class DAOBankImpl implements DAOBank{
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Erro ao executar comando: findAllOrderByNane em banco -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao listar os registros cadastrados no banco de dados");
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -165,7 +165,7 @@ public class DAOBankImpl implements DAOBank{
 			return bank;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Erro ao executar comando: alreadyRecordedByCodeOrName em banco -> " + e.getMessage());
+			throw new DatabaseException("Ocorreu um erro ao procurar o registro cadastrado no banco de dados com o código nº " + code + " e nome " + name);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
