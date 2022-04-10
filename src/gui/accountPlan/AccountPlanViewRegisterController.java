@@ -107,7 +107,7 @@ public class AccountPlanViewRegisterController implements Initializable{
 		ValidationException exception = new ValidationException("");
 		account.setId(Utils.tryParseToInt(txtId.getText()));
 		
-		if(txtName == null || txtName.getText().trim().equals("")) {
+		if(txtName.getText() == null || txtName.getText().trim().equals("")) {
 			exception.setError("name", "O campo nome não pode ser vazio");
 		}
 		account.setName(txtName.getText());

@@ -2,7 +2,6 @@ package gui.accountPlan;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -12,8 +11,6 @@ import org.kordamp.bootstrapfx.BootstrapFX;
 import database.exceptions.DatabaseException;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,7 +23,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Pagination;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -71,18 +67,9 @@ public class AccountPlanViewController implements Initializable {
 	private TableColumn<AccountPlan, AccountPlan> tblColumnEDIT;
 	@FXML
 	private TableColumn<AccountPlan, AccountPlan> tblColumnDELETE;
-	@FXML
-	private Pagination pagination = new Pagination();
 
 	private ObservableList<AccountPlan> obsList;
 	
-    private ObservableList<AccountPlan> masterData = FXCollections.observableArrayList();
-    
-    List<AccountPlan> list = new ArrayList<AccountPlan>();
-    
-    private int dataSize;
-    private int rowsPerPage = 4;
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		initializationNodes();
@@ -96,73 +83,21 @@ public class AccountPlanViewController implements Initializable {
 			return new ReadOnlyStringWrapper(v.getValue().isCredit() ? "CRÉDITO" : "DÉBITO");
 		});
 		btnNew.getStyleClass().add("btn-primary");
-		
-		
-        dataSize = masterData.size();
-
-        pagination.currentPageIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                changeTableView(newValue.intValue(), rowsPerPage);
-            }
-
-        });
-        
-        int totalPage = (int) (Math.ceil(dataSize * 1.0 / rowsPerPage));
-        pagination.setPageCount(totalPage);
-        pagination.setCurrentPageIndex(0);
-        changeTableView(0, rowsPerPage); 
-		
 	}
 
-	
-	
-    private void changeTableView(int index, int limit) {
-
-        int fromIndex = index * limit;
-        int toIndex = Math.min(fromIndex + limit, dataSize);
-        
-//        List<AccountPlan> list = service.findAll();
-
-        List<AccountPlan> subListObs = list.subList(fromIndex, toIndex);
-        ObservableList<AccountPlan> tmpObsToSetTableVal = FXCollections.observableArrayList();
-
-        tblView.getItems().clear();
-        tblView.setItems(null);
-
-        for (AccountPlan t : subListObs) {
-            tmpObsToSetTableVal.add(t);
-        }
-
-        tblView.setItems(tmpObsToSetTableVal);
-
-    }	
-	
-	
-	
 	
 	public void updateTableView() {
 		if (service == null) {
 			throw new IllegalStateException("O serviço não foi instanciado");
 		}
 
-		list = service.findAll();
+		List<AccountPlan> list = service.findAll();
 		obsList = FXCollections.observableArrayList(list);
-//		createPage(0, rowsPerPage, dataSize, list);
 		tblView.setItems(obsList);
-//        Pagination pagination = new Pagination((dataSize / rowsPerPage + 1), 0);
-//        pagination.setPageFactory(this::createPage);
 		initEditButtons();
 		initRemoveButtons();
 	}
 
-//	private Node createPage(int pageIndex) {
-//
-//		int fromIndex = pageIndex * rowsPerPage;
-//		int toIndex = Math.min(fromIndex + rowsPerPage, dataSize);
-//		tblView.setItems(FXCollections.observableArrayList(list.subList(fromIndex, toIndex)));
-//		return new BorderPane(tblView);
-//	}
 
 	private void initEditButtons() {
 		tblColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
@@ -252,7 +187,7 @@ public class AccountPlanViewController implements Initializable {
 			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 				@Override
 				public void handle(WindowEvent event) {
-//					updateTableView();
+					updateTableView();
 				}
 			});
 

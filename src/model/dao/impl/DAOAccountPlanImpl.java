@@ -11,6 +11,7 @@ import database.Database;
 import database.exceptions.DatabaseException;
 import model.dao.DAOAccountPlan;
 import model.entities.AccountPlan;
+import utils.DefaultMessages;
 
 public class DAOAccountPlanImpl implements DAOAccountPlan{
 	
@@ -32,11 +33,11 @@ public class DAOAccountPlanImpl implements DAOAccountPlan{
 			int result = stmt.executeUpdate();
 			
 			if(result  < 1) {
-				throw new DatabaseException("Falha ao salvar o registro");
+				throw new DatabaseException(DefaultMessages.getMsgErroSalvar() + ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando insert plano de conta -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroSalvar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -56,11 +57,11 @@ public class DAOAccountPlanImpl implements DAOAccountPlan{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Falha ao atualizar o registro");
+				throw new DatabaseException(DefaultMessages.getMsgErroAtualizar() + ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando update plano de conta -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroAtualizar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -77,11 +78,11 @@ public class DAOAccountPlanImpl implements DAOAccountPlan{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Falha ao excluir o registro");
+				throw new DatabaseException(DefaultMessages.getMsgErroDeletar() + ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando delete plano de conta -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroDeletar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -106,7 +107,7 @@ public class DAOAccountPlanImpl implements DAOAccountPlan{
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findId plano de conta -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() +  ". Código nº " + id);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -130,7 +131,7 @@ public class DAOAccountPlanImpl implements DAOAccountPlan{
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findId plano de conta -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroFindall());
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -156,7 +157,8 @@ public class DAOAccountPlanImpl implements DAOAccountPlan{
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findname plano de conta -> " + e.getMessage());
+			String tipo = credit ? "crédito" : "débito";
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Nome " + name + " do tipo " + tipo);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -181,7 +183,7 @@ public class DAOAccountPlanImpl implements DAOAccountPlan{
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findId plano de conta -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroFindall());
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);

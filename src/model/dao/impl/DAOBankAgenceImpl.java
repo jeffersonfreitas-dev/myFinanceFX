@@ -14,6 +14,7 @@ import database.exceptions.DatabaseException;
 import model.dao.DAOBankAgence;
 import model.entities.Bank;
 import model.entities.BankAgence;
+import utils.DefaultMessages;
 
 public class DAOBankAgenceImpl implements DAOBankAgence{
 	
@@ -36,11 +37,11 @@ public class DAOBankAgenceImpl implements DAOBankAgence{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Falha ao salvar o registro. Nenhuma linha afetada");
+				throw new DatabaseException(DefaultMessages.getMsgErroSalvar() + ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao inserir o registro no banco de dados");
+			throw new DatabaseException(DefaultMessages.getMsgErroSalvar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -61,11 +62,11 @@ public class DAOBankAgenceImpl implements DAOBankAgence{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Falha ao atualizar o registro. Nenhuma linha afetada");
+				throw new DatabaseException(DefaultMessages.getMsgErroAtualizar()+ ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao atualizar o registro no banco de dados");			
+			throw new DatabaseException(DefaultMessages.getMsgErroAtualizar());			
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -82,12 +83,12 @@ public class DAOBankAgenceImpl implements DAOBankAgence{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Falha ao deletar o registro. Nenhuma linha afetada");
+				throw new DatabaseException(DefaultMessages.getMsgErroDeletar()+ ". Nenhuma linha afetada");
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao deletar o registro no banco de dados");			
+			throw new DatabaseException(DefaultMessages.getMsgErroDeletar());			
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -113,7 +114,7 @@ public class DAOBankAgenceImpl implements DAOBankAgence{
 			return null;
 		}catch(SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao procurar o registro no banco de dados com o código nº " + id);
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Código nº " + id);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -146,30 +147,13 @@ public class DAOBankAgenceImpl implements DAOBankAgence{
 			return list;
 		}catch(SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao listar os registros cadastrados no banco de dados");
+			throw new DatabaseException(DefaultMessages.getMsgErroFindall());
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
 		}
 	}
 
-	
-	private BankAgence instanceBankAgence(ResultSet rs, Bank bank) throws SQLException{
-		BankAgence agence = new BankAgence();
-		agence.setId(rs.getInt("id"));
-		agence.setAgence(rs.getString("agence"));
-		agence.setDv(rs.getString("dv"));
-		agence.setBank(bank);
-		return agence;
-	}
-
-	private Bank instanceBank(ResultSet rs) throws SQLException{
-		Bank bank = new Bank();
-		bank.setId(rs.getInt("id_bank"));
-		bank.setCode(rs.getString("code"));
-		bank.setName(rs.getString("name"));
-		return bank;
-	}
 
 	@Override
 	public BankAgence findByAgenceAndBankId(String agence, Integer id_bank) {
@@ -190,10 +174,28 @@ public class DAOBankAgenceImpl implements DAOBankAgence{
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao procurar o registro cadastrado no banco de dados com a agencia nº " + agence + " e banco com código nº " + id_bank);
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Agencia nº " + agence + " e banco com código nº " + id_bank);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
 		}
+	}
+	
+	
+	private BankAgence instanceBankAgence(ResultSet rs, Bank bank) throws SQLException{
+		BankAgence agence = new BankAgence();
+		agence.setId(rs.getInt("id"));
+		agence.setAgence(rs.getString("agence"));
+		agence.setDv(rs.getString("dv"));
+		agence.setBank(bank);
+		return agence;
+	}
+
+	private Bank instanceBank(ResultSet rs) throws SQLException{
+		Bank bank = new Bank();
+		bank.setId(rs.getInt("id_bank"));
+		bank.setCode(rs.getString("code"));
+		bank.setName(rs.getString("name"));
+		return bank;
 	}
 }

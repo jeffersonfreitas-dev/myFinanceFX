@@ -14,6 +14,7 @@ import model.entities.Bank;
 import model.entities.BankAccount;
 import model.entities.BankAgence;
 import model.entities.Company;
+import utils.DefaultMessages;
 
 public class DAOBankAccountImpl implements DAOBankAccount{
 	
@@ -38,11 +39,11 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Falha ao salvar o registro. Nenhuma linha afetada");
+				throw new DatabaseException(DefaultMessages.getMsgErroSalvar() +". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao inserir o registro no banco de dados");
+			throw new DatabaseException(DefaultMessages.getMsgErroSalvar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -65,11 +66,11 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Falha ao atualizar o registro. Nenhuma linha afetada");
+				throw new DatabaseException(DefaultMessages.getMsgErroAtualizar()+ ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao atualizar o registro");
+			throw new DatabaseException(DefaultMessages.getMsgErroAtualizar());
 		}finally {
 			Database.closeStatement(stmt);
 		}		
@@ -85,11 +86,11 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Falha ao deletar o registro. Nenhuma linha afetada");
+				throw new DatabaseException(DefaultMessages.getMsgErroDeletar()+ ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao deletar o registro");
+			throw new DatabaseException(DefaultMessages.getMsgErroDeletar());
 		}finally {
 			Database.closeStatement(stmt);
 		}	
@@ -112,7 +113,7 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao procurar o registro no banco de dados com o código nº " + id);
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Código nº " + id);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -137,7 +138,7 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao listar os registros cadastrados no banco de dados");
+			throw new DatabaseException(DefaultMessages.getMsgErroFindall());
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -163,7 +164,7 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao procurar o registro cadastrado no banco de dados com a conta nº " + account + " e empresa nº " + id_company);
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby()+ ". Conta nº " + account + " e empresa nº " + id_company);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -188,7 +189,7 @@ public class DAOBankAccountImpl implements DAOBankAccount{
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao procurar o registro cadastrado no banco de dados com o nome " + code);
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Nome " + code);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);

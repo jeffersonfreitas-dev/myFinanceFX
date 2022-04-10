@@ -11,6 +11,7 @@ import database.Database;
 import database.exceptions.DatabaseException;
 import model.dao.DAOClifor;
 import model.entities.Clifor;
+import utils.DefaultMessages;
 
 public class DAOCliforImpl implements DAOClifor{
 	
@@ -32,11 +33,11 @@ public class DAOCliforImpl implements DAOClifor{
 			int result = stmt.executeUpdate();
 			
 			if(result  < 1) {
-				throw new DatabaseException("Falha ao salvar o registro");
+				throw new DatabaseException(DefaultMessages.getMsgErroSalvar() + ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando insert clifor -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroSalvar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -56,11 +57,11 @@ public class DAOCliforImpl implements DAOClifor{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Falha ao atualizar o registro");
+				throw new DatabaseException(DefaultMessages.getMsgErroAtualizar() + ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando update clifor -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroAtualizar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -77,11 +78,11 @@ public class DAOCliforImpl implements DAOClifor{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Falha ao excluir o registro");
+				throw new DatabaseException(DefaultMessages.getMsgErroDeletar() + ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando delete clifor -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroDeletar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -106,7 +107,7 @@ public class DAOCliforImpl implements DAOClifor{
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findId clifor -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby());
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -130,7 +131,7 @@ public class DAOCliforImpl implements DAOClifor{
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findId clifor -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroFindall());
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -156,7 +157,8 @@ public class DAOCliforImpl implements DAOClifor{
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findname clifor -> " + e.getMessage());
+			String tipo = provider ? "fornecedor" : "cliente";
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Nome " + name + " e tipo " + tipo);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
