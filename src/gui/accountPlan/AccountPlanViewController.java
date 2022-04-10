@@ -23,9 +23,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -67,6 +70,14 @@ public class AccountPlanViewController implements Initializable {
 	private TableColumn<AccountPlan, AccountPlan> tblColumnEDIT;
 	@FXML
 	private TableColumn<AccountPlan, AccountPlan> tblColumnDELETE;
+	@FXML
+	private RadioButton rdioCredit;
+	@FXML
+	private RadioButton rdioDebito;
+	@FXML
+	private ToggleGroup rdioGroup;
+	@FXML
+	private Label lblFiltro;
 
 	private ObservableList<AccountPlan> obsList;
 	
@@ -77,6 +88,8 @@ public class AccountPlanViewController implements Initializable {
 	}
 
 	private void initializationNodes() {
+		rdioCredit.setToggleGroup(rdioGroup);
+		rdioDebito.setToggleGroup(rdioGroup);
 		tblColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tblColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
 		tblColumnCredit.setCellValueFactory(v -> {
@@ -85,6 +98,27 @@ public class AccountPlanViewController implements Initializable {
 		btnNew.getStyleClass().add("btn-primary");
 	}
 
+
+	public void rdioButtonFiltroClick() {
+		Boolean tipo = false;
+		RadioButton rb = (RadioButton)rdioGroup.getSelectedToggle();
+		if(rb.getText().equalsIgnoreCase("Crédito")) {
+			tipo = true;
+		}
+		updateTableFiltroTipo(tipo);
+	}
+	
+
+	public void updateTableFiltroTipo(Boolean credit) {
+		if (service == null) {
+			throw new IllegalStateException("O serviço não foi instanciado");
+		}
+
+		List<AccountPlan> list = service.findAllByType(credit);
+		obsList = FXCollections.observableArrayList(list);
+		tblView.setItems(obsList);
+	}	
+	
 	
 	public void updateTableView() {
 		if (service == null) {

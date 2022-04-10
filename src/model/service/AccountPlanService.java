@@ -14,6 +14,10 @@ public class AccountPlanService {
 	public List<AccountPlan> findAll() {
 		return dao.findAllOrderByName();
 	}
+
+	public List<AccountPlan> findAllByType(Boolean credit) {
+		return dao.findAllByType(credit);
+	}	
 	
 	public List<AccountPlan> findAllPagination(Integer limit){
 		return dao.findAllPagination(limit);

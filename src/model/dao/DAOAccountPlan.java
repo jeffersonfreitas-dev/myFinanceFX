@@ -11,6 +11,7 @@ public interface DAOAccountPlan {
 	void deleteById (Integer id);
 	AccountPlan findById(Integer id);
 	List<AccountPlan> findAllOrderByName();
+	List<AccountPlan> findAllByType(Boolean credit);
 	List<AccountPlan> findAllPagination(Integer limit);
 	AccountPlan findByNameAndCredit(String name, boolean credit);
 

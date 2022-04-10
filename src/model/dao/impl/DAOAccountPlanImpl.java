@@ -101,7 +101,7 @@ public class DAOAccountPlanImpl implements DAOAccountPlan{
 			rs = stmt.executeQuery();
 			
 			if(rs.next()) {
-				AccountPlan ap = new AccountPlan(rs.getInt("id"), rs.getString("name"), rs.getBoolean("credit"));
+				AccountPlan ap = setAccount(rs);
 				return ap;
 			}
 			return null;
@@ -125,7 +125,7 @@ public class DAOAccountPlanImpl implements DAOAccountPlan{
 			stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();
 			while(rs.next()) {
-				AccountPlan ap = new AccountPlan(rs.getInt("id"), rs.getString("name"), rs.getBoolean("credit"));
+				AccountPlan ap = setAccount(rs);
 				list.add(ap);
 			}
 			return list;
@@ -151,7 +151,7 @@ public class DAOAccountPlanImpl implements DAOAccountPlan{
 			rs = stmt.executeQuery();
 			
 			if(rs.next()) {
-				AccountPlan ap = new AccountPlan(rs.getInt("id"), rs.getString("name"), rs.getBoolean("credit"));
+				AccountPlan ap = setAccount(rs);
 				return ap;
 			}
 			return null;
@@ -177,7 +177,7 @@ public class DAOAccountPlanImpl implements DAOAccountPlan{
 			stmt.setInt(1, limit);
 			rs = stmt.executeQuery();
 			while(rs.next()) {
-				AccountPlan ap = new AccountPlan(rs.getInt("id"), rs.getString("name"), rs.getBoolean("credit"));
+				AccountPlan ap = setAccount(rs);
 				list.add(ap);
 			}
 			return list;
@@ -188,6 +188,38 @@ public class DAOAccountPlanImpl implements DAOAccountPlan{
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
 		}
+	}
+
+
+
+	@Override
+	public List<AccountPlan> findAllByType(Boolean credit) {
+		List<AccountPlan> list = new ArrayList<AccountPlan>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT * FROM account_plan WHERE credit = ? order by name";
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setBoolean(1, credit);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				AccountPlan ap = setAccount(rs);
+				list.add(ap);
+			}
+			return list;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException(DefaultMessages.getMsgErroFindall());
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
+	}
+	
+	
+	
+	private AccountPlan setAccount(ResultSet rs) throws SQLException {
+		return new AccountPlan(rs.getInt("id"), rs.getString("name"), rs.getBoolean("credit"));
 	}
 
 
