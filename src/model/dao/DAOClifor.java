@@ -12,5 +12,6 @@ public interface DAOClifor {
 	Clifor findById(Integer id);
 	List<Clifor> findAllOrderByName();
 	Clifor findByNameAndProvider(String name, boolean provider);
+	List<Clifor> findAllByTipo(Boolean fornecedor);
 
 }

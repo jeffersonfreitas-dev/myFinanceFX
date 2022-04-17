@@ -23,9 +23,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -66,6 +68,12 @@ public class CliforViewController implements Initializable{
 	private TableColumn<Clifor, Clifor> tblColumnEDIT;
 	@FXML
 	private TableColumn<Clifor, Clifor> tblColumnDELETE;
+	@FXML
+	private RadioButton rdioClientes;
+	@FXML
+	private RadioButton rdioFornecedores;
+	@FXML
+	private ToggleGroup rdioGroup;
 	
 	
 	private ObservableList<Clifor> obsList;
@@ -79,6 +87,8 @@ public class CliforViewController implements Initializable{
 
 	private void initializationNodes() {
 		btnNew.getStyleClass().add("btn-primary");
+		rdioClientes.setToggleGroup(rdioGroup);
+		rdioFornecedores.setToggleGroup(rdioGroup);
 		tblColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tblColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
 		tblColumnProvider.setCellValueFactory( v -> {
@@ -86,7 +96,28 @@ public class CliforViewController implements Initializable{
 		});
 	}
 	
+	
+	public void rdioButtonFiltroClick() {
+		Boolean tipo = true;
+		RadioButton rb = (RadioButton) rdioGroup.getSelectedToggle();
+		if(rb.getText().equalsIgnoreCase("Clientes")) {
+			tipo = false;
+		}
+		
+		updateTableFiltroTipo(tipo);
+	}
 
+
+
+	private void updateTableFiltroTipo(Boolean fornecedor) {
+		if(service == null) {
+			throw new IllegalStateException("O serviço não foi instanciado");
+		}
+		
+		List<Clifor> list = service.findAllByTipo(fornecedor);
+		obsList = FXCollections.observableArrayList(list);
+		tblView.setItems(obsList);
+	}
 
 
 	public void updateTableView() {

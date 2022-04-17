@@ -35,4 +35,8 @@ public class CliforService {
 		
 	}
 
+	public List<Clifor> findAllByTipo(Boolean fornecedor) {
+		return dao.findAllByTipo(fornecedor);
+	}
+
 }

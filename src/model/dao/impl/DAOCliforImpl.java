@@ -165,4 +165,31 @@ public class DAOCliforImpl implements DAOClifor{
 		}
 	}
 
+
+	@Override
+	public List<Clifor> findAllByTipo(Boolean fornecedor) {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT * FROM clifor WHERE provider = ?";
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setBoolean(1, fornecedor);
+			rs = stmt.executeQuery();
+			
+			List<Clifor> result = new ArrayList<>();
+			while(rs.next()) {
+				Clifor clifor = new Clifor(rs.getInt("id"), rs.getString("name"), rs.getBoolean("provider"));
+				result.add(clifor);
+			}
+			return result;			
+		} catch (Exception e) {
+			e.printStackTrace();
+			String tipo = fornecedor ? "fornecedor" : "cliente";
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Tipo " + tipo);
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
+	}
+
 }
