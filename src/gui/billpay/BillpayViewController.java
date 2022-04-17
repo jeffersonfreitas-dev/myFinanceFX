@@ -26,9 +26,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -37,6 +40,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import model.entities.Billpay;
+import model.entities.Clifor;
 import model.entities.Payment;
 import model.service.AccountPlanService;
 import model.service.BankAccountService;
@@ -53,6 +57,9 @@ public class BillpayViewController implements Initializable{
 	public void setBillpayService(BillpayService service) {
 		this.service = service;
 	}
+	
+	private String status = "PAGAR";
+	private String nome = "";
 	
 	@FXML
 	private Button btnNew;
@@ -94,6 +101,16 @@ public class BillpayViewController implements Initializable{
 	private TableColumn<Billpay, Billpay> tblColumnDELETE;
 	@FXML
 	private TableColumn<Billpay, Billpay> tblColumnPAY;
+	@FXML
+	private RadioButton rdioPagas;
+	@FXML
+	private RadioButton rdioVencidas;
+	@FXML
+	private RadioButton rdioPagar;
+	@FXML
+	private ToggleGroup rdioGroup;
+	@FXML
+	private TextField filtroNome;
 	
 	private ObservableList<Billpay> obsList = null;
 
@@ -105,7 +122,10 @@ public class BillpayViewController implements Initializable{
 
 
 	private void initializationNodes() {
-	
+		rdioPagas.setToggleGroup(rdioGroup);
+		rdioPagar.setToggleGroup(rdioGroup);
+		rdioVencidas.setToggleGroup(rdioGroup);
+		filtroNome.setText("");
 		btnNew.getStyleClass().add("btn-primary");
 		tblColumnInvoice.setCellValueFactory(new PropertyValueFactory<>("invoice"));
 		tblColumnDate.setCellValueFactory(new PropertyValueFactory<>("date"));
@@ -121,6 +141,30 @@ public class BillpayViewController implements Initializable{
 		});
 	}
 
+	
+	public void rdioButtonFiltroClick() {
+		RadioButton rb = (RadioButton) rdioGroup.getSelectedToggle();
+		if(rb.getText().equalsIgnoreCase("Quitadas")) {
+			this.status = "QUITADA";
+		}else if(rb.getText().equalsIgnoreCase("Vencidas")){
+			this.status = "VENCIDA";
+		}else {
+			this.status = "PAGAR";
+		}
+		updateTableFiltro(this.tipo, this.nome);
+	}
+	
+	private void updateTableFiltro(String status, String nome) {
+		if(service == null) {
+			throw new IllegalStateException("O serviço não foi instanciado");
+		}
+		
+		List<Clifor> list = service.filtro(status, nome);
+		obsList = FXCollections.observableArrayList(list);
+		tblView.setItems(obsList);
+	}
+
+	
 
 	public void updateTableView() {
 		if(service == null) {

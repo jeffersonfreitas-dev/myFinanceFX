@@ -191,7 +191,7 @@ public class AccountPlanViewController implements Initializable {
 			}
 			try {
 				service.remove(entity);
-//				updateTableView();
+				updateTableView();
 			} catch (DatabaseException e) {
 				e.printStackTrace();
 				Alerts.showAlert("Erro ao remover registro", null, e.getMessage(), AlertType.ERROR);
