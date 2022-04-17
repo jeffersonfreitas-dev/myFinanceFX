@@ -39,4 +39,8 @@ public class CliforService {
 		return dao.findAllByTipo(fornecedor);
 	}
 
+	public List<Clifor> filtro(Boolean fornecedor, String nome) {
+		return dao.filtro(fornecedor, nome);
+	}
+
 }

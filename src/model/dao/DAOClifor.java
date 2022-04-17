@@ -13,5 +13,6 @@ public interface DAOClifor {
 	List<Clifor> findAllOrderByName();
 	Clifor findByNameAndProvider(String name, boolean provider);
 	List<Clifor> findAllByTipo(Boolean fornecedor);
+	List<Clifor> filtro(Boolean fornecedor, String nome);
 
 }

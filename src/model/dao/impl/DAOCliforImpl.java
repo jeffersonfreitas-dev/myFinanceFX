@@ -170,10 +170,49 @@ public class DAOCliforImpl implements DAOClifor{
 	public List<Clifor> findAllByTipo(Boolean fornecedor) {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT * FROM clifor WHERE provider = ?";
+		String sql = "SELECT * FROM clifor WHERE provider = ? order by name";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setBoolean(1, fornecedor);
+			rs = stmt.executeQuery();
+			
+			List<Clifor> result = new ArrayList<>();
+			while(rs.next()) {
+				Clifor clifor = new Clifor(rs.getInt("id"), rs.getString("name"), rs.getBoolean("provider"));
+				result.add(clifor);
+			}
+			return result;			
+		} catch (Exception e) {
+			e.printStackTrace();
+			String tipo = fornecedor ? "fornecedor" : "cliente";
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Tipo " + tipo);
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
+	}
+
+
+	@Override
+	public List<Clifor> filtro(Boolean fornecedor, String nome) {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		StringBuilder sb = new StringBuilder("SELECT * FROM clifor WHERE provider = ?");
+		if(nome != "") {
+			sb.append(" and upper(name) like upper(?)");
+		}
+		sb.append(" order by name");
+		
+		String sql = sb.toString();
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setBoolean(1, fornecedor);
+			
+			if(nome != "") {
+				stmt.setString(2, "%"+nome+"%");
+			}
+			
 			rs = stmt.executeQuery();
 			
 			List<Clifor> result = new ArrayList<>();

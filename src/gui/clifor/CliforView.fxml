@@ -7,13 +7,14 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="446.0" prefWidth="457.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.clifor.CliforViewController">
+<VBox prefHeight="471.0" prefWidth="617.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.clifor.CliforViewController">
    <children>
       <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" VBox.vgrow="NEVER">
         <items>
@@ -42,7 +43,7 @@
                   </RadioButton>
                   <Label fx:id="lblFiltro" text="Filtrar por:">
                      <padding>
-                        <Insets left="10.0" />
+                        <Insets left="5.0" right="10.0" />
                      </padding>
                      <font>
                         <Font name="System Bold" size="12.0" />
@@ -53,6 +54,14 @@
                   <Insets left="20.0" right="20.0" />
                </opaqueInsets>
             </HBox>
+            <TextField fx:id="filtroNome" alignment="CENTER_RIGHT" onInputMethodTextChanged="#txtNomeFiltroChange" prefHeight="25.0" prefWidth="227.0" promptText="Digite o nome para pesquisa">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets left="3.0" right="3.0" />
+               </padding>
+            </TextField>
         </items>
       </ToolBar>
       <TableView fx:id="tblView" nodeOrientation="LEFT_TO_RIGHT" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">

@@ -1,5 +1,7 @@
 package gui.clifor;
 
+import static org.mockito.Mockito.doNothing;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -27,6 +29,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
@@ -46,6 +49,8 @@ public class CliforViewController implements Initializable{
 		this.service = service;
 	}
 	
+	private Boolean tipo = true;
+	private String nome = "";
 	
 	@FXML
 	private Button btnNew;
@@ -74,6 +79,8 @@ public class CliforViewController implements Initializable{
 	private RadioButton rdioFornecedores;
 	@FXML
 	private ToggleGroup rdioGroup;
+	@FXML
+	private TextField filtroNome;
 	
 	
 	private ObservableList<Clifor> obsList;
@@ -94,27 +101,35 @@ public class CliforViewController implements Initializable{
 		tblColumnProvider.setCellValueFactory( v -> {
 			return new ReadOnlyStringWrapper(v.getValue().isProvider() ? "Fornecedor" : "Cliente");
 		});
+		txtNomeFiltroChange();
 	}
 	
 	
 	public void rdioButtonFiltroClick() {
-		Boolean tipo = true;
 		RadioButton rb = (RadioButton) rdioGroup.getSelectedToggle();
 		if(rb.getText().equalsIgnoreCase("Clientes")) {
-			tipo = false;
+			this.tipo = false;
+		}else {
+			this.tipo = true;
 		}
-		
-		updateTableFiltroTipo(tipo);
+		updateTableFiltro(this.tipo, this.nome);
+	}
+	
+	public void txtNomeFiltroChange() {
+		filtroNome.textProperty().addListener((observable, oldValue, newValue) -> {
+			this.nome = newValue;
+			updateTableFiltro(this.tipo, this.nome);
+		});
 	}
 
 
 
-	private void updateTableFiltroTipo(Boolean fornecedor) {
+	private void updateTableFiltro(Boolean fornecedor, String nome) {
 		if(service == null) {
 			throw new IllegalStateException("O serviço não foi instanciado");
 		}
 		
-		List<Clifor> list = service.findAllByTipo(fornecedor);
+		List<Clifor> list = service.filtro(fornecedor, nome);
 		obsList = FXCollections.observableArrayList(list);
 		tblView.setItems(obsList);
 	}
@@ -125,9 +140,12 @@ public class CliforViewController implements Initializable{
 			throw new IllegalStateException("O serviço não foi instanciado");
 		}
 		
-		List<Clifor> list = service.findAll();
+		List<Clifor> list = service.findAllByTipo(tipo);
+		rdioFornecedores.setSelected(true);
 		obsList = FXCollections.observableArrayList(list);
 		tblView.setItems(obsList);
+		this.nome = "";
+		filtroNome.setText(nome);
 		initEditButtons();
 		initRemoveButtons();
 	}
