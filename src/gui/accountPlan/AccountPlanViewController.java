@@ -47,6 +47,8 @@ public class AccountPlanViewController implements Initializable {
 	public void setAccountPlanService(AccountPlanService accountPlanService) {
 		this.service = accountPlanService;
 	}
+	
+	private Boolean tipo = false;
 
 	@FXML
 	private Button btnNew;
@@ -96,20 +98,34 @@ public class AccountPlanViewController implements Initializable {
 			return new ReadOnlyStringWrapper(v.getValue().isCredit() ? "CRÉDITO" : "DÉBITO");
 		});
 		btnNew.getStyleClass().add("btn-primary");
+		rdioDebito.setSelected(true);
 	}
 
 
 	public void rdioButtonFiltroClick() {
-		Boolean tipo = false;
 		RadioButton rb = (RadioButton)rdioGroup.getSelectedToggle();
 		if(rb.getText().equalsIgnoreCase("Crédito")) {
-			tipo = true;
+			this.tipo = true;
+		}else {
+			this.tipo = false;
 		}
-		updateTableFiltroTipo(tipo);
+		updateTableFiltroTipo(this.tipo);
 	}
 	
 
 	public void updateTableFiltroTipo(Boolean credit) {
+		setPropertiesFilter(credit);
+	}
+
+	
+	public void updateTableView() {
+		setPropertiesFilter(this.tipo);
+		initEditButtons();
+		initRemoveButtons();
+	}
+
+	
+	private void setPropertiesFilter(Boolean credit) {
 		if (service == null) {
 			throw new IllegalStateException("O serviço não foi instanciado");
 		}
@@ -117,21 +133,7 @@ public class AccountPlanViewController implements Initializable {
 		List<AccountPlan> list = service.findAllByType(credit);
 		obsList = FXCollections.observableArrayList(list);
 		tblView.setItems(obsList);
-	}	
-	
-	
-	public void updateTableView() {
-		if (service == null) {
-			throw new IllegalStateException("O serviço não foi instanciado");
-		}
-
-		List<AccountPlan> list = service.findAll();
-		obsList = FXCollections.observableArrayList(list);
-		tblView.setItems(obsList);
-		initEditButtons();
-		initRemoveButtons();
-	}
-
+	}		
 
 	private void initEditButtons() {
 		tblColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));

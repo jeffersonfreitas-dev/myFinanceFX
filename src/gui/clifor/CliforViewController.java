@@ -1,7 +1,5 @@
 package gui.clifor;
 
-import static org.mockito.Mockito.doNothing;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
