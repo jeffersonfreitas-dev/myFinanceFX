@@ -222,4 +222,41 @@ public class DAOBillpayImpl implements DAOBillpay{
 		company.setName(rs.getString("name_company"));
 		return company;
 	}
+
+
+	@Override
+	public List<Billpay> filtro(String status, String nome) {
+		List<Billpay> list = new ArrayList<Billpay>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder("SELECT b.*, c.id as cod_clifor, c.name as name_clifor, e.id as cod_company, e.name as name_company, p.id as cod_account,p.credit, p.name FROM billpay b ");
+		sb.append("INNER JOIN clifor c ON b.id_clifor = c.id INNER JOIN company e ON b.id_company = e.id INNER JOIN account_plan p ON b.id_account_plan = p.id where b.status = ? ");
+		if(nome != "") {
+			//TODO: Diferenciar data, historico e fornecedor
+			sb.append("and b.historico like ? ");
+		}
+		sb.append("ORDER BY due_date");
+		
+		try {
+			stmt = conn.prepareStatement(sb.toString());
+			stmt.setString(1, status);
+			
+			if(nome != "") {
+				stmt.setString(2, nome);
+			}
+			rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				Billpay bill = getBillpay(rs);
+				list.add(bill);
+			}
+			return list;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException("Ocorreu um erro ao executar o comando findAllOrderByDueDate conta a pagar -> " + e.getMessage());
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
+	}
 }

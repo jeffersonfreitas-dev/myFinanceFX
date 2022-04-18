@@ -29,7 +29,7 @@
             </Button>
             <HBox alignment="CENTER_RIGHT" prefHeight="31.0" prefWidth="320.0">
                <children>
-                  <RadioButton fx:id="rdioPagas" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Quitadas">
+                  <RadioButton fx:id="rdioPagas" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#rdioButtonFiltroClick" text="Quitadas">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
@@ -37,12 +37,12 @@
                         <ToggleGroup fx:id="rdioGroup" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton fx:id="rdioVencidas" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Vencidas" toggleGroup="$rdioGroup">
+                  <RadioButton fx:id="rdioVencidas" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#rdioButtonFiltroClick" text="Vencidas" toggleGroup="$rdioGroup">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
                   </RadioButton>
-                  <RadioButton fx:id="rdioPagar" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="A Pagar" toggleGroup="$rdioGroup">
+                  <RadioButton fx:id="rdioPagar" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#rdioButtonFiltroClick" text="A Pagar" toggleGroup="$rdioGroup">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
@@ -73,8 +73,6 @@
       </ToolBar>
       <TableView fx:id="tblView" nodeOrientation="LEFT_TO_RIGHT" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn fx:id="tblColumnStatus" editable="false" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" resizable="false" sortable="false" style="-fx-alignment: center;" />
-          <TableColumn fx:id="tblColumnInvoice" editable="false" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" style="-fx-alignment: center-left; -fx-border-fill: transparent;" text="Nota" />
           <TableColumn fx:id="tblColumnDate" editable="false" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" resizable="false" style="-fx-alignment: center;" text="Emissão" />
             <TableColumn fx:id="tblColumnDueDate" editable="false" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" resizable="false" style="-fx-alignment: center;" text="Vencimento" />
             <TableColumn fx:id="tblColumnProvider" editable="false" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" resizable="false" style="-fx-alignment: center-left;" text="Fornecedor" />

@@ -40,7 +40,6 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import model.entities.Billpay;
-import model.entities.Clifor;
 import model.entities.Payment;
 import model.service.AccountPlanService;
 import model.service.BankAccountService;
@@ -82,8 +81,6 @@ public class BillpayViewController implements Initializable{
 	@FXML
 	private TableView<Billpay> tblView;
 	@FXML
-	private TableColumn<Billpay, Integer> tblColumnInvoice;
-	@FXML
 	private TableColumn<Billpay, Date> tblColumnDate;
 	@FXML
 	private TableColumn<Billpay, Date> tblColumnDueDate;
@@ -93,8 +90,6 @@ public class BillpayViewController implements Initializable{
 	private TableColumn<Billpay, String> tblColumnProvider;
 	@FXML
 	private TableColumn<Billpay, Double> tblColumnValue;
-	@FXML
-	private TableColumn<Billpay, String> tblColumnStatus;
 	@FXML
 	private TableColumn<Billpay, Billpay> tblColumnEDIT;
 	@FXML
@@ -127,7 +122,6 @@ public class BillpayViewController implements Initializable{
 		rdioVencidas.setToggleGroup(rdioGroup);
 		filtroNome.setText("");
 		btnNew.getStyleClass().add("btn-primary");
-		tblColumnInvoice.setCellValueFactory(new PropertyValueFactory<>("invoice"));
 		tblColumnDate.setCellValueFactory(new PropertyValueFactory<>("date"));
 		Utils.formatTableColumnDate(tblColumnDate, "dd/MM/yyyy");
 		tblColumnDueDate.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
@@ -135,7 +129,6 @@ public class BillpayViewController implements Initializable{
 		tblColumnHistoric.setCellValueFactory(new PropertyValueFactory<>("historic"));
 		tblColumnValue.setCellValueFactory(new PropertyValueFactory<>("value"));
 		Utils.formatTableColumnDouble(tblColumnValue, 2);
-		tblColumnStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 		tblColumnProvider.setCellValueFactory(v -> {	String s = v.getValue().getClifor().getName();
 		return new ReadOnlyStringWrapper(s);
 		});
@@ -151,15 +144,16 @@ public class BillpayViewController implements Initializable{
 		}else {
 			this.status = "PAGAR";
 		}
-		updateTableFiltro(this.tipo, this.nome);
+		updateTableFiltro(this.status, this.nome);
 	}
+	
 	
 	private void updateTableFiltro(String status, String nome) {
 		if(service == null) {
 			throw new IllegalStateException("O serviço não foi instanciado");
 		}
 		
-		List<Clifor> list = service.filtro(status, nome);
+		List<Billpay> list = service.filtro(status, nome);
 		obsList = FXCollections.observableArrayList(list);
 		tblView.setItems(obsList);
 	}

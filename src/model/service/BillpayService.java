@@ -65,4 +65,8 @@ public class BillpayService {
 		dao.update(entity);
 	}
 
+	public List<Billpay> filtro(String status, String nome) {
+		return dao.filtro(status, nome);
+	}
+
 }

@@ -12,5 +12,6 @@ public interface DAOBillpay {
 	Billpay findById(Integer id);
 	List<Billpay> findAllOrderByDueDate();
 	Billpay findByInvoiceAndCompanyId(String invoice, Integer id_company);
+	List<Billpay> filtro(String status, String nome);
 
 }
