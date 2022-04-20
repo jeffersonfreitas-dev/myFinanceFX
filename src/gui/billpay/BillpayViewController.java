@@ -26,6 +26,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -59,6 +60,7 @@ public class BillpayViewController implements Initializable{
 	
 	private String status = "PAGAR";
 	private String nome = "";
+	private String valorCombobox = "Histórico";
 	
 	@FXML
 	private Button btnNew;
@@ -75,6 +77,7 @@ public class BillpayViewController implements Initializable{
 				controller.updateFormData();
 				controller.loadAssociateObjects();					
 			});
+		
 	}
 
 
@@ -106,6 +109,8 @@ public class BillpayViewController implements Initializable{
 	private ToggleGroup rdioGroup;
 	@FXML
 	private TextField filtroNome;
+	@FXML
+	private ComboBox<String> combobox;
 	
 	private ObservableList<Billpay> obsList = null;
 
@@ -132,8 +137,32 @@ public class BillpayViewController implements Initializable{
 		tblColumnProvider.setCellValueFactory(v -> {	String s = v.getValue().getClifor().getName();
 		return new ReadOnlyStringWrapper(s);
 		});
+		
+		combobox.getItems().add("Histórico");
+		combobox.getItems().add("Fornecedor");
+		combobox.getItems().add("Vencimento");
+		
+		setarPlaceHolder(valorCombobox);
+		
+		txtNomeFiltroChange();
+		rdioPagar.setSelected(true);
+
 	}
 
+	private void setarPlaceHolder(String valor) {
+		if(valor.equals("Histórico")) {
+			filtroNome.setPromptText("Digite o texto para pesquisar no histórico");
+		}
+		
+	}
+
+
+	public void txtNomeFiltroChange() {
+		filtroNome.textProperty().addListener((observable, oldValue, newValue) -> {
+			this.nome = newValue;
+			updateTableFiltro(this.status, this.nome, this.valorCombobox);
+		});
+	}
 	
 	public void rdioButtonFiltroClick() {
 		RadioButton rb = (RadioButton) rdioGroup.getSelectedToggle();
@@ -144,16 +173,16 @@ public class BillpayViewController implements Initializable{
 		}else {
 			this.status = "PAGAR";
 		}
-		updateTableFiltro(this.status, this.nome);
+		updateTableFiltro(this.status, this.nome, this.valorCombobox);
 	}
 	
 	
-	private void updateTableFiltro(String status, String nome) {
+	private void updateTableFiltro(String status, String nome, String combobox) {
 		if(service == null) {
 			throw new IllegalStateException("O serviço não foi instanciado");
 		}
 		
-		List<Billpay> list = service.filtro(status, nome);
+		List<Billpay> list = service.filtro(status, nome, combobox);
 		obsList = FXCollections.observableArrayList(list);
 		tblView.setItems(obsList);
 	}
@@ -164,7 +193,7 @@ public class BillpayViewController implements Initializable{
 		if(service == null) {
 			throw new IllegalStateException("O serviço não foi instanciado");
 		}
-		List<Billpay> list = service.findAll();
+		List<Billpay> list = service.filtro(this.status, this.nome, this.valorCombobox);
 		obsList = FXCollections.observableArrayList(list);
 		tblView.setItems(obsList);
 		initializationNodes();

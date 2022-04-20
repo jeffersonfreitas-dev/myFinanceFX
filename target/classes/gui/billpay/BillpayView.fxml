@@ -68,7 +68,7 @@
                   <Insets left="3.0" right="3.0" />
                </padding>
             </TextField>
-            <ComboBox prefHeight="25.0" prefWidth="144.0" />
+            <ComboBox fx:id="combobox" prefHeight="25.0" prefWidth="144.0" />
         </items>
       </ToolBar>
       <TableView fx:id="tblView" nodeOrientation="LEFT_TO_RIGHT" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
