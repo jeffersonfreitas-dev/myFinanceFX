@@ -21,7 +21,6 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
@@ -39,6 +38,7 @@ public class PaymentViewRegisterController implements Initializable{
 	
 	private Billpay billpay;
 	public void setBillpay(Billpay billpay) {
+		System.out.println(billpay.getStatus());
 		this.billpay = billpay;
 	}
 	
@@ -62,8 +62,6 @@ public class PaymentViewRegisterController implements Initializable{
 		this.entity = entity;
 	}
 	
-	@FXML
-	private TextField txtId;
 	@FXML
 	private DatePicker pkDate;
 	@FXML
@@ -117,7 +115,6 @@ public class PaymentViewRegisterController implements Initializable{
 		}
 		pay.setBillpay(billpay);
 		ValidationException exception = new ValidationException("");
-		pay.setId(Utils.tryParseToInt(txtId.getText()));
 		
 		if(cmbAccount.getValue() == null) {
 			exception.setError("account", "Informe a conta bancária para pagamento");

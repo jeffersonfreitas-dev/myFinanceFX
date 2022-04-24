@@ -107,8 +107,6 @@ public class BillpayViewController implements Initializable{
 	@FXML
 	private RadioButton rdioPagas;
 	@FXML
-	private RadioButton rdioVencidas;
-	@FXML
 	private RadioButton rdioPagar;
 	@FXML
 	private ToggleGroup rdioGroup;
@@ -147,7 +145,6 @@ public class BillpayViewController implements Initializable{
 	private void initializationNodes() {
 		rdioPagas.setToggleGroup(rdioGroup);
 		rdioPagar.setToggleGroup(rdioGroup);
-		rdioVencidas.setToggleGroup(rdioGroup);
 		filtroNome.setText("");
 		btnNew.getStyleClass().add("btn-primary");
 		tblColumnDate.setCellValueFactory(new PropertyValueFactory<>("date"));
@@ -185,7 +182,7 @@ public class BillpayViewController implements Initializable{
 		            	Alerts.showAlert("Erro ao abrir pagamento", null, "Está conta já foi quitada", AlertType.ERROR);
 		            }else {
 		            	Stage stage = new Stage();
-		            	loadModalView("/gui/payment/PaymentViewRegister.fxml", 650.0, 270.0, entity, "Pagamento de contas", stage, (PaymentViewRegisterController controller) -> {
+		            	loadModalView("/gui/payment/PaymentViewRegister.fxml", 610.0, 240.0, entity, "Pagamento de contas", stage, (PaymentViewRegisterController controller) -> {
 		            		controller.setBillpayService(new BillpayService());
 		            		controller.setAccountService(new BankAccountService());
 		            		controller.setService(new PaymentService());
@@ -261,7 +258,7 @@ public class BillpayViewController implements Initializable{
 		initializationNodes();
 		initRemoveButtons();
 		initEditButtons();
-		initPaymentButtons();
+		initDetailButtons();
 	}
 	
 	
@@ -298,14 +295,14 @@ public class BillpayViewController implements Initializable{
 	}
 	
 	
-	private void initPaymentButtons() {
+	private void initDetailButtons() {
 		tblColumnPAY.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
 		tblColumnPAY.setCellFactory(param -> new TableCell<Billpay, Billpay>() {
 			private final Button button = new Button();
 			
 			@Override
 			protected void updateItem(Billpay entity, boolean empty) {
-				button.setGraphic(new ImageView("/assets/icons/payment16.png"));
+				button.setGraphic(new ImageView("/assets/icons/detail16.png"));
 				button.setStyle(" -fx-background-color:transparent;");
 				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
@@ -314,17 +311,6 @@ public class BillpayViewController implements Initializable{
 					return;
 				}
 				setGraphic(button);
-				button.setOnAction(e -> {
-					Stage stage = new Stage();
-					loadModalView("/gui/payment/PaymentViewRegister.fxml", 650.0, 270.0, entity, "Pagamento de contas", stage, (PaymentViewRegisterController controller) -> {
-						controller.setBillpayService(new BillpayService());
-						controller.setAccountService(new BankAccountService());
-						controller.setService(new PaymentService());
-						controller.setPayment(new Payment());
-						controller.loadAssociateObjects();
-						controller.setBillpay(entity);					
-					});
-				});
 			}
 		});
 	}

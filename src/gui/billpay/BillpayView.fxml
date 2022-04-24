@@ -29,7 +29,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <HBox alignment="CENTER_RIGHT" prefHeight="31.0" prefWidth="320.0">
+            <HBox alignment="CENTER_RIGHT" prefHeight="31.0" prefWidth="235.0">
                <children>
                   <RadioButton fx:id="rdioPagas" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#rdioButtonFiltroClick" text="Quitadas">
                      <HBox.margin>
@@ -38,11 +38,6 @@
                      <toggleGroup>
                         <ToggleGroup fx:id="rdioGroup" />
                      </toggleGroup>
-                  </RadioButton>
-                  <RadioButton fx:id="rdioVencidas" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#rdioButtonFiltroClick" text="Vencidas" toggleGroup="$rdioGroup">
-                     <HBox.margin>
-                        <Insets right="10.0" />
-                     </HBox.margin>
                   </RadioButton>
                   <RadioButton fx:id="rdioPagar" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#rdioButtonFiltroClick" text="A Pagar" toggleGroup="$rdioGroup">
                      <HBox.margin>
