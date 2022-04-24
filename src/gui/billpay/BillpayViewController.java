@@ -2,6 +2,7 @@ package gui.billpay;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -61,6 +63,8 @@ public class BillpayViewController implements Initializable{
 	private String status = "PAGAR";
 	private String nome = "";
 	private String valorCombobox = "Histórico";
+	private LocalDate dtaInicio;
+	private LocalDate dtaFinal;
 	
 	@FXML
 	private Button btnNew;
@@ -110,7 +114,25 @@ public class BillpayViewController implements Initializable{
 	@FXML
 	private TextField filtroNome;
 	@FXML
-	private ComboBox<String> combobox;
+	private ComboBox<String> combobox = new ComboBox<String>();
+	@FXML
+	private DatePicker dataInicio;
+	@FXML
+	private DatePicker dataFinal;
+	@FXML
+	private Button irDataFiltro;
+	@FXML
+	public void onBtnIrDataFiltroClick() {
+		if(dataInicio != null) {
+			this.dtaInicio = dataInicio.getValue();
+		}
+		
+		if(dataFinal != null) {
+			this.dtaFinal = dataFinal.getValue();
+		}
+		updateTableFiltro(this.status, this.nome, this.valorCombobox, this.dtaInicio, this.dtaFinal);
+		
+	}
 	
 	private ObservableList<Billpay> obsList = null;
 
@@ -137,10 +159,11 @@ public class BillpayViewController implements Initializable{
 		tblColumnProvider.setCellValueFactory(v -> {	String s = v.getValue().getClifor().getName();
 		return new ReadOnlyStringWrapper(s);
 		});
+		Utils.formatDatePicker(dataInicio, "dd/MM/yyyy");
+		Utils.formatDatePicker(dataFinal, "dd/MM/yyyy");
 		
-		combobox.getItems().add("Histórico");
-		combobox.getItems().add("Fornecedor");
-		combobox.getItems().add("Vencimento");
+		combobox.setItems(FXCollections.observableArrayList("Histórico", "Fornecedor", "Vencimento"));
+		combobox.setValue(valorCombobox);
 		
 		setarPlaceHolder(valorCombobox);
 		
@@ -148,10 +171,15 @@ public class BillpayViewController implements Initializable{
 		rdioPagar.setSelected(true);
 
 	}
-
+	
+	
 	private void setarPlaceHolder(String valor) {
 		if(valor.equals("Histórico")) {
 			filtroNome.setPromptText("Digite o texto para pesquisar no histórico");
+		}else if(valor.equals("Fornecedor")) {
+			filtroNome.setPromptText("Digite o nome do fornecedor para pesquisa");
+		}else {
+			filtroNome.setPromptText("Data inicial/final sem pontuação, no formato DDMMAAAA");
 		}
 		
 	}
@@ -160,7 +188,7 @@ public class BillpayViewController implements Initializable{
 	public void txtNomeFiltroChange() {
 		filtroNome.textProperty().addListener((observable, oldValue, newValue) -> {
 			this.nome = newValue;
-			updateTableFiltro(this.status, this.nome, this.valorCombobox);
+			updateTableFiltro(this.status, this.nome, this.valorCombobox, this.dtaInicio, this.dtaFinal);
 		});
 	}
 	
@@ -173,18 +201,24 @@ public class BillpayViewController implements Initializable{
 		}else {
 			this.status = "PAGAR";
 		}
-		updateTableFiltro(this.status, this.nome, this.valorCombobox);
+		updateTableFiltro(this.status, this.nome, this.valorCombobox, this.dtaInicio, this.dtaFinal);
 	}
 	
 	
-	private void updateTableFiltro(String status, String nome, String combobox) {
+	private void updateTableFiltro(String status, String nome, String combobox, LocalDate inicio, LocalDate fim) {
 		if(service == null) {
 			throw new IllegalStateException("O serviço não foi instanciado");
 		}
 		
-		List<Billpay> list = service.filtro(status, nome, combobox);
+		List<Billpay> list = service.filtro(status, nome, combobox, inicio, fim);
 		obsList = FXCollections.observableArrayList(list);
 		tblView.setItems(obsList);
+	}
+	
+	
+	public void getComboBoxValue() {
+		this.valorCombobox = combobox.getValue();
+		setarPlaceHolder(valorCombobox);
 	}
 
 	
@@ -193,7 +227,7 @@ public class BillpayViewController implements Initializable{
 		if(service == null) {
 			throw new IllegalStateException("O serviço não foi instanciado");
 		}
-		List<Billpay> list = service.filtro(this.status, this.nome, this.valorCombobox);
+		List<Billpay> list = service.filtro(this.status, this.nome, this.valorCombobox, this.dtaInicio, this.dtaFinal);
 		obsList = FXCollections.observableArrayList(list);
 		tblView.setItems(obsList);
 		initializationNodes();

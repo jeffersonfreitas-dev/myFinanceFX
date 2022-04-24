@@ -1,5 +1,6 @@
 package model.service;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
 
@@ -65,8 +66,8 @@ public class BillpayService {
 		dao.update(entity);
 	}
 
-	public List<Billpay> filtro(String status, String nome, String combobox) {
-		return dao.filtro(status, nome, combobox);
+	public List<Billpay> filtro(String status, String nome, String combobox, LocalDate inicio, LocalDate fim) {
+		return dao.filtro(status, nome, combobox, inicio, fim);
 	}
 
 }

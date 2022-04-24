@@ -1,9 +1,11 @@
 package model.dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -225,7 +227,7 @@ public class DAOBillpayImpl implements DAOBillpay{
 
 
 	@Override
-	public List<Billpay> filtro(String status, String nome, String combobox) {
+	public List<Billpay> filtro(String status, String nome, String combobox, LocalDate inicio, LocalDate fim) {
 		List<Billpay> list = new ArrayList<Billpay>();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -234,7 +236,17 @@ public class DAOBillpayImpl implements DAOBillpay{
 		if(nome != "") {
 			if(combobox.equals("Histórico")) {
 				sb.append("and upper(b.historic) like upper(?) ");
+			}else {
+				sb.append("and upper(c.name) like upper(?) ");
 			}
+		}
+		
+		if(inicio != null && fim != null) {
+			sb.append("and b.due_date between ? and ? ");
+		}else if(inicio != null && fim == null) {
+			sb.append("and b.due_date >= ? ");
+		}else if(inicio == null && fim != null){
+			sb.append("and b.due_date <= ? ");
 		}
 		sb.append("ORDER BY due_date");
 		
@@ -242,9 +254,23 @@ public class DAOBillpayImpl implements DAOBillpay{
 			stmt = conn.prepareStatement(sb.toString());
 			stmt.setString(1, status);
 			
+			int controlParam = 2;
+
 			if(nome != "") {
 				stmt.setString(2, "%"+nome+"%");
+				controlParam = 3;
 			}
+			
+			if(inicio != null && fim != null) {
+				stmt.setDate(controlParam,  Date.valueOf(inicio));
+				stmt.setDate(controlParam+1, Date.valueOf(fim));
+			}else if(inicio != null && fim == null) {
+				stmt.setDate(controlParam, Date.valueOf(inicio));
+			}else if(inicio == null && fim != null){
+				stmt.setDate(controlParam, Date.valueOf(fim));
+			}
+			
+			
 			rs = stmt.executeQuery();
 			
 			while(rs.next()) {

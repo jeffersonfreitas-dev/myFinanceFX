@@ -4,8 +4,10 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -15,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="430.0" prefWidth="1041.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.billpay.BillpayViewController">
+<VBox prefHeight="430.0" prefWidth="1160.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.billpay.BillpayViewController">
    <children>
       <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" VBox.vgrow="NEVER">
         <items>
@@ -60,7 +62,8 @@
                   <Insets left="20.0" right="20.0" />
                </opaqueInsets>
             </HBox>
-            <TextField fx:id="filtroNome" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="320.0" promptText="Digite para pesquisar por histórico">
+            <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="0.0" />
+            <TextField fx:id="filtroNome" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="250.0" promptText="Digite para pesquisar por histórico">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -68,7 +71,14 @@
                   <Insets left="3.0" right="3.0" />
                </padding>
             </TextField>
-            <ComboBox fx:id="combobox" prefHeight="25.0" prefWidth="144.0" />
+            <ComboBox fx:id="combobox" nodeOrientation="LEFT_TO_RIGHT" onAction="#getComboBoxValue" prefHeight="25.0" prefWidth="120.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></ComboBox>
+            <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="0.0" />
+            <Button fx:id="irDataFiltro" mnemonicParsing="false" onAction="#onBtnIrDataFiltroClick" text="Ir" />
+            <DatePicker fx:id="dataFinal" editable="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="130.0" promptText="Final" />
+            <DatePicker fx:id="dataInicio" editable="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="130.0" promptText="Inicial" />
         </items>
       </ToolBar>
       <TableView fx:id="tblView" nodeOrientation="LEFT_TO_RIGHT" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">

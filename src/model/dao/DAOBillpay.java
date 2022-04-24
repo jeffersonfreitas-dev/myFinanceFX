@@ -1,5 +1,6 @@
 package model.dao;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import model.entities.Billpay;
@@ -12,6 +13,6 @@ public interface DAOBillpay {
 	Billpay findById(Integer id);
 	List<Billpay> findAllOrderByDueDate();
 	Billpay findByInvoiceAndCompanyId(String invoice, Integer id_company);
-	List<Billpay> filtro(String status, String nome, String combobox);
+	List<Billpay> filtro(String status, String nome, String combobox, LocalDate inicio, LocalDate fim);
 
 }
