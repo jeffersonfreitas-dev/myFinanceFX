@@ -77,8 +77,8 @@
                </cursor></ComboBox>
             <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="0.0" />
             <Button fx:id="irDataFiltro" mnemonicParsing="false" onAction="#onBtnIrDataFiltroClick" text="Ir" />
-            <DatePicker fx:id="dataFinal" editable="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="130.0" promptText="Final" />
-            <DatePicker fx:id="dataInicio" editable="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="130.0" promptText="Inicial" />
+            <DatePicker fx:id="dataFinal" editable="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="130.0" promptText="Data Final" />
+            <DatePicker fx:id="dataInicio" editable="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="130.0" promptText="Data Inicial" />
         </items>
       </ToolBar>
       <TableView fx:id="tblView" nodeOrientation="LEFT_TO_RIGHT" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">

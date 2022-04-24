@@ -3,6 +3,7 @@ package model.service;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 import model.dao.DAOBillpay;
 import model.dao.DAOFactory;
@@ -46,7 +47,7 @@ public class BillpayService {
 				bill.setDate(entity.getDate());
 				bill.setFulfillment(entity.getFulfillment());
 				bill.setHistoric(entity.getHistoric());
-				bill.setInvoice(entity.getInvoice() + "/"+(i+1));
+				bill.setInvoice(UUID.randomUUID().toString());
 				bill.setValue(entity.getValue() / entity.getFulfillment());
 				bill.setPortion(i+1);
 				bill.setStatus("A");

@@ -71,15 +71,15 @@ public class BillpayViewRegisterController implements Initializable{
 	}	
 
 	@FXML
-	private TextField txtId;
-	@FXML
-	private TextField txtInvoice;
-	@FXML
 	private DatePicker pkEmission;
 	@FXML
 	private DatePicker pkDueDate;
 	@FXML
 	private TextField txtValue;
+	@FXML
+	private TextField txtQtdDias;
+	@FXML
+	private TextField txtQtdParcelas;
 	@FXML
 	private TextArea txtHistoric;
 	
@@ -126,7 +126,7 @@ public class BillpayViewRegisterController implements Initializable{
 		cmbAccount.setButtonCell(factory.call(null));
 	}
 	@FXML
-	private Label lblErrorInvoice;
+	private Label lblErrorParcelamento;
 	@FXML
 	private Label lblErrorEmission;
 	@FXML
@@ -141,6 +141,7 @@ public class BillpayViewRegisterController implements Initializable{
 	private Label lblErrorClifor;
 	@FXML
 	private Label lblErrorAccountPlan;
+	
 	private ObservableList<Company> obsCompany;
 	private ObservableList<Clifor> obsClifor;
 	private ObservableList<AccountPlan> obsAccount;
@@ -190,8 +191,6 @@ public class BillpayViewRegisterController implements Initializable{
 		btnCancel.getStyleClass().add("btn-danger");
 		btnSave.getStyleClass().add("btn-success");	
 		Constraints.setTextFieldDouble(txtValue);
-		Constraints.setTextFieldMaxLength(txtInvoice, 20);
-		Constraints.setTextFieldInteger(txtId);
 		Utils.formatDatePicker(pkDueDate, "dd/MM/yyyy");
 		Utils.formatDatePicker(pkEmission, "dd/MM/yyyy");
 		initializeComboBoxAccountPlan();
@@ -209,8 +208,6 @@ public class BillpayViewRegisterController implements Initializable{
 			throw new IllegalStateException("Entidade não instanciada");
 		}
 		
-		txtId.setText(String.valueOf(entity.getId()));
-		txtInvoice.setText(entity.getInvoice());
 		txtHistoric.setText(entity.getHistoric());
 		txtValue.setText(String.format("%.2f", entity.getValue()));
 		
@@ -262,13 +259,7 @@ public class BillpayViewRegisterController implements Initializable{
 	private Billpay getFormDate() throws ParseException {
 		Billpay bill = new Billpay();
 		ValidationException exception = new ValidationException("");
-		bill.setId(Utils.tryParseToInt(txtId.getText()));
 		bill.setStatus(entity.getStatus());
-		
-		if(txtInvoice.getText() == null || txtInvoice.getText().trim().equals("")) {
-			exception.setError("invoice", "Informe a nota fiscal");
-		}
-		bill.setInvoice(txtInvoice.getText());
 		
 		if(pkEmission.getValue() == null) {
 			exception.setError("emission", "Informe uma data válida");
@@ -334,7 +325,7 @@ public class BillpayViewRegisterController implements Initializable{
 		lblErrorDueDate.setText("");
 		lblErrorEmission.setText("");
 		lblErrorHistoric.setText("");
-		lblErrorInvoice.setText("");
+		lblErrorParcelamento.setText("");
 		lblErrorValue.setText("");
 		
 		if(keys.contains("accountPlan")) {
@@ -356,7 +347,7 @@ public class BillpayViewRegisterController implements Initializable{
 			lblErrorHistoric.setText(errors.get("historic"));
 		}
 		if(keys.contains("invoice")) {
-			lblErrorInvoice.setText(errors.get("invoice"));
+			lblErrorParcelamento.setText(errors.get("parcelamento"));
 		}
 		if(keys.contains("value")) {
 			lblErrorValue.setText(errors.get("value"));

@@ -72,7 +72,7 @@ public class BillpayViewController implements Initializable{
 	public void onBtnNewAction(ActionEvent event) {
 		Stage stage = new Stage();
 		Billpay entity = new Billpay();
-		loadModalView("/gui/billpay/BillpayViewRegister.fxml", 600.0, 585.0, entity, "Cadastro de contas a pagar", stage, (BillpayViewRegisterController controller) -> {
+		loadModalView("/gui/billpay/BillpayViewRegister.fxml", 650.0, 580.0, entity, "Cadastro de contas a pagar", stage, (BillpayViewRegisterController controller) -> {
 				controller.setBillpay(entity);
 				controller.setBillpayService(new BillpayService());
 				controller.setCliforService(new CliforService());
@@ -161,6 +161,8 @@ public class BillpayViewController implements Initializable{
 		});
 		Utils.formatDatePicker(dataInicio, "dd/MM/yyyy");
 		Utils.formatDatePicker(dataFinal, "dd/MM/yyyy");
+		dataInicio.setPromptText("Data Inicial");
+		dataFinal.setPromptText("Data Final");
 		
 		combobox.setItems(FXCollections.observableArrayList("Histórico", "Fornecedor", "Vencimento"));
 		combobox.setValue(valorCombobox);
@@ -255,7 +257,7 @@ public class BillpayViewController implements Initializable{
 				setGraphic(button);
 				button.setOnAction( e -> {
 					Stage stage = new Stage();
-					loadModalView("/gui/billpay/BillpayViewRegister.fxml", 600.0, 585.0, entity, "Alteração de contas a pagar", stage, (BillpayViewRegisterController controller) -> {
+					loadModalView("/gui/billpay/BillpayViewRegister.fxml", 650.0, 580.0, entity, "Alteração de contas a pagar", stage, (BillpayViewRegisterController controller) -> {
 						controller.setBillpay(entity);
 						controller.setBillpayService(new BillpayService());
 						controller.setCliforService(new CliforService());
@@ -288,7 +290,7 @@ public class BillpayViewController implements Initializable{
 				setGraphic(button);
 				button.setOnAction(e -> {
 					Stage stage = new Stage();
-					loadModalView("/gui/payment/PaymentViewRegister.fxml", 600.0, 270.0, entity, "Pagamento de contas", stage, (PaymentViewRegisterController controller) -> {
+					loadModalView("/gui/payment/PaymentViewRegister.fxml", 650.0, 270.0, entity, "Pagamento de contas", stage, (PaymentViewRegisterController controller) -> {
 						controller.setBillpayService(new BillpayService());
 						controller.setAccountService(new BankAccountService());
 						controller.setService(new PaymentService());

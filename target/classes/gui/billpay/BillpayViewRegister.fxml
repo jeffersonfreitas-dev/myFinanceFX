@@ -16,117 +16,124 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="545.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.billpay.BillpayViewRegisterController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="537.0" prefWidth="649.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.billpay.BillpayViewRegisterController">
    <children>
-      <GridPane prefHeight="456.0" prefWidth="575.0">
+      <GridPane prefHeight="437.0" prefWidth="624.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="261.0" minWidth="10.0" prefWidth="76.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="517.0" minWidth="10.0" prefWidth="499.0" />
         </columnConstraints>
         <rowConstraints>
+            <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
           <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="70.0" minHeight="70.0" prefHeight="70.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="ID:" />
-            <Label text="Nota Fiscal:" GridPane.rowIndex="1" />
-            <Label text="Vencimento:" GridPane.rowIndex="5" />
-            <TextField fx:id="txtId" disable="true" editable="false" focusTraversable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" GridPane.columnIndex="1" />
-            <Label fx:id="lblErrorInvoice" prefHeight="8.0" prefWidth="500.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
-               <GridPane.margin>
-                  <Insets left="5.0" />
-               </GridPane.margin>
+            <Label text="Emissão" GridPane.rowIndex="8">
                <font>
-                  <Font name="System Bold" size="10.0" />
-               </font>
-            </Label>
-            <Label text="Valor:" GridPane.rowIndex="3" />
-            <Label text="Empresa:" GridPane.rowIndex="7" />
-            <Label text="Fornecedor:" GridPane.rowIndex="9" />
-            <Label text="P. de Conta:" GridPane.rowIndex="11" />
-            <Label text="Histórico:" GridPane.rowIndex="13" />
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Font name="System Bold" size="12.0" />
+               </font></Label>
+            <Label text="Valor:" GridPane.rowIndex="12">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Label>
+            <Label text="Empresa:">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Label>
+            <Label text="Fornecedor:" GridPane.rowIndex="2">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Label>
+            <Label text="P. de Conta:" GridPane.rowIndex="4">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Label>
+            <Label text="Histórico:" GridPane.rowIndex="6">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Label>    
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="12">
                <children>
-                  <TextField fx:id="txtInvoice" prefHeight="35.0" prefWidth="200.0" />
-               </children>
-            </HBox>    
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <children>
-                  <TextField fx:id="txtValue" prefHeight="35.0" prefWidth="200.0" />
-                  <DatePicker fx:id="pkDueDate" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
-               <children>
-                  <DatePicker prefHeight="35.0" prefWidth="220.0" />
-                  <Label text="Emissão:">
-                     <HBox.margin>
-                        <Insets left="10.0" />
-                     </HBox.margin>
-                  </Label>
-                  <DatePicker fx:id="pkEmission" prefHeight="35.0" prefWidth="206.0">
-                     <HBox.margin>
-                        <Insets left="5.0" />
-                     </HBox.margin>
-                  </DatePicker>
-               </children>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
-               <children>
-                  <Label fx:id="lblErrorDueDate" prefHeight="15.0" prefWidth="281.0" textFill="RED">
-                     <font>
-                        <Font name="System Bold" size="10.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="lblErrorEmission" prefHeight="15.0" prefWidth="204.0" textFill="RED">
-                     <font>
-                        <Font name="System Bold" size="10.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </Label>
+                  <TextField fx:id="txtValue" prefHeight="35.0" prefWidth="220.0" promptText="R$ 0,00" />
                </children>
             </HBox>                                            
-            <ComboBox fx:id="cmbCompany" prefHeight="35.0" prefWidth="600.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <ComboBox fx:id="cmbClifor" prefHeight="35.0" prefWidth="600.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-            <ComboBox fx:id="cmbAccount" prefHeight="35.0" prefWidth="600.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-            <TextArea fx:id="txtHistoric" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="13" />
-            <Label fx:id="lblErrorValue" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <ComboBox fx:id="cmbCompany" prefHeight="35.0" prefWidth="600.0" promptText="Selecione uma empresa" GridPane.columnIndex="1" />
+            <ComboBox fx:id="cmbClifor" prefHeight="35.0" prefWidth="600.0" promptText="Selecione um fornecedor" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <ComboBox fx:id="cmbAccount" prefHeight="35.0" prefWidth="600.0" promptText="Selecione um plano de conta" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextArea fx:id="txtHistoric" prefHeight="27.0" prefWidth="499.0" promptText="Digite um histórico para a conta" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Label fx:id="lblErrorValue" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="13">
                <font>
                   <Font name="System Bold" size="10.0" />
                </font>
             </Label>
-            <Label fx:id="lblErrorCompany" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="8">
+            <Label fx:id="lblErrorCompany" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
                   <Font name="System Bold" size="10.0" />
                </font>
             </Label>
-            <Label fx:id="lblErrorClifor" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="10">
+            <Label fx:id="lblErrorClifor" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <font>
                   <Font name="System Bold" size="10.0" />
                </font>
             </Label>
-            <Label fx:id="lblErrorAccountPlan" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="12">
+            <Label fx:id="lblErrorAccountPlan" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <font>
                   <Font name="System Bold" size="10.0" />
                </font>
             </Label>
 
-            <Label fx:id="lblErrorHistoric" prefHeight="11.0" prefWidth="499.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="14">
+            <Label fx:id="lblErrorHistoric" prefHeight="11.0" prefWidth="499.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="7">
+               <font>
+                  <Font name="System Bold" size="10.0" />
+               </font>
+            </Label>
+            <DatePicker fx:id="pkDueDate" prefHeight="35.0" prefWidth="220.0" promptText="DD/MM/AAAA" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+            <Label text="Vencimento:" GridPane.rowIndex="10">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label text="Parcelamento:" GridPane.rowIndex="14">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="14">
+               <children>
+                  <TextField fx:id="txtQtdParcelas" prefHeight="35.0" prefWidth="100.0" promptText="Qtd Parcelas" />
+                  <TextField fx:id="txtQtdDias" prefHeight="35.0" prefWidth="115.0" promptText="Qtd de Dias">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </TextField>
+               </children>
+            </HBox>
+            <DatePicker fx:id="pkEmission" prefHeight="35.0" prefWidth="220.0" promptText="DD/MM/AAAA" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <Label fx:id="lblErrorDueDate" prefHeight="15.0" prefWidth="517.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="11">
+               <font>
+                  <Font name="System Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblErrorParcelamento" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="15">
+               <font>
+                  <Font name="System Bold" size="10.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblErrorEmission" prefHeight="15.0" prefWidth="524.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="9">
                <font>
                   <Font name="System Bold" size="10.0" />
                </font>
