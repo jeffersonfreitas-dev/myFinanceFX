@@ -66,15 +66,17 @@
                <font>
                   <Font name="System Bold" size="12.0" />
                </font></Label>    
+            <ComboBox fx:id="cmbCompany" prefHeight="35.0" prefWidth="600.0" promptText="Selecione uma empresa" GridPane.columnIndex="1" />
+            <ComboBox fx:id="cmbClifor" prefHeight="35.0" prefWidth="600.0" promptText="Selecione um fornecedor" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <ComboBox fx:id="cmbAccount" prefHeight="35.0" prefWidth="600.0" promptText="Selecione um plano de conta" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextArea fx:id="txtHistoric" prefHeight="27.0" prefWidth="499.0" promptText="Digite um histórico para a conta" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <DatePicker fx:id="pkEmission" prefHeight="35.0" prefWidth="220.0" promptText="DD/MM/AAAA" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <DatePicker fx:id="pkDueDate" prefHeight="35.0" prefWidth="220.0" promptText="DD/MM/AAAA" GridPane.columnIndex="1" GridPane.rowIndex="10" />
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="12">
                <children>
                   <TextField fx:id="txtValue" prefHeight="35.0" prefWidth="220.0" promptText="R$ 0,00" />
                </children>
             </HBox>                                            
-            <ComboBox fx:id="cmbCompany" prefHeight="35.0" prefWidth="600.0" promptText="Selecione uma empresa" GridPane.columnIndex="1" />
-            <ComboBox fx:id="cmbClifor" prefHeight="35.0" prefWidth="600.0" promptText="Selecione um fornecedor" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <ComboBox fx:id="cmbAccount" prefHeight="35.0" prefWidth="600.0" promptText="Selecione um plano de conta" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <TextArea fx:id="txtHistoric" prefHeight="27.0" prefWidth="499.0" promptText="Digite um histórico para a conta" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <Label fx:id="lblErrorValue" prefHeight="8.0" prefWidth="505.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="13">
                <font>
                   <Font name="System Bold" size="10.0" />
@@ -101,7 +103,6 @@
                   <Font name="System Bold" size="10.0" />
                </font>
             </Label>
-            <DatePicker fx:id="pkDueDate" prefHeight="35.0" prefWidth="220.0" promptText="DD/MM/AAAA" GridPane.columnIndex="1" GridPane.rowIndex="10" />
             <Label text="Vencimento:" GridPane.rowIndex="10">
                <font>
                   <Font name="System Bold" size="12.0" />
@@ -117,7 +118,6 @@
                   <TextField fx:id="txtQtdParcelas" prefHeight="35.0" prefWidth="220.0" promptText="Quantidade Parcelas" />
                </children>
             </HBox>
-            <DatePicker fx:id="pkEmission" prefHeight="35.0" prefWidth="220.0" promptText="DD/MM/AAAA" GridPane.columnIndex="1" GridPane.rowIndex="8" />
             <Label fx:id="lblErrorDueDate" prefHeight="15.0" prefWidth="517.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="11">
                <font>
                   <Font name="System Bold" size="10.0" />

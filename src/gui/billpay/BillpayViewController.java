@@ -32,6 +32,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -171,6 +172,32 @@ public class BillpayViewController implements Initializable{
 		
 		txtNomeFiltroChange();
 		rdioPagar.setSelected(true);
+		
+		
+		//METODO DOIS CLICKES ROW TABELA
+		tblView.setRowFactory( tv -> {
+		    TableRow<Billpay> row = new TableRow<>();
+		    row.setOnMouseClicked(event -> {
+		        if (event.getClickCount() == 2 && (! row.isEmpty())) {
+		            Billpay entity = row.getItem();
+		            
+		            if(entity.getStatus().equals("QUITADA")) {
+		            	Alerts.showAlert("Erro ao abrir pagamento", null, "Está conta já foi quitada", AlertType.ERROR);
+		            }else {
+		            	Stage stage = new Stage();
+		            	loadModalView("/gui/payment/PaymentViewRegister.fxml", 650.0, 270.0, entity, "Pagamento de contas", stage, (PaymentViewRegisterController controller) -> {
+		            		controller.setBillpayService(new BillpayService());
+		            		controller.setAccountService(new BankAccountService());
+		            		controller.setService(new PaymentService());
+		            		controller.setPayment(new Payment());
+		            		controller.loadAssociateObjects();
+		            		controller.setBillpay(entity);					
+		            	});
+		            }
+		        }
+		    });
+		    return row ;
+		});
 
 	}
 	
