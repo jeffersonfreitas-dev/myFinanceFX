@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="537.0" prefWidth="649.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.billpay.BillpayViewRegisterController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="535.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.billpay.BillpayViewRegisterController">
    <children>
       <GridPane prefHeight="437.0" prefWidth="624.0">
         <columnConstraints>
@@ -114,12 +114,7 @@
             </Label>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="14">
                <children>
-                  <TextField fx:id="txtQtdParcelas" prefHeight="35.0" prefWidth="100.0" promptText="Qtd Parcelas" />
-                  <TextField fx:id="txtQtdDias" prefHeight="35.0" prefWidth="115.0" promptText="Qtd de Dias">
-                     <HBox.margin>
-                        <Insets left="5.0" />
-                     </HBox.margin>
-                  </TextField>
+                  <TextField fx:id="txtQtdParcelas" prefHeight="35.0" prefWidth="220.0" promptText="Quantidade Parcelas" />
                </children>
             </HBox>
             <DatePicker fx:id="pkEmission" prefHeight="35.0" prefWidth="220.0" promptText="DD/MM/AAAA" GridPane.columnIndex="1" GridPane.rowIndex="8" />

@@ -164,7 +164,7 @@ public class BillpayViewController implements Initializable{
 		dataInicio.setPromptText("Data Inicial");
 		dataFinal.setPromptText("Data Final");
 		
-		combobox.setItems(FXCollections.observableArrayList("Histórico", "Fornecedor", "Vencimento"));
+		combobox.setItems(FXCollections.observableArrayList("Histórico", "Fornecedor"));
 		combobox.setValue(valorCombobox);
 		
 		setarPlaceHolder(valorCombobox);
@@ -176,12 +176,11 @@ public class BillpayViewController implements Initializable{
 	
 	
 	private void setarPlaceHolder(String valor) {
+		if(valor == null) valor = "Histórico";
 		if(valor.equals("Histórico")) {
 			filtroNome.setPromptText("Digite o texto para pesquisar no histórico");
-		}else if(valor.equals("Fornecedor")) {
-			filtroNome.setPromptText("Digite o nome do fornecedor para pesquisa");
 		}else {
-			filtroNome.setPromptText("Data inicial/final sem pontuação, no formato DDMMAAAA");
+			filtroNome.setPromptText("Digite o nome do fornecedor para pesquisa");
 		}
 		
 	}

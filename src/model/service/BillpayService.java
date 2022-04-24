@@ -34,12 +34,11 @@ public class BillpayService {
 			throw new RecordAlreadyRecordedException("Já existe uma conta a pagar com esta nota para esta empresa cadastrada.");
 		}
 		
-		entity.setFulfillment(1);
-		
 		if(entity.getId() == null) {
 			Calendar cal = Calendar.getInstance();
+			cal.setTime(entity.getDueDate());
+
 			for(int i = 0; i < entity.getFulfillment(); i++) {
-				cal.setTime(entity.getDueDate());
 				Billpay bill = new Billpay();
 				bill.setAccountPlan(entity.getAccountPlan());
 				bill.setClifor(entity.getClifor());
@@ -50,7 +49,7 @@ public class BillpayService {
 				bill.setInvoice(UUID.randomUUID().toString());
 				bill.setValue(entity.getValue() / entity.getFulfillment());
 				bill.setPortion(i+1);
-				bill.setStatus("A");
+				bill.setStatus("PAGAR");
 				cal.add(Calendar.MONTH, i);
 				bill.setDueDate(cal.getTime());
 				dao.insert(bill);

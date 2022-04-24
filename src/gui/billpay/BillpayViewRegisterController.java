@@ -2,7 +2,6 @@ package gui.billpay;
 
 import java.net.URL;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -76,8 +75,6 @@ public class BillpayViewRegisterController implements Initializable{
 	private DatePicker pkDueDate;
 	@FXML
 	private TextField txtValue;
-	@FXML
-	private TextField txtQtdDias;
 	@FXML
 	private TextField txtQtdParcelas;
 	@FXML
@@ -245,8 +242,8 @@ public class BillpayViewRegisterController implements Initializable{
 		}
 		
 		List<Company> companies = companyService.findByAll();
-		List<Clifor> clifors = cliforService.findAll();
-		List<AccountPlan> accounts = accountService.findAll();
+		List<Clifor> clifors = cliforService.findAllByTipo(true);
+		List<AccountPlan> accounts = accountService.findAllByType(false);
 		obsAccount = FXCollections.observableArrayList(accounts);
 		obsClifor = FXCollections.observableArrayList(clifors);
 		obsCompany = FXCollections.observableArrayList(companies);
@@ -262,25 +259,15 @@ public class BillpayViewRegisterController implements Initializable{
 		bill.setStatus(entity.getStatus());
 		
 		if(pkEmission.getValue() == null) {
-			exception.setError("emission", "Informe uma data válida");
+			exception.setError("emission", "Informe uma data de emissão válida");
 		}else {
 			bill.setDate(Date.from(pkEmission.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 		}
-		pkDueDate.getEditor().getText();
-		if(pkDueDate.getValue() == null && pkDueDate.getEditor().getText() == null) {
+
+		if(pkDueDate.getValue() == null) {
 			exception.setError("dueDate", "Informe um vencimento válido");
 		}else {
-
-			if(pkDueDate.getEditor().getText() != null) {
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				bill.setDueDate(sdf.parse(pkDueDate.getEditor().getText()));
-			}else {
-				bill.setDueDate(Date.from(pkDueDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-			}
-			
-			if(bill.getDueDate().before(bill.getDate())) {
-				exception.setError("dueDate", "Vencimento menor que a emissão");
-			}
+			bill.setDueDate(Date.from(pkDueDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 		}
 		
 		if(txtValue.getText() == null || txtValue.getText().trim().equals("")) {
@@ -308,6 +295,12 @@ public class BillpayViewRegisterController implements Initializable{
 			exception.setError("accountPlan", "Selecione um plano de conta");
 		}
 		bill.setAccountPlan(cmbAccount.getValue());
+		
+		if(txtQtdParcelas.getText() == null) {
+			bill.setFulfillment(1);
+		}else {
+			bill.setFulfillment(Utils.tryParseToInt(txtQtdParcelas.getText()));
+		}
 		
 		if(exception.getErrors().size() > 0) {
 			throw exception;

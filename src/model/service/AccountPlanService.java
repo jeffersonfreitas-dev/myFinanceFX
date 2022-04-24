@@ -14,6 +14,7 @@ public class AccountPlanService {
 	public List<AccountPlan> findAll() {
 		return dao.findAllOrderByName();
 	}
+	
 
 	public List<AccountPlan> findAllByType(Boolean credit) {
 		return dao.findAllByType(credit);
