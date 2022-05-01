@@ -35,7 +35,7 @@ public class ReceivementService {
 		try {
 			if(movimentOpen() && dateInMoviment(entity.getDate())) {
 				Receivable receb = receivableService.findById(entity.getReceivable().getId());
-				receb.setStatus("R");
+				receb.setStatus("RECEBIDO");
 				receivableService.saveOrUpdate(receb);
 				Integer id = dao.insert(entity);
 				Receivement receivement = dao.findById(id);
@@ -44,6 +44,8 @@ public class ReceivementService {
 				receivement.setReceivable(receb);
 				statementService.createBankStatementByReceivement(receivement);
 			}
+			
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 			Alerts.showAlert("Erro ao salvar", "Recebimento não realizado", e.getMessage(), AlertType.ERROR);

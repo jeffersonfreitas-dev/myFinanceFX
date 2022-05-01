@@ -16,6 +16,7 @@ import model.entities.AccountPlan;
 import model.entities.Billpay;
 import model.entities.Clifor;
 import model.entities.Company;
+import utils.DefaultMessages;
 
 public class DAOBillpayImpl implements DAOBillpay{
 	
@@ -43,11 +44,11 @@ public class DAOBillpayImpl implements DAOBillpay{
 			stmt.setInt(9, entity.getAccountPlan().getId());
 			int result = stmt.executeUpdate();
 			if(result < 1) {
-				throw new DatabaseException("Falha ao salvar o registro");
+				throw new DatabaseException(DefaultMessages.getMsgErroSalvar() + ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando insert conta a pagar -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroSalvar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -73,11 +74,11 @@ public class DAOBillpayImpl implements DAOBillpay{
 			stmt.setInt(10, entity.getId());
 			int result = stmt.executeUpdate();
 			if(result < 1) {
-				throw new DatabaseException("Falha ao atualizar o registro");
+				throw new DatabaseException(DefaultMessages.getMsgErroAtualizar() + ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando update conta a pagar -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroAtualizar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -93,11 +94,11 @@ public class DAOBillpayImpl implements DAOBillpay{
 			stmt.setInt(1, id);
 			int result = stmt.executeUpdate();
 			if(result < 1) {
-				throw new DatabaseException("Falha ao deletar o registro");
+				throw new DatabaseException(DefaultMessages.getMsgErroDeletar() + ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando delete conta a pagar -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroDeletar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -123,7 +124,7 @@ public class DAOBillpayImpl implements DAOBillpay{
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findById conta a pagar -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Código nº " + id);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -150,7 +151,7 @@ public class DAOBillpayImpl implements DAOBillpay{
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findAllOrderByDueDate conta a pagar -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroFindall());
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -177,7 +178,68 @@ public class DAOBillpayImpl implements DAOBillpay{
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findByInvoiceAndCompanyId conta a pagar -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Nota nº " + invoice + " e empresa " + id_company);
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
+	}
+	
+	
+	@Override
+	public List<Billpay> filtro(String status, String nome, String combobox, LocalDate inicio, LocalDate fim) {
+		List<Billpay> list = new ArrayList<Billpay>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder("SELECT b.*, c.id as cod_clifor, c.name as name_clifor, e.id as cod_company, e.name as name_company, p.id as cod_account,p.credit, p.name FROM billpay b ");
+		sb.append("INNER JOIN clifor c ON b.id_clifor = c.id INNER JOIN company e ON b.id_company = e.id INNER JOIN account_plan p ON b.id_account_plan = p.id where b.status = ? ");
+		if(nome != "") {
+			if(combobox.equals("Histórico")) {
+				sb.append("and upper(b.historic) like upper(?) ");
+			}else {
+				sb.append("and upper(c.name) like upper(?) ");
+			}
+		}
+		
+		if(inicio != null && fim != null) {
+			sb.append("and b.due_date between ? and ? ");
+		}else if(inicio != null && fim == null) {
+			sb.append("and b.due_date >= ? ");
+		}else if(inicio == null && fim != null){
+			sb.append("and b.due_date <= ? ");
+		}
+		sb.append("ORDER BY due_date");
+		
+		try {
+			stmt = conn.prepareStatement(sb.toString());
+			stmt.setString(1, status);
+			
+			int controlParam = 2;
+
+			if(nome != "") {
+				stmt.setString(2, "%"+nome+"%");
+				controlParam = 3;
+			}
+			
+			if(inicio != null && fim != null) {
+				stmt.setDate(controlParam,  Date.valueOf(inicio));
+				stmt.setDate(controlParam+1, Date.valueOf(fim));
+			}else if(inicio != null && fim == null) {
+				stmt.setDate(controlParam, Date.valueOf(inicio));
+			}else if(inicio == null && fim != null){
+				stmt.setDate(controlParam, Date.valueOf(fim));
+			}
+			
+			rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				Billpay bill = getBillpay(rs);
+				list.add(bill);
+			}
+			return list;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException(DefaultMessages.getMsgErroFindall());
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -225,65 +287,4 @@ public class DAOBillpayImpl implements DAOBillpay{
 		return company;
 	}
 
-
-	@Override
-	public List<Billpay> filtro(String status, String nome, String combobox, LocalDate inicio, LocalDate fim) {
-		List<Billpay> list = new ArrayList<Billpay>();
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		StringBuilder sb = new StringBuilder("SELECT b.*, c.id as cod_clifor, c.name as name_clifor, e.id as cod_company, e.name as name_company, p.id as cod_account,p.credit, p.name FROM billpay b ");
-		sb.append("INNER JOIN clifor c ON b.id_clifor = c.id INNER JOIN company e ON b.id_company = e.id INNER JOIN account_plan p ON b.id_account_plan = p.id where b.status = ? ");
-		if(nome != "") {
-			if(combobox.equals("Histórico")) {
-				sb.append("and upper(b.historic) like upper(?) ");
-			}else {
-				sb.append("and upper(c.name) like upper(?) ");
-			}
-		}
-		
-		if(inicio != null && fim != null) {
-			sb.append("and b.due_date between ? and ? ");
-		}else if(inicio != null && fim == null) {
-			sb.append("and b.due_date >= ? ");
-		}else if(inicio == null && fim != null){
-			sb.append("and b.due_date <= ? ");
-		}
-		sb.append("ORDER BY due_date");
-		
-		try {
-			stmt = conn.prepareStatement(sb.toString());
-			stmt.setString(1, status);
-			
-			int controlParam = 2;
-
-			if(nome != "") {
-				stmt.setString(2, "%"+nome+"%");
-				controlParam = 3;
-			}
-			
-			if(inicio != null && fim != null) {
-				stmt.setDate(controlParam,  Date.valueOf(inicio));
-				stmt.setDate(controlParam+1, Date.valueOf(fim));
-			}else if(inicio != null && fim == null) {
-				stmt.setDate(controlParam, Date.valueOf(inicio));
-			}else if(inicio == null && fim != null){
-				stmt.setDate(controlParam, Date.valueOf(fim));
-			}
-			
-			
-			rs = stmt.executeQuery();
-			
-			while(rs.next()) {
-				Billpay bill = getBillpay(rs);
-				list.add(bill);
-			}
-			return list;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findAllOrderByDueDate conta a pagar -> " + e.getMessage());
-		}finally {
-			Database.closeStatement(stmt);
-			Database.closeResultSet(rs);
-		}
-	}
 }

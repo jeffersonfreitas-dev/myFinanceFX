@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import database.exceptions.DatabaseException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -165,7 +164,7 @@ public class BillpayViewRegisterController implements Initializable{
 		} catch (ValidationException e) {
 			e.printStackTrace();
 			setErrorsMessage(e.getErrors());
-		} catch (DatabaseException | ParseException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
 		}

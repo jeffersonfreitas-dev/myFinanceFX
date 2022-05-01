@@ -14,6 +14,7 @@ import model.entities.AccountPlan;
 import model.entities.Clifor;
 import model.entities.Company;
 import model.entities.Receivable;
+import utils.DefaultMessages;
 
 public class DAOReceivableImpl implements DAOReceivable{
 	
@@ -43,11 +44,11 @@ public class DAOReceivableImpl implements DAOReceivable{
 			stmt.setInt(11, entity.getAccountPlan().getId());
 			int result = stmt.executeUpdate();
 			if(result < 1) {
-				throw new DatabaseException("Falha ao salvar o registro");
+				throw new DatabaseException(DefaultMessages.getMsgErroSalvar() + ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando insert conta a pagar -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroSalvar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -75,11 +76,11 @@ public class DAOReceivableImpl implements DAOReceivable{
 			stmt.setInt(12, entity.getId());
 			int result = stmt.executeUpdate();
 			if(result < 1) {
-				throw new DatabaseException("Falha ao atualizar o registro");
+				throw new DatabaseException(DefaultMessages.getMsgErroAtualizar() + ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando update conta a pagar -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroAtualizar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -95,11 +96,11 @@ public class DAOReceivableImpl implements DAOReceivable{
 			stmt.setInt(1, id);
 			int result = stmt.executeUpdate();
 			if(result < 1) {
-				throw new DatabaseException("Falha ao deletar o registro");
+				throw new DatabaseException(DefaultMessages.getMsgErroDeletar() + ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando delete conta a pagar -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroDeletar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -125,7 +126,7 @@ public class DAOReceivableImpl implements DAOReceivable{
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findById conta a pagar -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Código nº " + id);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -152,7 +153,7 @@ public class DAOReceivableImpl implements DAOReceivable{
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findAllOrderByDueDate conta a pagar -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroFindall());
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -179,7 +180,35 @@ public class DAOReceivableImpl implements DAOReceivable{
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findByInvoiceAndCompanyId conta a pagar -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Nota nº " + invoice + " e empresa " + id_company);
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
+	}
+	
+	
+	@Override
+	public List<Receivable> filtro(String status) {
+		List<Receivable> list = new ArrayList<Receivable>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT b.*, c.id as cod_clifor, c.name as name_clifor, e.id as cod_company, e.name as name_company, p.id as cod_account, "
+				+ "p.credit, p.name FROM receivable b INNER JOIN clifor c ON b.id_clifor = c.id INNER JOIN company e ON b.id_company = e.id "
+				+ "INNER JOIN account_plan p ON b.id_account_plan = p.id WHERE b.status = ? ";
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, status);
+			rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				Receivable receb = getReceivable(rs);
+				list.add(receb);
+			}
+			return list;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException(DefaultMessages.getMsgErroFindall());
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -228,4 +257,7 @@ public class DAOReceivableImpl implements DAOReceivable{
 		company.setName(rs.getString("name_company"));
 		return company;
 	}
+
+
+
 }

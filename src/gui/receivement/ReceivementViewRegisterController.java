@@ -21,7 +21,6 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
@@ -62,8 +61,6 @@ public class ReceivementViewRegisterController implements Initializable{
 		this.entity = entity;
 	}
 	
-	@FXML
-	private TextField txtId;
 	@FXML
 	private DatePicker pkDate;
 	@FXML
@@ -117,7 +114,6 @@ public class ReceivementViewRegisterController implements Initializable{
 		}
 		receivement.setReceivable(receivable);
 		ValidationException exception = new ValidationException("");
-		receivement.setId(Utils.tryParseToInt(txtId.getText()));
 		
 		if(cmbAccount.getValue() == null) {
 			exception.setError("account", "Informe a conta bancária para recebimento");

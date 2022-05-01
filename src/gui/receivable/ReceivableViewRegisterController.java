@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import database.exceptions.DatabaseException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -70,15 +69,13 @@ public class ReceivableViewRegisterController implements Initializable{
 	
 	
 	@FXML
-	private TextField txtId;
-	@FXML
-	private TextField txtInvoice;
-	@FXML
 	private DatePicker pkEmission;
 	@FXML
 	private DatePicker pkDueDate;
 	@FXML
 	private TextField txtValue;
+	@FXML
+	private TextField txtParcelamento;
 	@FXML
 	private TextArea txtHistoric;
 	
@@ -125,8 +122,6 @@ public class ReceivableViewRegisterController implements Initializable{
 		cmbAccount.setButtonCell(factory.call(null));
 	}
 	@FXML
-	private Label lblErrorInvoice;
-	@FXML
 	private Label lblErrorEmission;
 	@FXML
 	private Label lblErrorDueDate;
@@ -140,6 +135,8 @@ public class ReceivableViewRegisterController implements Initializable{
 	private Label lblErrorClifor;
 	@FXML
 	private Label lblErrorAccountPlan;
+	@FXML
+	private Label lblErrorParcelamento;
 	@FXML
 	private Button btnSave;
 	@FXML
@@ -163,7 +160,7 @@ public class ReceivableViewRegisterController implements Initializable{
 		} catch (ValidationException e) {
 			e.printStackTrace();
 			setErrorsMessage(e.getErrors());
-		} catch (DatabaseException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			Alerts.showAlert("Erro ao salvar o registro", null, e.getMessage(), AlertType.ERROR);
 		}
@@ -193,8 +190,6 @@ public class ReceivableViewRegisterController implements Initializable{
 		btnCancel.getStyleClass().add("btn-danger");
 		btnSave.getStyleClass().add("btn-success");	
 		Constraints.setTextFieldDouble(txtValue);
-		Constraints.setTextFieldMaxLength(txtInvoice, 20);
-		Constraints.setTextFieldInteger(txtId);
 		Utils.formatDatePicker(pkDueDate, "dd/MM/yyyy");
 		Utils.formatDatePicker(pkEmission, "dd/MM/yyyy");
 		initializeComboBoxAccountPlan();
@@ -210,8 +205,6 @@ public class ReceivableViewRegisterController implements Initializable{
 			throw new IllegalStateException("Entidade não instanciada");
 		}
 		
-		txtId.setText(String.valueOf(entity.getId()));
-		txtInvoice.setText(entity.getInvoice());
 		txtHistoric.setText(entity.getHistoric());
 		txtValue.setText(String.format("%.2f", entity.getValue()));
 		
@@ -263,14 +256,9 @@ public class ReceivableViewRegisterController implements Initializable{
 	private Receivable getFormDate() {
 		Receivable recep = new Receivable();
 		ValidationException exception = new ValidationException("");
-		recep.setId(Utils.tryParseToInt(txtId.getText()));
 		recep.setStatus(entity.getStatus());
 		
-		if(txtInvoice.getText() == null || txtInvoice.getText().trim().equals("")) {
-			exception.setError("invoice", "Informe a nota fiscal");
-		}
-		recep.setInvoice(txtInvoice.getText());
-		
+
 		if(pkEmission.getValue() == null) {
 			exception.setError("emission", "Informe uma data válida");
 		}else {
@@ -313,6 +301,12 @@ public class ReceivableViewRegisterController implements Initializable{
 		}
 		recep.setAccountPlan(cmbAccount.getValue());
 		
+		if(txtParcelamento.getText() == null || txtParcelamento.getText() == "") {
+			recep.setFulfillment(1);
+		}else {
+			recep.setFulfillment(Utils.tryParseToInt(txtParcelamento.getText()));
+		}
+		
 		if(exception.getErrors().size() > 0) {
 			throw exception;
 		}
@@ -329,7 +323,6 @@ public class ReceivableViewRegisterController implements Initializable{
 		lblErrorDueDate.setText("");
 		lblErrorEmission.setText("");
 		lblErrorHistoric.setText("");
-		lblErrorInvoice.setText("");
 		lblErrorValue.setText("");
 		
 		if(keys.contains("accountPlan")) {
@@ -349,9 +342,6 @@ public class ReceivableViewRegisterController implements Initializable{
 		}
 		if(keys.contains("historic")) {
 			lblErrorHistoric.setText(errors.get("historic"));
-		}
-		if(keys.contains("invoice")) {
-			lblErrorInvoice.setText(errors.get("invoice"));
 		}
 		if(keys.contains("value")) {
 			lblErrorValue.setText(errors.get("value"));

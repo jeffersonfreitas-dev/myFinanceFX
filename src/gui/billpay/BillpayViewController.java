@@ -221,8 +221,6 @@ public class BillpayViewController implements Initializable{
 		RadioButton rb = (RadioButton) rdioGroup.getSelectedToggle();
 		if(rb.getText().equalsIgnoreCase("Quitadas")) {
 			this.status = "QUITADA";
-		}else if(rb.getText().equalsIgnoreCase("Vencidas")){
-			this.status = "VENCIDA";
 		}else {
 			this.status = "PAGAR";
 		}
@@ -306,7 +304,7 @@ public class BillpayViewController implements Initializable{
 				button.setStyle(" -fx-background-color:transparent;");
 				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
-				if(entity == null || entity.getStatus().equals("P")) {
+				if(entity == null) {
 					setGraphic(null);
 					return;
 				}

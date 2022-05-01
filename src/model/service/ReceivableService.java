@@ -2,6 +2,7 @@ package model.service;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 import model.dao.DAOFactory;
 import model.dao.DAOReceivable;
@@ -32,12 +33,11 @@ public class ReceivableService {
 			throw new RecordAlreadyRecordedException("Já existe uma conta a receber com esta nota para esta empresa cadastrada.");
 		}
 		
-		entity.setFulfillment(1);
-		
 		if(entity.getId() == null) {
 			Calendar cal = Calendar.getInstance();
+			cal.setTime(entity.getDueDate());
+			
 			for(int i = 0; i < entity.getFulfillment(); i++) {
-				cal.setTime(entity.getDueDate());
 				Receivable receb = new Receivable();
 				receb.setAccountPlan(entity.getAccountPlan());
 				receb.setClifor(entity.getClifor());
@@ -45,17 +45,16 @@ public class ReceivableService {
 				receb.setDate(entity.getDate());
 				receb.setFulfillment(entity.getFulfillment());
 				receb.setHistoric(entity.getHistoric());
-				receb.setInvoice(entity.getInvoice() + "/"+(i+1));
+				receb.setInvoice(UUID.randomUUID().toString());
 				receb.setValue(entity.getValue() / entity.getFulfillment());
 				receb.setPortion(i+1);
-				receb.setStatus("A");
+				receb.setStatus("RECEBER");
 				cal.add(Calendar.MONTH, i);
 				receb.setDueDate(cal.getTime());
 				dao.insert(receb);
 			}
 			
 		}else {
-			entity.setPortion(1);
 			dao.update(entity);
 			
 		}
@@ -65,6 +64,10 @@ public class ReceivableService {
 	public void payment(Receivable entity) {
 		entity.setStatus("PAGO");
 		dao.update(entity);
+	}
+
+	public List<Receivable> filtro(String status) {
+		return dao.filtro(status);
 	}
 
 }

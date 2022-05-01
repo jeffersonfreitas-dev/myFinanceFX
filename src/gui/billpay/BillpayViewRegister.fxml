@@ -70,8 +70,8 @@
             <ComboBox fx:id="cmbClifor" prefHeight="35.0" prefWidth="600.0" promptText="Selecione um fornecedor" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <ComboBox fx:id="cmbAccount" prefHeight="35.0" prefWidth="600.0" promptText="Selecione um plano de conta" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <TextArea fx:id="txtHistoric" prefHeight="27.0" prefWidth="499.0" promptText="Digite um histórico para a conta" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <DatePicker fx:id="pkEmission" prefHeight="35.0" prefWidth="220.0" promptText="DD/MM/AAAA" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-            <DatePicker fx:id="pkDueDate" prefHeight="35.0" prefWidth="220.0" promptText="DD/MM/AAAA" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+            <DatePicker fx:id="pkEmission" editable="false" prefHeight="35.0" prefWidth="220.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <DatePicker fx:id="pkDueDate" editable="false" prefHeight="35.0" prefWidth="220.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="12">
                <children>
                   <TextField fx:id="txtValue" prefHeight="35.0" prefWidth="220.0" promptText="R$ 0,00" />
