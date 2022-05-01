@@ -55,8 +55,6 @@ public class TransferenciaViewRegisterController implements Initializable{
 	}	
 
 	@FXML
-	private TextField txtId;
-	@FXML
 	private DatePicker pkDate;
 	@FXML
 	private TextField txtValue;
@@ -97,8 +95,6 @@ public class TransferenciaViewRegisterController implements Initializable{
 	private Label lblErrorDate;
 	@FXML
 	private Label lblErrorValue;
-	@FXML
-	private Label lblErrorObservation;
 	@FXML
 	private Label lblErrorBankAccountOrigin;
 	@FXML
@@ -151,7 +147,6 @@ public class TransferenciaViewRegisterController implements Initializable{
 		btnCancel.getStyleClass().add("btn-danger");
 		btnSave.getStyleClass().add("btn-success");	
 		Constraints.setTextFieldDouble(txtValue);
-		Constraints.setTextFieldInteger(txtId);
 		Utils.formatDatePicker(pkDate, "dd/MM/yyyy");
 		initializeComboBoxBankAccount();
 		initializeComboBoxBankAccountDestination();
@@ -166,7 +161,6 @@ public class TransferenciaViewRegisterController implements Initializable{
 			throw new IllegalStateException("Entidade não instanciada");
 		}
 		
-		txtId.setText(String.valueOf(entity.getId()));
 		txtObservation.setText(entity.getObservation());
 		txtValue.setText(String.format("%.2f", entity.getValue()));
 		
@@ -205,7 +199,6 @@ public class TransferenciaViewRegisterController implements Initializable{
 	private Transferencia getFormDate() {
 		Transferencia transf = new Transferencia();
 		ValidationException exception = new ValidationException("");
-		transf.setId(Utils.tryParseToInt(txtId.getText()));
 		
 		if(pkDate.getValue() == null) {
 			exception.setError("date", "Informe uma data válida");
@@ -247,7 +240,6 @@ public class TransferenciaViewRegisterController implements Initializable{
 		lblErrorBankAccountDestination.setText("");
 		lblErrorBankAccountOrigin.setText("");
 		lblErrorDate.setText("");
-		lblErrorObservation.setText("");
 		lblErrorValue.setText("");
 		
 		if(keys.contains("origin")) {
@@ -258,9 +250,6 @@ public class TransferenciaViewRegisterController implements Initializable{
 		}
 		if(keys.contains("date")) {
 			lblErrorDate.setText(errors.get("date"));
-		}
-		if(keys.contains("observation")) {
-			lblErrorObservation.setText(errors.get("observation"));
 		}
 		if(keys.contains("value")) {
 			lblErrorValue.setText(errors.get("value"));

@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import org.kordamp.bootstrapfx.BootstrapFX;
 
+import database.exceptions.DatabaseException;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,17 +20,22 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
+import model.entities.Bank;
 import model.entities.Transferencia;
 import model.service.BankAccountService;
 import model.service.TransferenciaService;
@@ -45,7 +53,7 @@ public class TransferenciaViewController implements Initializable{
 	private Button btnNew;
 	@FXML
 	public void onBtnNewAction(ActionEvent event) {
-		loadModalView("/gui/transferencia/TransferenciaViewRegister.fxml", "Cadastro de transferencia", 480.0, 600.0, (TransferenciaViewRegisterController controller) ->{
+		loadModalView("/gui/transferencia/TransferenciaViewRegister.fxml", "Cadastro de transferencia", 410.0, 600.0, (TransferenciaViewRegisterController controller) ->{
 			controller.setTransferenciaService(new TransferenciaService());
 			controller.setTransferencia(new Transferencia());
 			controller.setBankAccountService(new BankAccountService());
@@ -67,6 +75,8 @@ public class TransferenciaViewController implements Initializable{
 	private TableColumn<Transferencia, String> columnDestination;
 	@FXML
 	private TableColumn<Transferencia, Double> columnValue;
+	@FXML
+	private TableColumn<Transferencia, Transferencia> tblColumnDELETE;
 	
 	private ObservableList<Transferencia> obsList = null;
 
@@ -103,14 +113,50 @@ public class TransferenciaViewController implements Initializable{
 			throw new IllegalStateException("O serviço não foi instanciado");
 		}
 		List<Transferencia> list = service.findAll();
-		
-		for(Transferencia t : list) {
-			System.out.println(t.getObservation());
-		}
-		
 		obsList = FXCollections.observableArrayList(list);
 		tblView.setItems(obsList);
 		initializationNodes();
+		initRemoveButtons();
+	}
+	
+	
+	private void initRemoveButtons() {
+		tblColumnDELETE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tblColumnDELETE.setCellFactory(param -> new TableCell<Transferencia, Transferencia>() {
+			private final Button button = new Button();
+			
+			@Override
+			protected void updateItem(Transferencia entity, boolean empty) {
+				button.setGraphic(new ImageView("/assets/icons/trash16.png"));
+				button.setStyle(" -fx-background-color:transparent;");
+				button.setCursor(Cursor.HAND);
+				super.updateItem(entity, empty);
+				if(entity == null || entity.isClose()) {
+					setGraphic(null);
+					return;
+				}
+				setGraphic(button);
+				button.setOnAction(e -> removeEntity(entity));
+			}
+		});
+	}
+	
+	
+	private void removeEntity(Transferencia entity) {
+		Optional<ButtonType> result = Alerts.showConfirmation("Confirmação", "Você tem certeza que deseja remover este item?");
+		
+		if(result.get() == ButtonType.OK) {
+			if(service == null) {
+				throw new IllegalStateException("Serviço não instanciado");
+			}
+			try {
+				service.remove(entity);
+				updateTableView();
+			} catch (DatabaseException e) {
+				e.printStackTrace();
+				Alerts.showAlert("Erro ao remover registro", null, e.getMessage(), AlertType.ERROR);
+			}
+		}
 	}
 	
 	

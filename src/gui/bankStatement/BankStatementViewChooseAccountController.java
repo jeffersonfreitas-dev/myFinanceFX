@@ -85,11 +85,19 @@ public class BankStatementViewChooseAccountController implements Initializable{
 	private Button btnOpen;
 	@FXML
 	public void onBtnOpenAction(ActionEvent event) {
-		if(cmbAccount.getValue() == null || cmbMovimentation.getValue() == null) {
-			lblErros.setText("Movimentação e conta bancária são obrigatórios!");
+		if(cmbAccount.getValue() == null) {
+			lblErroConta.setText("Selecione uma conta bancária");
 		}else {
-			lblErros.setText("");
-			
+			lblErroConta.setText("");
+		}
+		
+		if(cmbMovimentation.getValue() == null) {
+			lblErroMovimento.setText("Selecione um movimento para exibição");
+		}else {
+			lblErroMovimento.setText("");
+		}
+		
+		if(cmbAccount.getValue() != null && cmbMovimentation.getValue() != null) {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/bankStatement/BankStatementView.fxml"));
 			loadView(loader);
 			Stage stage = Utils.getCurrentStage(event);
@@ -108,7 +116,9 @@ public class BankStatementViewChooseAccountController implements Initializable{
 	
 	
 	@FXML
-	private Label lblErros;
+	private Label lblErroMovimento;
+	@FXML
+	private Label lblErroConta;
 	
 	private ObservableList<BankAccount> obsAccount;
 	private ObservableList<Moviment> obsMoviment;
@@ -152,7 +162,6 @@ public class BankStatementViewChooseAccountController implements Initializable{
 			secound.setTop(top);
 			secound.setBottom(bottom);
 			secound.setCenter(box);
-//			nomeTela.setText("Lista de contas a pagar");
 			BankStatementViewController controller = loader.getController();
 			controller.setBankStatementService(new BankStatementService());
 			controller.updateTableView(cmbAccount.getValue(), cmbMovimentation.getValue());

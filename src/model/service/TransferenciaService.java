@@ -24,7 +24,17 @@ public class TransferenciaService {
 	}
 
 	public void remove(Transferencia entity) {
-		dao.deleteById(entity.getId());
+		try {
+			boolean movimentOpen = movimentService.movimentOpen();
+			boolean dateInMoviment = movimentService.dateInMoviment(entity.getDate());
+			if(movimentOpen && dateInMoviment) {
+				dao.deleteById(entity.getId());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Alerts.showAlert("Erro ao deletar", "Não foi possível deletar o registro", e.getMessage(), AlertType.ERROR);
+		}		
+		
 		
 	}
 

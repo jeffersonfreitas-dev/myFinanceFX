@@ -143,7 +143,7 @@ public class MainViewController implements Initializable{
 	private Hyperlink linkBankStatement; 
 	@FXML
 	public void onlinkBankStatementAction() {
-		loadModalView("/gui/bankStatement/BankStatementViewChooseAccount.fxml", "Escolha a conta para exibir o extrato", 270.0, 600.0, (BankStatementViewChooseAccountController controller) ->{
+		loadModalView("/gui/bankStatement/BankStatementViewChooseAccount.fxml", "Escolha a conta para exibir o extrato", 220.0, 600.0, (BankStatementViewChooseAccountController controller) ->{
 			controller.setBankStatementService(new BankStatementService());
 			controller.setBankAccountService(new BankAccountService());
 			controller.setMovimentService(new MovimentService());
@@ -211,7 +211,7 @@ public class MainViewController implements Initializable{
 			stage.initModality(Modality.WINDOW_MODAL);
 			stage.setHeight(heigth);
 			stage.setWidth(width);
-			
+			nomeTela.setText("Extrato Bancário");
 			T controller = loader.getController();
 			initialization.accept(controller);
 			
