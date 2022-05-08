@@ -94,6 +94,8 @@ public class TransferenciaViewRegisterController implements Initializable{
 	@FXML
 	private Label lblErrorDate;
 	@FXML
+	private Label lblErrorObservacao;
+	@FXML
 	private Label lblErrorValue;
 	@FXML
 	private Label lblErrorBankAccountOrigin;
@@ -199,7 +201,7 @@ public class TransferenciaViewRegisterController implements Initializable{
 	private Transferencia getFormDate() {
 		Transferencia transf = new Transferencia();
 		ValidationException exception = new ValidationException("");
-		
+
 		if(pkDate.getValue() == null) {
 			exception.setError("date", "Informe uma data válida");
 		}else {
@@ -253,6 +255,9 @@ public class TransferenciaViewRegisterController implements Initializable{
 		}
 		if(keys.contains("value")) {
 			lblErrorValue.setText(errors.get("value"));
+		}
+		if(keys.contains("observation")) {
+			lblErrorObservacao.setText(errors.get("observation"));
 		}
 	}
 	

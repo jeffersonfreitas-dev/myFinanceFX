@@ -20,7 +20,6 @@ public class MovimentService {
 	
 	private DAOMoviment dao = DAOFactory.createMovimentDAO();
 	private DAOBankAccount daoAccount = DAOFactory.createBankAccountDAO();
-	
 	private BankStatementService statementService = new BankStatementService();
 
 	
@@ -154,7 +153,13 @@ public class MovimentService {
 	
 	
 	public void remove(Moviment entity) {
+		Integer hasMoviment = statementService.hasMovimentByDate(entity.getDateBeginner(), entity.getDateFinish());
+		if(hasMoviment > 0) {
+			throw new DatabaseException("Não foi possível excluir o movimento pois há movimentação no período");
+		}
 		
+		statementService.deleteByDateInitialAndFinal(entity.getDateBeginner(), entity.getDateFinish());
+		dao.deleteById(entity.getId());
 	}
 
 

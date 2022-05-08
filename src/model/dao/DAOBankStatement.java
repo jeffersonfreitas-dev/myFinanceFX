@@ -14,5 +14,8 @@ public interface DAOBankStatement {
 	BankStatement findById(Integer id);
 	List<BankStatement> findAllOrderByDateAndBankAccount();
 	List<BankStatement> findAllByAccountAndMoviment(BankAccount bankAccount, Date dateBeginner, Date dateFinish);
+	void deleteTransferenciaById(Integer id);
+	Integer hasMovimentByDate(Date dateBeginner, Date dateFinish);
+	void deleteByDateInitialAndFinal(Date dateBeginner, Date dateFinish);
 
 }

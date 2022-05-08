@@ -15,7 +15,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.entities.Moviment;
@@ -37,8 +36,6 @@ public class MovimentViewRegisterController implements Initializable{
 		this.service = service;
 	}
 	
-	@FXML
-	private TextField txtId;
 	@FXML
 	private DatePicker pkDateInicio;
 	@FXML
@@ -83,7 +80,6 @@ public class MovimentViewRegisterController implements Initializable{
 			throw new IllegalStateException("Entidade não instanciada");
 		}
 		ValidationException exception = new ValidationException("");
-		mov.setId(Utils.tryParseToInt(txtId.getText()));
 		
 		if(pkDateInicio.getValue() == null) {
 			exception.setError("date", "Informe a data inicial");

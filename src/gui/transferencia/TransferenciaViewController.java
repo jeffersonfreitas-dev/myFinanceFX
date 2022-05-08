@@ -35,7 +35,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
-import model.entities.Bank;
 import model.entities.Transferencia;
 import model.service.BankAccountService;
 import model.service.TransferenciaService;

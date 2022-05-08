@@ -24,15 +24,14 @@
       </ToolBar>
       <TableView fx:id="tblView" nodeOrientation="LEFT_TO_RIGHT" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn fx:id="tblColumnStatus" editable="false" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" resizable="false" sortable="false" style="-fx-alignment: center;" />
-          <TableColumn fx:id="tblColumnCode" editable="false" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" resizable="false" style="-fx-alignment: center;" text="Código" />
-          <TableColumn fx:id="tblColumnDateBeginner" editable="false" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" resizable="false" style="-fx-alignment: center;" text="Inicio" />
-            <TableColumn fx:id="tblColumnDateFinish" editable="false" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" resizable="false" style="-fx-alignment: center;" text="Final" />
-            <TableColumn fx:id="tblColumnName" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" style="-fx-alignment: center-left;" text="Nome" />
-            <TableColumn fx:id="tblColumnCompany" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Empresa" />
-            <TableColumn fx:id="tblColumnValueBeginner" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" style="-fx-alignment: center-right;" text="Valor Inicio" />
-            <TableColumn fx:id="tblColumnValueFinish" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" style="-fx-alignment: center-right;" text="Valor Final" />
-            <TableColumn fx:id="tblColumnBalance" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" style="-fx-alignment: center-right;" text="Saldo" />
+            <TableColumn fx:id="tblColumnStatus" editable="false" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" resizable="false" sortable="false" style="-fx-alignment: center;" text="Status" />
+          <TableColumn fx:id="tblColumnCode" editable="false" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" resizable="false" style="-fx-alignment: center;" text="Código" />
+          <TableColumn fx:id="tblColumnDateBeginner" editable="false" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" resizable="false" style="-fx-alignment: center;" text="Inicio" />
+            <TableColumn fx:id="tblColumnDateFinish" editable="false" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" resizable="false" style="-fx-alignment: center;" text="Final" />
+            <TableColumn fx:id="tblColumnName" editable="false" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" resizable="false" style="-fx-alignment: center-left;" text="Nome" />
+            <TableColumn fx:id="tblColumnValueBeginner" editable="false" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" resizable="false" style="-fx-alignment: center-right;" text="Valor Inicio" />
+            <TableColumn fx:id="tblColumnValueFinish" editable="false" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" resizable="false" style="-fx-alignment: center-right;" text="Valor Final" />
+            <TableColumn fx:id="tblColumnBalance" editable="false" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" resizable="false" style="-fx-alignment: center-right;" text="Saldo" />
             <TableColumn fx:id="tblColumnCLOSE" editable="false" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" resizable="false" sortable="false" style="-fx-alignment: center;" />
             <TableColumn fx:id="tblColumnDELETE" editable="false" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" resizable="false" sortable="false" style="-fx-alignment: center;" />
         </columns>

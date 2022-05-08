@@ -17,6 +17,7 @@ import model.entities.BankStatement;
 import model.entities.Payment;
 import model.entities.Receivement;
 import model.entities.Transferencia;
+import utils.DefaultMessages;
 
 public class DAOBankStatementImpl implements DAOBankStatement{
 	
@@ -58,11 +59,11 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 			int result = stmt.executeUpdate();
 			
 			if(result  < 1) {
-				throw new DatabaseException("Falha ao salvar o registro");
+				throw new DatabaseException(DefaultMessages.getMsgErroSalvar() + ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando insert extrato -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroSalvar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -89,11 +90,11 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 			stmt.setInt(10, entity.getTransferencia().getId());
 			int result = stmt.executeUpdate();
 			if(result < 1) {
-				throw new DatabaseException("Falha ao salvar o registro");
+				throw new DatabaseException(DefaultMessages.getMsgErroAtualizar() + ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando update extrato -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroAtualizar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -109,11 +110,11 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 			stmt.setInt(1, id);
 			int result = stmt.executeUpdate();
 			if(result < 1) {
-				throw new DatabaseException("Falha ao deletar o registro");
+				throw new DatabaseException(DefaultMessages.getMsgErroDeletar() + ". Nenhuma linha afetada");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando delete extrato -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroDeletar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -139,7 +140,7 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando delete extrato -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Código nº " + id);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -166,7 +167,7 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando findAll extrato -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroFindall());
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -250,11 +251,79 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao executar o comando -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroFindall());
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
+	}
+	
+	
+	@Override
+	public void deleteTransferenciaById(Integer id) {
+		PreparedStatement stmt = null;
+		String sql = "DELETE FROM bank_statement WHERE id_transferencia = ? ";
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, id);
+			Integer result = stmt.executeUpdate();
+			if(result < 1) {
+				throw new DatabaseException(DefaultMessages.getMsgErroDeletar() + ". Nenhuma linha afetada");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException(DefaultMessages.getMsgErroDeletar());
+		}finally {
+			Database.closeStatement(stmt);
+		}
+	}
+	
+	
+
+	@Override
+	public Integer hasMovimentByDate(Date dateBeginner, Date dateFinish) {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT COUNT(id) as reg FROM bank_statement WHERE date BETWEEN ? AND ? and initial_value = false";
+		
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setDate(1, new java.sql.Date(dateBeginner.getTime()));
+			stmt.setDate(2, new java.sql.Date(dateFinish.getTime()));
+			rs = stmt.executeQuery();
+			if(rs.next()) {
+				return rs.getInt("reg");
+			}
+			return null;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Data inicial " + dateBeginner + " - " + dateFinish);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
 		}
 	}
 
+
+	@Override
+	public void deleteByDateInitialAndFinal(Date dateBeginner, Date dateFinish) {
+		PreparedStatement stmt = null;
+		String sql = "DELETE FROM bank_statement WHERE date BETWEEN ? AND ?";
+		
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setDate(1, new java.sql.Date(dateBeginner.getTime()));
+			stmt.setDate(2, new java.sql.Date(dateFinish.getTime()));
+			Integer result = stmt.executeUpdate();
+			if(result < 1) {
+				throw new DatabaseException(DefaultMessages.getMsgErroDeletar() + ". Nenhuma linha afetada");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Data inicial " + dateBeginner + " - " + dateFinish);
+		}finally {
+			Database.closeStatement(stmt);
+		}
+		
+	}
 }

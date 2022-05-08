@@ -53,10 +53,9 @@ public class MovimentViewController implements Initializable{
 
 		Stage stage = new Stage();
 		Moviment entity = new Moviment();
-		loadModalView("/gui/moviment/MovimentViewRegister.fxml", 600.0, 270.0, entity, "Cadastro de movimentação", stage, (MovimentViewRegisterController controller) -> {
+		loadModalView("/gui/moviment/MovimentViewRegister.fxml", 600.0, 250.0, entity, "Cadastro de movimentação", stage, (MovimentViewRegisterController controller) -> {
 			controller.setService(new MovimentService());
 			controller.setMoviment(entity);				
-//			controller.updateFormData();
 			});
 	}
 
@@ -111,7 +110,7 @@ public class MovimentViewController implements Initializable{
 		Utils.formatTableColumnDouble(tblColumnValueBeginner, 2);
 		tblColumnStatus.setCellValueFactory(v -> {
 			String result = "";
-			result = v.getValue().isClosed() ? "F" : "A";
+			result = v.getValue().isClosed() ? "FECHADO" : "ABERTO";
 			return new ReadOnlyStringWrapper(result);
 		});
 	}

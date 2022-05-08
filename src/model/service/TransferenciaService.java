@@ -28,6 +28,7 @@ public class TransferenciaService {
 			boolean movimentOpen = movimentService.movimentOpen();
 			boolean dateInMoviment = movimentService.dateInMoviment(entity.getDate());
 			if(movimentOpen && dateInMoviment) {
+				statementService.deleteByTransferenciaId(entity.getId());
 				dao.deleteById(entity.getId());
 			}
 		} catch (Exception e) {

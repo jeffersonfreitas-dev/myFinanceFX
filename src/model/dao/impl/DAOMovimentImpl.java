@@ -13,6 +13,7 @@ import database.Database;
 import database.exceptions.DatabaseException;
 import model.dao.DAOMoviment;
 import model.entities.Moviment;
+import utils.DefaultMessages;
 
 public class DAOMovimentImpl implements DAOMoviment{
 	
@@ -25,10 +26,7 @@ public class DAOMovimentImpl implements DAOMoviment{
 	
 	@Override
 	public Integer insert(Moviment entity) {
-		
 		validaCamposObrigatorios(entity);
-		
-		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		String sql = "INSERT INTO moviment (date_beginner, name, date_finish, value_beginner, balance_moviment, value_finish, closed) VALUES (?, upper(?), ?, ?, ?, ?, ?)";
@@ -43,7 +41,7 @@ public class DAOMovimentImpl implements DAOMoviment{
 			stmt.setBoolean(7, entity.isClosed());
 			int result = stmt.executeUpdate();
 			if(result < 1) {
-				throw new DatabaseException("Nenhuma linha afetada na operação de salvar");
+				throw new DatabaseException(DefaultMessages.getMsgErroSalvar() + ". Nenhuma linha afetada");
 			}
 			
 			rs = stmt.getGeneratedKeys();
@@ -53,7 +51,7 @@ public class DAOMovimentImpl implements DAOMoviment{
 			return null;
 		} catch (SQLException | NullPointerException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao salvar o registro -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroSalvar());
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -82,7 +80,7 @@ public class DAOMovimentImpl implements DAOMoviment{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Nenhuma linha afetada na operação de atualizar");
+				throw new DatabaseException(DefaultMessages.getMsgErroAtualizar() + ". Nenhuma linha afetada");
 			}
 			
 			rs = stmt.getGeneratedKeys();
@@ -92,7 +90,7 @@ public class DAOMovimentImpl implements DAOMoviment{
 			return null;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao atualizar o registro -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroAtualizar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -109,12 +107,12 @@ public class DAOMovimentImpl implements DAOMoviment{
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
-				throw new DatabaseException("Nenhuma linha afetada na operação de exclusão");
+				throw new DatabaseException(DefaultMessages.getMsgErroDeletar() + ". Nenhuma linha afetada");
 			}
 			return result;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Ocorreu um erro ao deletar o registro -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroDeletar());
 		}finally {
 			Database.closeStatement(stmt);
 		}
@@ -139,7 +137,7 @@ public class DAOMovimentImpl implements DAOMoviment{
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Erro ao executar: findById do registro -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Código nº " + id);
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -165,7 +163,7 @@ public class DAOMovimentImpl implements DAOMoviment{
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Erro ao executar comando: findAllOrderByNane do registro -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroFindall());
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);
@@ -203,7 +201,7 @@ public class DAOMovimentImpl implements DAOMoviment{
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new DatabaseException("Erro ao executar comando: findAllOrderByNane do registro -> " + e.getMessage());
+			throw new DatabaseException(DefaultMessages.getMsgErroFindall());
 		}finally {
 			Database.closeStatement(stmt);
 			Database.closeResultSet(rs);

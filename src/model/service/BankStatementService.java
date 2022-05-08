@@ -89,12 +89,6 @@ public class BankStatementService {
 
 
 	public void createBankStatementByTransferencia(Transferencia entity) {
-		try {
-			
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
 		if(entity == null) {
 			throw new IllegalStateException("Entidade Transferência está nulo");
 		}
@@ -128,24 +122,20 @@ public class BankStatementService {
 	}
 
 
-//	public void saveOrUpdate(Bank bank) {
-//		
-//		Bank isRecorded = dao.findByCodeOrName(bank.getCode(), bank.getName());
-//		
-//		if(isRecorded != null && !bank.equals(isRecorded)) {
-//			throw new RecordAlreadyRecordedException("Registro já cadastrado no banco de dados!");
-//		}
-//		
-//		if(bank.getId() == null) {
-//			dao.insert(bank);
-//		}else if (bank.getId() != null && bank.equals(isRecorded)){
-//			dao.update(bank);
-//		}
-//	}
-//
-//
-//	public void remove(Bank bank) {
-//		dao.deleteById(bank.getId());
-//	}
+	public void deleteByTransferenciaId(Integer id) {
+		dao.deleteTransferenciaById(id);
+		
+	}
+
+
+	public Integer hasMovimentByDate(Date dateBeginner, Date dateFinish) {
+		return dao.hasMovimentByDate(dateBeginner, dateFinish);
+	}
+
+
+	public void deleteByDateInitialAndFinal(Date dateBeginner, Date dateFinish) {
+		dao.deleteByDateInitialAndFinal(dateBeginner, dateFinish);
+	}
+
 
 }
