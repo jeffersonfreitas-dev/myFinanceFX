@@ -12,7 +12,9 @@ import java.util.List;
 import database.Database;
 import database.exceptions.DatabaseException;
 import model.dao.DAOBankStatement;
+import model.entities.Bank;
 import model.entities.BankAccount;
+import model.entities.BankAgence;
 import model.entities.BankStatement;
 import model.entities.Payment;
 import model.entities.Receivement;
@@ -125,9 +127,25 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 	public BankStatement findById(Integer id) {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT x.*, p.id as cod_payment, c.id as cod_account, r.id as cod_receivement, t.id as cod_transferencia FROM bank_statement x INNER JOIN bank_account "
-				+ "ON x.id_bank_account = c.id LEFT JOIN payment p ON x.id_payment = p.id LEFT JOIN receivement r ON x.id_receivement = r.id transferencia t ON x.id_transferencia = t.id"
-				+ "WHERE id = ?";
+		String sql = "SELECT x.*, \r\n"
+				+ "	p.id as cod_payment, \r\n"
+				+ "	c.id as cod_account,\r\n"
+				+ "	c.account,\r\n"
+				+ "	c.type,\r\n"
+				+ "	a.id as cod_agence,\r\n"
+				+ "	a.agence,\r\n"
+				+ "	b.id as cod_bank,\r\n"
+				+ "	b.name as nomebank,\r\n"
+				+ "	r.id as cod_receivement, \r\n"
+				+ "	t.id as cod_transferencia \r\n"
+				+ "	FROM bank_statement x \r\n"
+				+ "	INNER JOIN bank_account c ON x.id_bank_account = c.id\r\n"
+				+ "	INNER JOIN bank_agence a ON c.id_bank_agence = a.id\r\n"
+				+ "	INNER JOIN bank b ON a.id_bank = b.id\r\n"
+				+ "	LEFT JOIN payment p ON x.id_payment = p.id \r\n"
+				+ "	LEFT JOIN receivement r ON x.id_receivement = r.id \r\n"
+				+ "	LEFT JOIN transferencia t ON x.id_transferencia = t.id\r\n"
+				+ "WHERE x.id = ?";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, id);
@@ -153,8 +171,24 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 		List<BankStatement> list = new ArrayList<BankStatement>();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT x.*, p.id as cod_payment, c.id as cod_account, c.account, c.code, r.id as cod_receivement, t.id as cod_transferencia FROM bank_statement x INNER JOIN bank_account c "
-				+ "ON x.id_bank_account = c.id LEFT JOIN payment p ON x.id_payment = p.id LEFT JOIN receivement r ON x.id_receivement = r.id LEFT JOIN transferencia t ON x.id_transferencia = t.id "
+		String sql = "SELECT x.*, \r\n"
+				+ "	p.id as cod_payment, \r\n"
+				+ "	c.id as cod_account,\r\n"
+				+ "	c.account,\r\n"
+				+ "	c.type,\r\n"
+				+ "	a.id as cod_agence,\r\n"
+				+ "	a.agence,\r\n"
+				+ "	b.id as cod_bank,\r\n"
+				+ "	b.name as nomebank,\r\n"
+				+ "	r.id as cod_receivement, \r\n"
+				+ "	t.id as cod_transferencia \r\n"
+				+ "	FROM bank_statement x \r\n"
+				+ "	INNER JOIN bank_account c ON x.id_bank_account = c.id\r\n"
+				+ "	INNER JOIN bank_agence a ON c.id_bank_agence = a.id\r\n"
+				+ "	INNER JOIN bank b ON a.id_bank = b.id\r\n"
+				+ "	LEFT JOIN payment p ON x.id_payment = p.id \r\n"
+				+ "	LEFT JOIN receivement r ON x.id_receivement = r.id \r\n"
+				+ "	LEFT JOIN transferencia t ON x.id_transferencia = t.id\r\n"
 				+ "ORDER BY x.date, c.account";
 		try {
 			stmt = conn.prepareStatement(sql);
@@ -175,66 +209,40 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 	}	
 	
 	
-	private BankStatement getBankStatement(ResultSet rs) throws SQLException {
-		BankStatement entity = new BankStatement();
-		entity.setBankAccount(getBankAccount(rs));
-		entity.setCredit(rs.getBoolean("credit"));
-		entity.setDate(new Date(rs.getDate("date").getTime()));
-		entity.setHistoric(rs.getString("historic"));
-		entity.setId(rs.getInt("id"));
-		entity.setPayment(getPayment(rs));
-		entity.setReceivement(getReceivement(rs));
-		entity.setTransferencia(getTransferencia(rs));
-		entity.setValue(rs.getDouble("value"));
-		entity.setInitialValue(rs.getBoolean("initial_value"));
-		return entity;
-	}
 
-
-	private Receivement getReceivement(ResultSet rs) throws SQLException {
-		if(rs.findColumn("cod_receivement") > 0) {
-			Receivement rec = new Receivement();
-			rec.setId(rs.getInt("id_receivement"));
-			return rec;
-		}
-		return null;
-	}
-
-	private Transferencia getTransferencia(ResultSet rs) throws SQLException {
-		if(rs.findColumn("cod_transferencia") > 0) {
-			Transferencia trans = new Transferencia();
-			trans.setId(rs.getInt("id_transferencia"));
-			return trans;
-		}
-		return null;
-	}
-
-
-	private Payment getPayment(ResultSet rs) throws SQLException {
-		if(rs.findColumn("cod_payment") > 0) {
-			Payment pay = new Payment();
-			pay.setId(rs.getInt("id_payment"));
-			return pay;
-		}
-		return null;
-	}
-
-
-	private BankAccount getBankAccount(ResultSet rs) throws SQLException {
-		BankAccount account = new BankAccount();
-		account.setId(rs.getInt("cod_account"));
-		account.setCode(rs.getString("code"));
-		return account;
-	}
 
 
 	@Override
 	public List<BankStatement> findAllByAccountAndMoviment(BankAccount bankAccount, Date dateBeginner, Date dateFinish) {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT x.*, p.id as cod_payment, c.id as cod_account, c.account, c.code, r.id as cod_receivement, t.id as cod_transferencia FROM bank_statement x INNER JOIN bank_account c "
-				+ "ON x.id_bank_account = c.id LEFT JOIN payment p ON x.id_payment = p.id LEFT JOIN receivement r ON x.id_receivement = r.id LEFT JOIN transferencia t ON x.id_transferencia = t.id "
-				+ "WHERE c.id = ? and x.date between ? and ? ORDER BY x.date, c.account";
+		String sql = "SELECT x.*, \r\n"
+				+ "	p.id as cod_payment, \r\n"
+				+ "	c.id as cod_account,\r\n"
+				+ "	c.account,\r\n"
+				+ "	c.type,\r\n"
+				+ "	a.id as cod_agence,\r\n"
+				+ "	a.agence,\r\n"
+				+ "	b.id as cod_bank,\r\n"
+				+ "	b.name as nomebank,\r\n"
+				+ "	r.id as cod_receivement, \r\n"
+				+ "	t.id as cod_transferencia \r\n"
+				+ "	FROM bank_statement x \r\n"
+				+ "	INNER JOIN bank_account c ON x.id_bank_account = c.id\r\n"
+				+ "	INNER JOIN bank_agence a ON c.id_bank_agence = a.id\r\n"
+				+ "	INNER JOIN bank b ON a.id_bank = b.id\r\n"
+				+ "	LEFT JOIN payment p ON x.id_payment = p.id \r\n"
+				+ "	LEFT JOIN receivement r ON x.id_receivement = r.id \r\n"
+				+ "	LEFT JOIN transferencia t ON x.id_transferencia = t.id\r\n"
+				+ "	WHERE c.id = ? and x.date between ? and ?\r\n"
+				+ " ORDER BY x.date, c.account";
+		
+		
+		
+//		
+//		String sql = "SELECT x.*, p.id as cod_payment, c.id as cod_account, c.account, c.code, r.id as cod_receivement, t.id as cod_transferencia FROM bank_statement x INNER JOIN bank_account c "
+//				+ "ON x.id_bank_account = c.id LEFT JOIN payment p ON x.id_payment = p.id LEFT JOIN receivement r ON x.id_receivement = r.id LEFT JOIN transferencia t ON x.id_transferencia = t.id "
+//				+ "WHERE c.id = ? and x.date between ? and ? ORDER BY x.date, c.account";
 		try {
 			List<BankStatement> list = new ArrayList<>();
 			
@@ -325,5 +333,76 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 			Database.closeStatement(stmt);
 		}
 		
+	}
+	
+	
+	private BankStatement getBankStatement(ResultSet rs) throws SQLException {
+		BankStatement entity = new BankStatement();
+		entity.setBankAccount(getBankAccount(rs));
+		entity.setCredit(rs.getBoolean("credit"));
+		entity.setDate(new Date(rs.getDate("date").getTime()));
+		entity.setHistoric(rs.getString("historic"));
+		entity.setId(rs.getInt("id"));
+		entity.setPayment(getPayment(rs));
+		entity.setReceivement(getReceivement(rs));
+		entity.setTransferencia(getTransferencia(rs));
+		entity.setValue(rs.getDouble("value"));
+		entity.setInitialValue(rs.getBoolean("initial_value"));
+		return entity;
+	}
+
+
+	private Receivement getReceivement(ResultSet rs) throws SQLException {
+		if(rs.findColumn("cod_receivement") > 0) {
+			Receivement rec = new Receivement();
+			rec.setId(rs.getInt("id_receivement"));
+			return rec;
+		}
+		return null;
+	}
+
+	private Transferencia getTransferencia(ResultSet rs) throws SQLException {
+		if(rs.findColumn("cod_transferencia") > 0) {
+			Transferencia trans = new Transferencia();
+			trans.setId(rs.getInt("id_transferencia"));
+			return trans;
+		}
+		return null;
+	}
+
+
+	private Payment getPayment(ResultSet rs) throws SQLException {
+		if(rs.findColumn("cod_payment") > 0) {
+			Payment pay = new Payment();
+			pay.setId(rs.getInt("id_payment"));
+			return pay;
+		}
+		return null;
+	}
+
+
+	private BankAccount getBankAccount(ResultSet rs) throws SQLException {
+		BankAccount account = new BankAccount();
+		account.setId(rs.getInt("cod_account"));
+		account.setAccount(rs.getString("account"));
+		account.setType(rs.getString("type"));
+		account.setBankAgence(getBankAgence(rs));
+		return account;
+	}
+	
+	private BankAgence getBankAgence(ResultSet rs) throws SQLException {
+		BankAgence agence = new BankAgence();
+		agence.setId(rs.getInt("cod_agence"));
+		agence.setAgence(rs.getString("agence"));
+		agence.setBank(getBank(rs));
+		return agence;
+	}
+
+
+	private Bank getBank(ResultSet rs) throws SQLException {
+		Bank bank = new Bank();
+		bank.setId(rs.getInt("cod_bank"));
+		bank.setName(rs.getString("nomebank"));
+		return bank;
 	}
 }

@@ -11,8 +11,11 @@ import java.util.List;
 import database.Database;
 import database.exceptions.DatabaseException;
 import model.dao.DAOPayment;
+import model.entities.Bank;
 import model.entities.BankAccount;
+import model.entities.BankAgence;
 import model.entities.Billpay;
+import model.entities.Clifor;
 import model.entities.Payment;
 
 public class DAOPaymentImpl implements DAOPayment{
@@ -101,8 +104,32 @@ public class DAOPaymentImpl implements DAOPayment{
 	public Payment findById(Integer id) {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT p.*, b.id as cod_bill, a.id as cod_account FROM payment p INNER JOIN billpay b ON p.id_billpay = b.id "
-				+ "INNER JOIN bank_account a ON p.id_bank_account = a.id WHERE p.id = ?";
+		String sql = "SELECT p.*, \r\n"
+				+ "	b.id as cod_bill, \r\n"
+				+ "	b.historic as historicbill,\r\n"
+				+ "	b.date as datebill,\r\n"
+				+ "	b.due_date as due_datebill,\r\n"
+				+ "	b.portion as portionbill,\r\n"
+				+ "	b.fulfillment as fulfillmentbill,\r\n"
+				+ "	a.id as cod_account,\r\n"
+				+ "	a.account,\r\n"
+				+ "	a.type,\r\n"
+				+ "	aa.id as idagence,\r\n"
+				+ "	aa.agence,\r\n"
+				+ "	bb.id as idbank,\r\n"
+				+ "	bb.name as namebank,\r\n"
+				+ "	ac.id as idaccountplan,\r\n"
+				+ "	ac.name as nameaccountplan,\r\n"
+				+ "	c.id as idclifor,\r\n"
+				+ "	c.name as nameclifor\r\n"
+				+ "	FROM payment p INNER JOIN billpay b ON p.id_billpay = b.id \r\n"
+				+ "	INNER JOIN bank_account a ON p.id_bank_account = a.id\r\n"
+				+ "	INNER JOIN bank_agence aa ON a.id_bank_agence = aa.id\r\n"
+				+ "	INNER JOIN clifor c ON b.id_clifor = c.id\r\n"
+				+ "	INNER JOIN account_plan ac on b.id_account_plan = ac.id\r\n"
+				+ "	INNER JOIN bank bb ON aa.id_bank = bb.id\r\n"
+				+ "	WHERE p.id = ?;";
+		
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, id);
@@ -162,14 +189,48 @@ public class DAOPaymentImpl implements DAOPayment{
 	private BankAccount getAccount(ResultSet rs) throws SQLException {
 		BankAccount account = new BankAccount();
 		account.setId(rs.getInt("cod_account"));
+		account.setAccount(rs.getString("account"));
+		account.setType(rs.getString("type"));
+		account.setBankAgence(getBankAgence(rs));
 		return account;
+	}
+
+
+	private BankAgence getBankAgence(ResultSet rs) throws SQLException {
+		BankAgence agence = new BankAgence();
+		agence.setId(rs.getInt("idagence"));
+		agence.setAgence(rs.getString("agence"));
+		agence.setBank(getBank(rs));
+		return agence;
+	}
+
+
+	private Bank getBank(ResultSet rs) throws SQLException {
+		Bank bank = new Bank();
+		bank.setId(rs.getInt("idbank"));
+		bank.setName(rs.getString("namebank"));
+		return bank;
 	}
 
 
 	private Billpay getBillpay(ResultSet rs) throws SQLException {
 		Billpay bill = new Billpay();
 		bill.setId(rs.getInt("cod_bill"));
+		bill.setHistoric(rs.getString("historicbill"));
+		bill.setDate(rs.getDate("datebill"));
+		bill.setDueDate(rs.getDate("due_datebill"));
+		bill.setPortion(rs.getInt("portionbill"));
+		bill.setFulfillment(rs.getInt("ulfillmentbill"));
+		bill.setClifor(getClifor(rs));
 		return bill;
+	}
+
+
+	private Clifor getClifor(ResultSet rs) throws SQLException {
+		Clifor clifor = new Clifor();
+		clifor.setId(rs.getInt("idclifor"));
+		clifor.setName(rs.getString("nameclifor"));
+		return clifor;
 	}
 
 }

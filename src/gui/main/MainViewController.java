@@ -2,7 +2,6 @@ package gui.main;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
@@ -49,8 +48,6 @@ import model.service.DashboardService;
 import model.service.MovimentService;
 import model.service.ReceivableService;
 import model.service.TransferenciaService;
-import net.sf.jasperreports.engine.JRException;
-import report.bankStatement.ReportBankStatement;
 import utils.Alerts;
 
 public class MainViewController implements Initializable{

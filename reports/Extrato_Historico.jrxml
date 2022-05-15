@@ -9,44 +9,30 @@
 	<parameter name="data_inicio" class="java.util.Date" isForPrompting="false"/>
 	<parameter name="data_fim" class="java.util.Date" isForPrompting="false"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT
-	c.account,
-	c.type,
-	a.agence,
-	b.name as nomebank,
-	r.id as cod_receivement, 
-	t.id as cod_transferencia 
-	FROM bank_statement x 
-	INNER JOIN bank_account c ON x.id_bank_account = c.id
-	INNER JOIN bank_agence a ON c.id_bank_agence = a.id
-	INNER JOIN bank b ON a.id_bank = b.id
-	LEFT JOIN payment p ON x.id_payment = p.id 
-	LEFT JOIN receivement r ON x.id_receivement = r.id 
-	LEFT JOIN transferencia t ON x.id_transferencia = t.id]]>
+		<![CDATA[select
+	e.date,
+	e.value,
+	e.credit,
+	b.historic
+from 
+	bank_statement e left join payment p on e.id_payment = p.id
+	inner join billpay b on p.id_billpay = b.id]]>
 	</queryString>
-	<field name="account" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="account"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="bank_account"/>
+	<field name="date" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="bank_statement"/>
 	</field>
-	<field name="type" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="type"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="bank_account"/>
+	<field name="value" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="value"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="bank_statement"/>
 	</field>
-	<field name="agence" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="agence"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="bank_agence"/>
+	<field name="credit" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="credit"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="bank_statement"/>
 	</field>
-	<field name="nomebank" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="nomebank"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="bank"/>
-	</field>
-	<field name="cod_receivement" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.label" value="cod_receivement"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="receivement"/>
-	</field>
-	<field name="cod_transferencia" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.label" value="cod_transferencia"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="transferencia"/>
+	<field name="historic" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="historic"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="billpay"/>
 	</field>
 	<variable name="saldo" class="java.math.BigDecimal" incrementType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$V{saldo}.add( $F{credit}.equals(true) ? $F{value} : $F{value}.multiply(new BigDecimal(-1)))]]></variableExpression>
@@ -56,7 +42,7 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="78" splitType="Stretch">
+		<band height="62" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="555" height="20" uuid="cc092c10-5488-446e-a498-269e5539201e"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -69,27 +55,8 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="false" isItalic="false"/>
 				</textElement>
-				<text><![CDATA[Extrato bancário simples]]></text>
+				<text><![CDATA[Histórico de movimentação]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="1" y="54" width="39" height="15" uuid="9b9c14ea-74c0-4ba2-b9fa-66c465804163">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Left">
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Conta:]]></text>
-			</staticText>
-			<textField pattern="dd/MM/yyyy">
-				<reportElement x="40" y="54" width="515" height="15" uuid="4f63c27d-85e5-4c07-b7f1-d5224e89fa56">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Left">
-					<font size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{account} + " Agencia: " + $F{agence} + " - " + $F{nomebank}]]></textFieldExpression>
-			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -105,7 +72,7 @@
 				<text><![CDATA[Data]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="55" y="6" width="340" height="15" uuid="b792fc92-d34e-4818-9dcd-5f556519436e">
+				<reportElement x="55" y="6" width="416" height="15" uuid="b792fc92-d34e-4818-9dcd-5f556519436e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -115,7 +82,7 @@
 				<text><![CDATA[Histórico]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="395" y="6" width="20" height="15" uuid="9d38b41e-ba9c-4e1a-be29-16d40c22a421">
+				<reportElement x="471" y="6" width="20" height="15" uuid="9d38b41e-ba9c-4e1a-be29-16d40c22a421">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -124,7 +91,7 @@
 				<text><![CDATA[C/D]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="415" y="6" width="60" height="15" uuid="053218ae-0dbd-4be2-804a-ff9aacb1459c">
+				<reportElement x="491" y="6" width="64" height="15" uuid="053218ae-0dbd-4be2-804a-ff9aacb1459c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -133,20 +100,10 @@
 				</textElement>
 				<text><![CDATA[Valor]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="475" y="6" width="80" height="15" uuid="a0d91dc8-f8d0-4e8e-bfd5-a5433ed1a2fc">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Saldo]]></text>
-			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="15" splitType="Stretch">
+		<band height="59" splitType="Stretch">
 			<textField pattern="dd/MM/yyyy">
 				<reportElement x="0" y="0" width="55" height="15" uuid="3843672e-3cad-4412-9294-2ee226f29ce8">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -157,7 +114,7 @@
 				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="55" y="0" width="340" height="15" uuid="6448d0ed-246a-4085-b256-9a79e0187b14">
+				<reportElement x="55" y="0" width="416" height="15" uuid="6448d0ed-246a-4085-b256-9a79e0187b14">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -166,7 +123,7 @@
 				<textFieldExpression><![CDATA[$F{historic}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="395" y="0" width="20" height="15" uuid="9ed1072c-5800-4dc1-b5a8-28325a6070d2">
+				<reportElement x="471" y="0" width="20" height="15" uuid="9ed1072c-5800-4dc1-b5a8-28325a6070d2">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -175,7 +132,7 @@
 				<textFieldExpression><![CDATA[$F{credit}.equals(true) ? "C" : "D"]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#">
-				<reportElement x="415" y="0" width="60" height="15" uuid="95c42c9d-a821-4013-8403-e8c98ec2f65b">
+				<reportElement x="491" y="0" width="64" height="15" uuid="95c42c9d-a821-4013-8403-e8c98ec2f65b">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
@@ -183,14 +140,9 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{value}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00#">
-				<reportElement x="475" y="0" width="80" height="15" uuid="73e6b274-bfd4-4117-a03b-e32d48a6f96c">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{saldo}]]></textFieldExpression>
+			<textField>
+				<reportElement x="96" y="20" width="335" height="30" uuid="29a202b3-eee0-4a8a-b808-cb862829ee65"/>
+				<textFieldExpression><![CDATA[$F{historic}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

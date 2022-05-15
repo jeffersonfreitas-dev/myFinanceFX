@@ -22,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
@@ -109,6 +110,19 @@ public class BankStatementViewController implements Initializable{
 			String result = "";
 			result = v.getValue().isCredit() ? "C" : "D";
 			return new ReadOnlyStringWrapper(result);
+		});
+		
+		
+		//METODO DOIS CLICKES ROW TABELA
+		tblView.setRowFactory( tv -> {
+		    TableRow<BankStatement> row = new TableRow<>();
+		    row.setOnMouseClicked(event -> {
+		        if (event.getClickCount() == 2 && (! row.isEmpty())) {
+		        	BankStatement entity = row.getItem();
+		        	new ReportBankStatement().showExtratoHistorico(entity);
+		        }
+		    });
+		    return row ;
 		});
 	}
 

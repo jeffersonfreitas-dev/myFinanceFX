@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.main.MainViewController">
+<BorderPane prefHeight="609.0" prefWidth="910.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.main.MainViewController">
    <left>
       <VBox prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
@@ -24,36 +24,41 @@
                      </font>
                   </Label>
                </children></Pane>
-            <Pane prefHeight="439.0" prefWidth="200.0">
+            <Pane prefHeight="534.0" prefWidth="200.0">
                <children>
-                  <Hyperlink fx:id="linkBank" layoutX="17.0" layoutY="290.0" onAction="#onlinkBankAction" text="Banco" textFill="#c9bdbd" />
-                  <Hyperlink fx:id="linkAccountPlan" layoutX="17.0" layoutY="354.0" onAction="#onlinkAccountPlanAction" text="Plano de conta" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkBank" layoutX="16.0" layoutY="290.0" onAction="#onlinkBankAction" text="Banco" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkAccountPlan" layoutX="16.0" layoutY="354.0" onAction="#onlinkAccountPlanAction" text="Plano de conta" textFill="#c9bdbd" />
                   <Hyperlink fx:id="linkBankAccount" layoutX="16.0" layoutY="270.0" onAction="#onlinkBankAccountAction" text="Conta bancária" textFill="#c9bdbd" />
-                  <Hyperlink fx:id="linkBankAgence" layoutX="17.0" layoutY="247.0" onAction="#onlinkBankAgenceAction" text="Agencia bancária" textFill="#c9bdbd" />
-                  <Hyperlink fx:id="linkClifor" layoutX="17.0" layoutY="333.0" onAction="#onlinkCliforAction" text="Cliente/Fornecedor" textFill="#c9bdbd" />
-                  <Hyperlink fx:id="linkCompany" layoutX="17.0" layoutY="310.0" onAction="#onlinkCompanyAction" text="Empresa" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkBankAgence" layoutX="16.0" layoutY="247.0" onAction="#onlinkBankAgenceAction" text="Agencia bancária" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkClifor" layoutX="16.0" layoutY="333.0" onAction="#onlinkCliforAction" text="Cliente/Fornecedor" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkCompany" layoutX="16.0" layoutY="310.0" onAction="#onlinkCompanyAction" text="Empresa" textFill="#c9bdbd" />
                   <Hyperlink fx:id="linkBillpay" layoutX="16.0" layoutY="121.0" onAction="#onlinkBillpayAction" text="Conta a pagar" textFill="#c9bdbd" />
-                  <Hyperlink fx:id="linkReceivable" layoutX="17.0" layoutY="144.0" onAction="#onlinkReceivableAction" text="Conta a receber" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkReceivable" layoutX="16.0" layoutY="144.0" onAction="#onlinkReceivableAction" text="Conta a receber" textFill="#c9bdbd" />
                   <Hyperlink fx:id="linkMoviment" layoutX="16.0" layoutY="98.0" onAction="#onlinkMovimentAction" text="Movimento" textFill="#c9bdbd" />
-                  <Hyperlink fx:id="linkDashboard" layoutX="17.0" layoutY="41.0" onAction="#onlinkDashboard" text="Dashboard" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkDashboard" layoutX="16.0" layoutY="41.0" onAction="#onlinkDashboard" text="Dashboard" textFill="#c9bdbd" />
                   <Label layoutX="6.0" layoutY="79.0" text="Movimentação" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
                   </Label>
-                  <Hyperlink fx:id="linkBankStatement" layoutX="17.0" layoutY="167.0" onAction="#onlinkBankStatementAction" text="Extrato" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkBankStatement" layoutX="16.0" layoutY="167.0" onAction="#onlinkBankStatementAction" text="Extrato" textFill="#c9bdbd" />
                   <Hyperlink fx:id="linkTransferencia" layoutX="16.0" layoutY="190.0" onAction="#onlinkTransferenciaAction" text="Transferencia" textFill="#c9bdbd" />
                   <Label layoutX="6.0" layoutY="228.0" text="Cadastro" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
                   </Label>
-                  <Label layoutX="7.0" layoutY="24.0" text="Início" textFill="WHITE">
+                  <Label layoutX="6.0" layoutY="24.0" text="Início" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
                   </Label>
-                  <Hyperlink fx:id="linkAbout" layoutX="17.0" layoutY="377.0" onAction="#onlinkAboutAction" text="ReportTest" textFill="#c9bdbd" />
+                  <Hyperlink fx:id="linkBankAgence1" layoutX="16.0" layoutY="409.0" onAction="#onlinkBankAgenceAction" text="Relatório financeiro" textFill="#c9bdbd" />
+                  <Label layoutX="6.0" layoutY="390.0" text="Relatórios" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
                </children></Pane>
          </children>
       </VBox>

@@ -3,7 +3,7 @@ package report.bankStatement;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class SourceBankStatementDTO {
+public class RelatorioExtratoHistoricoDTO {
 
 	private Date date;
 	private String Historic;
