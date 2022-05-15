@@ -2,6 +2,8 @@ package gui.bankStatement;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -32,6 +34,8 @@ import model.entities.Moviment;
 import model.service.BankAccountService;
 import model.service.BankStatementService;
 import model.service.MovimentService;
+import net.sf.jasperreports.engine.JRException;
+import report.bankStatement.ReportBankStatement;
 import utils.Alerts;
 import utils.Utils;
 
@@ -41,6 +45,8 @@ public class BankStatementViewController implements Initializable{
 	public void setBankStatementService(BankStatementService service) {
 		this.service = service;
 	}
+	
+	private List<BankStatement> extratos = new ArrayList<BankStatement>();
 	
 	@FXML
 	private Button btnNew;
@@ -55,7 +61,17 @@ public class BankStatementViewController implements Initializable{
 	}
 
 
-
+	@FXML
+	private Button btnImprimir;
+	@FXML
+	public void onBtnImprimirAction(ActionEvent event) {
+        try {
+          new ReportBankStatement().showExtratoSimple(this.extratos);
+      } catch (ClassNotFoundException | JRException | SQLException e1) {
+          e1.printStackTrace();
+      }
+	}
+	
 	@FXML
 	private TableView<BankStatement> tblView;
 	@FXML
@@ -81,6 +97,7 @@ public class BankStatementViewController implements Initializable{
 	private void initializationNodes() {
 	
 		btnNew.getStyleClass().add("btn-info");
+		btnImprimir.getStyleClass().add("btn-warning");
 		columnDate.setCellValueFactory(new PropertyValueFactory<>("date"));
 		Utils.formatTableColumnDate(columnDate, "dd/MM/yyyy");
 		columnHistoric.setCellValueFactory(new PropertyValueFactory<>("historic"));
@@ -103,8 +120,8 @@ public class BankStatementViewController implements Initializable{
 		
 		Double total = 0.0;
 		
-		List<BankStatement> list = service.findAllByAccountAndMoviment(bankAccount, moviment.getDateBeginner(), moviment.getDateFinish());
-		for(BankStatement s : list) {
+		extratos = service.findAllByAccountAndMoviment(bankAccount, moviment.getDateBeginner(), moviment.getDateFinish());
+		for(BankStatement s : extratos) {
 			
 			if(s.isInitialValue()) {
 				s.setBalance(s.getValue());
@@ -120,7 +137,7 @@ public class BankStatementViewController implements Initializable{
 			}
 			
 		}
-		obsList = FXCollections.observableArrayList(list);
+		obsList = FXCollections.observableArrayList(extratos);
 		tblView.setItems(obsList);
 		initializationNodes();
 	}

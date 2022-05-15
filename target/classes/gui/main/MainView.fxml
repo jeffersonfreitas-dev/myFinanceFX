@@ -53,6 +53,7 @@
                         <Font name="System Bold" size="13.0" />
                      </font>
                   </Label>
+                  <Hyperlink fx:id="linkAbout" layoutX="17.0" layoutY="377.0" onAction="#onlinkAboutAction" text="ReportTest" textFill="#c9bdbd" />
                </children></Pane>
          </children>
       </VBox>
