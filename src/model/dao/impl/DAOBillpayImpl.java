@@ -259,6 +259,7 @@ public class DAOBillpayImpl implements DAOBillpay{
 		bill.setInvoice(rs.getString("invoice"));
 		bill.setStatus(rs.getString("status"));
 		bill.setValue(rs.getDouble("value"));
+		bill.setFechada(rs.getBoolean("fechado"));
 		return bill;
 	}
 

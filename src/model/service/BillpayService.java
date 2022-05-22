@@ -52,6 +52,7 @@ public class BillpayService {
 				bill.setStatus("PAGAR");
 				cal.add(Calendar.MONTH, i);
 				bill.setDueDate(cal.getTime());
+				bill.setFechada(false);
 				dao.insert(bill);
 			}
 			
@@ -69,5 +70,6 @@ public class BillpayService {
 	public List<Billpay> filtro(String status, String nome, String combobox, LocalDate inicio, LocalDate fim) {
 		return dao.filtro(status, nome, combobox, inicio, fim);
 	}
+
 
 }

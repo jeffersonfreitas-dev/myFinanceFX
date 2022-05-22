@@ -274,4 +274,6 @@ CREATE SEQUENCE public.transferencia_sequence
 alter table bank_statement add column id_transferencia integer;
 alter table bank_statement add constraint fk_transf foreign key (id_transferencia) references transferencia(id);
 
+alter table billpay add column fechado boolean;
+
   

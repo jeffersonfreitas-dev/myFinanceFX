@@ -61,6 +61,8 @@ public class BillpayViewController implements Initializable{
 		this.service = service;
 	}
 	
+	private PaymentService payService = new PaymentService();
+	
 	private String status = "PAGAR";
 	private String nome = "";
 	private String valorCombobox = "Histórico";
@@ -179,7 +181,15 @@ public class BillpayViewController implements Initializable{
 		            Billpay entity = row.getItem();
 		            
 		            if(entity.getStatus().equals("QUITADA")) {
-		            	Alerts.showAlert("Erro ao abrir pagamento", null, "Está conta já foi quitada", AlertType.ERROR);
+		            	if(entity.getFechada()) {
+		            		Alerts.showAlert("Erro ao abrir pagamento", null, "Está conta já foi quitada e não pode ser mais alterada.", AlertType.ERROR);
+		            	}else {
+		            		Optional<ButtonType> result = Alerts.showConfirmation("Confirmação", "Você tem certeza que deseja excluir este pagamento?");
+		            		
+		            		if(result.get() == ButtonType.OK) {
+		            			payService.cancelarPagamento(entity);
+		            		}
+		            	}
 		            }else {
 		            	Stage stage = new Stage();
 		            	loadModalView("/gui/payment/PaymentViewRegister.fxml", 610.0, 350.0, entity, "Pagamento de contas", stage, (PaymentViewRegisterController controller) -> {
@@ -270,7 +280,7 @@ public class BillpayViewController implements Initializable{
 				button.setStyle(" -fx-background-color:transparent;");
 				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
-				if(entity == null || entity.getStatus().equals("P")) {
+				if(entity == null || entity.getStatus().equals("QUITADA")) {
 					setGraphic(null);
 					return;
 				}
@@ -325,7 +335,7 @@ public class BillpayViewController implements Initializable{
 				button.setStyle(" -fx-background-color:transparent;");
 				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
-				if(entity == null || entity.getStatus().equals("P")) {
+				if(entity == null || entity.getStatus().equals("QUITADA")) {
 					setGraphic(null);
 					return;
 				}

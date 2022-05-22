@@ -57,5 +57,10 @@ public class PaymentService {
 		}
 	}
 
+	
+	public void cancelarPagamento(Billpay entity) {
+		entity.setStatus("PAGAR");
+	}
+
 
 }
