@@ -10,26 +10,37 @@
 	<parameter name="data_fim" class="java.util.Date" isForPrompting="false"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
+	x.historic,
+	x.date,
+	x.credit,
+	x.value,
 	c.account,
-	c.type,
 	a.agence,
-	b.name as nomebank,
-	r.id as cod_receivement, 
-	t.id as cod_transferencia 
+	b.name as nomebank
 	FROM bank_statement x 
 	INNER JOIN bank_account c ON x.id_bank_account = c.id
 	INNER JOIN bank_agence a ON c.id_bank_agence = a.id
 	INNER JOIN bank b ON a.id_bank = b.id
-	LEFT JOIN payment p ON x.id_payment = p.id 
-	LEFT JOIN receivement r ON x.id_receivement = r.id 
-	LEFT JOIN transferencia t ON x.id_transferencia = t.id]]>
+]]>
 	</queryString>
+	<field name="historic" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="historic"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="bank_statement"/>
+	</field>
+	<field name="date" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="bank_statement"/>
+	</field>
+	<field name="credit" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="credit"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="bank_statement"/>
+	</field>
+	<field name="value" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="value"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="bank_statement"/>
+	</field>
 	<field name="account" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="account"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="bank_account"/>
-	</field>
-	<field name="type" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="type"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="bank_account"/>
 	</field>
 	<field name="agence" class="java.lang.String">
@@ -39,14 +50,6 @@
 	<field name="nomebank" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="nomebank"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="bank"/>
-	</field>
-	<field name="cod_receivement" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.label" value="cod_receivement"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="receivement"/>
-	</field>
-	<field name="cod_transferencia" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.label" value="cod_transferencia"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="transferencia"/>
 	</field>
 	<variable name="saldo" class="java.math.BigDecimal" incrementType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$V{saldo}.add( $F{credit}.equals(true) ? $F{value} : $F{value}.multiply(new BigDecimal(-1)))]]></variableExpression>
@@ -65,11 +68,13 @@
 				<text><![CDATA[Relatório Financeiro]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="22" width="554" height="20" uuid="58259f6d-ab0e-4893-8dee-4ad1d4a213a5"/>
+				<reportElement x="1" y="22" width="554" height="15" uuid="58259f6d-ab0e-4893-8dee-4ad1d4a213a5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12" isBold="false" isItalic="false"/>
+					<font size="10" isBold="false" isItalic="true"/>
 				</textElement>
-				<text><![CDATA[Extrato bancário simples]]></text>
+				<text><![CDATA[Extrato Bancário Simplificado]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1" y="54" width="39" height="15" uuid="9b9c14ea-74c0-4ba2-b9fa-66c465804163">

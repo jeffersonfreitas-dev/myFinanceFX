@@ -37,6 +37,9 @@ public class ReportBankStatement extends JFrame{
 	        	item.setHistoric(e.getHistoric());
 	        	item.setCredit(e.isCredit());
 	        	item.setValue(new BigDecimal(e.getValue()));
+	        	item.setAccount(e.getBankAccount().getAccount());
+	        	item.setAgence(e.getBankAccount().getBankAgence().getAgence());
+	        	item.setNomebank(e.getBankAccount().getBankAgence().getBank().getName());
 	        	itens.add(item);
 	        }
 	        

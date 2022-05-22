@@ -119,13 +119,21 @@ public class BankStatementViewController implements Initializable{
 		    row.setOnMouseClicked(event -> {
 		        if (event.getClickCount() == 2 && (! row.isEmpty())) {
 		        	BankStatement entity = row.getItem();
-		        	new ReportBankStatement().showExtratoHistorico(entity);
+		            
+	            	loadModalView("/gui/bankStatement/BankStatementViewDetails.fxml", "Historico de movimentação", 350.0, 590.0, (BankStatementViewDetailsController controller) -> {
+	            		controller.setBankStatement(entity);
+	            		controller.setPayment(entity.getPayment());
+	            		controller.setReceivement(entity.getReceivement());
+	            		controller.setTransferencia(entity.getTransferencia());
+	            		controller.setTextInArea();
+	            	});
+
 		        }
 		    });
 		    return row ;
 		});
 	}
-
+	
 	
 	public void updateTableView(BankAccount bankAccount, Moviment moviment) {
 		if(service == null) {

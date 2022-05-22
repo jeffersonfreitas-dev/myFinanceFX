@@ -220,7 +220,7 @@ public class DAOPaymentImpl implements DAOPayment{
 		bill.setDate(rs.getDate("datebill"));
 		bill.setDueDate(rs.getDate("due_datebill"));
 		bill.setPortion(rs.getInt("portionbill"));
-		bill.setFulfillment(rs.getInt("ulfillmentbill"));
+		bill.setFulfillment(rs.getInt("fulfillmentbill"));
 		bill.setClifor(getClifor(rs));
 		return bill;
 	}

@@ -236,13 +236,6 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 				+ "	LEFT JOIN transferencia t ON x.id_transferencia = t.id\r\n"
 				+ "	WHERE c.id = ? and x.date between ? and ?\r\n"
 				+ " ORDER BY x.date, c.account";
-		
-		
-		
-//		
-//		String sql = "SELECT x.*, p.id as cod_payment, c.id as cod_account, c.account, c.code, r.id as cod_receivement, t.id as cod_transferencia FROM bank_statement x INNER JOIN bank_account c "
-//				+ "ON x.id_bank_account = c.id LEFT JOIN payment p ON x.id_payment = p.id LEFT JOIN receivement r ON x.id_receivement = r.id LEFT JOIN transferencia t ON x.id_transferencia = t.id "
-//				+ "WHERE c.id = ? and x.date between ? and ? ORDER BY x.date, c.account";
 		try {
 			List<BankStatement> list = new ArrayList<>();
 			
@@ -385,7 +378,6 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 		BankAccount account = new BankAccount();
 		account.setId(rs.getInt("cod_account"));
 		account.setAccount(rs.getString("account"));
-		account.setType(rs.getString("type"));
 		account.setBankAgence(getBankAgence(rs));
 		return account;
 	}

@@ -81,4 +81,8 @@ public class ReceivementService {
 		return true;
 	}
 
+	public Receivement findById(Integer id) {
+		return dao.findById(id);
+	}
+
 }
