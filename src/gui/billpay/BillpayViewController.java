@@ -182,13 +182,13 @@ public class BillpayViewController implements Initializable{
 		            	Alerts.showAlert("Erro ao abrir pagamento", null, "Está conta já foi quitada", AlertType.ERROR);
 		            }else {
 		            	Stage stage = new Stage();
-		            	loadModalView("/gui/payment/PaymentViewRegister.fxml", 610.0, 240.0, entity, "Pagamento de contas", stage, (PaymentViewRegisterController controller) -> {
+		            	loadModalView("/gui/payment/PaymentViewRegister.fxml", 610.0, 350.0, entity, "Pagamento de contas", stage, (PaymentViewRegisterController controller) -> {
 		            		controller.setBillpayService(new BillpayService());
 		            		controller.setAccountService(new BankAccountService());
 		            		controller.setService(new PaymentService());
 		            		controller.setPayment(new Payment());
-		            		controller.loadAssociateObjects();
 		            		controller.setBillpay(entity);					
+		            		controller.loadAssociateObjects();
 		            	});
 		            }
 		        }

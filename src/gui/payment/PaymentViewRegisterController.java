@@ -21,6 +21,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
@@ -38,7 +39,6 @@ public class PaymentViewRegisterController implements Initializable{
 	
 	private Billpay billpay;
 	public void setBillpay(Billpay billpay) {
-		System.out.println(billpay.getStatus());
 		this.billpay = billpay;
 	}
 	
@@ -82,6 +82,8 @@ public class PaymentViewRegisterController implements Initializable{
 	
 	@FXML
 	private Label lblErroAccount;
+	@FXML
+	private TextArea text;
 	@FXML
 	private Label lblErroData;
 	@FXML
@@ -151,6 +153,14 @@ public class PaymentViewRegisterController implements Initializable{
 		if(service == null || billService == null) {
 			throw new IllegalStateException("Serviço não instanciado");
 		}
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Fornecedor: " + billpay.getClifor().getName() + "\n");
+		sb.append("Plano de Conta: " + billpay.getAccountPlan().getName() + "\n");
+		sb.append("Parcelas: " + billpay.getPortion() + "/" + billpay.getFulfillment() + "\n");
+		sb.append("Histórico: " + billpay.getHistoric() + "\n");
+		text.setText(sb.toString());
 		
 		List<BankAccount> accounts = accountService.findAll();
 		obsBankAccount = FXCollections.observableArrayList(accounts);
