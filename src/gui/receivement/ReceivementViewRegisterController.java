@@ -21,6 +21,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
@@ -60,6 +61,9 @@ public class ReceivementViewRegisterController implements Initializable{
 	public void setReceivement(Receivement entity) {
 		this.entity = entity;
 	}
+	
+	@FXML
+	private TextArea text;
 	
 	@FXML
 	private DatePicker pkDate;
@@ -150,6 +154,14 @@ public class ReceivementViewRegisterController implements Initializable{
 		if(service == null || recebService == null) {
 			throw new IllegalStateException("Serviço não instanciado");
 		}
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Cliente: " + receivable.getClifor().getName() + "\n");
+		sb.append("Plano de Conta: " + receivable.getAccountPlan().getName() + "\n");
+		sb.append("Parcelas: " + receivable.getPortion() + "/" + receivable.getFulfillment() + "\n");
+		sb.append("Histórico: " + receivable.getHistoric() + "\n");
+		text.setText(sb.toString());
 		
 		List<BankAccount> accounts = accountService.findAll();
 		obsBankAccount = FXCollections.observableArrayList(accounts);

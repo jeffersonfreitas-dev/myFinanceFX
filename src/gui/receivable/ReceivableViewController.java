@@ -139,13 +139,13 @@ public class ReceivableViewController implements Initializable{
 		            	Alerts.showAlert("Erro ao abrir recebimento", null, "Está conta já foi recebida", AlertType.ERROR);
 		            }else {
 		            	Stage stage = new Stage();
-						loadModalView("/gui/receivement/ReceivementViewRegister.fxml", 600.0, 220.0, entity, "Recebimento de contas", stage, (ReceivementViewRegisterController controller) -> {
+						loadModalView("/gui/receivement/ReceivementViewRegister.fxml", 600.0, 350.0, entity, "Recebimento de contas", stage, (ReceivementViewRegisterController controller) -> {
 							controller.setReceivableService(new ReceivableService());
 							controller.setAccountService(new BankAccountService());
 							controller.setService(new ReceivementService());
 							controller.setReceivement(new Receivement());
-							controller.loadAssociateObjects();
 							controller.setReceivable(entity);			
+							controller.loadAssociateObjects();
 		            	});
 		            }
 		        }
