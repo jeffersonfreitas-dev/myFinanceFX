@@ -29,7 +29,7 @@ public class BankStatementService {
 		ext.setBankAccount(payment.getBankAccount());
 		ext.setCredit(false);
 		ext.setDate(payment.getDate());
-		ext.setHistoric("Pagamento da conta nº " + payment.getBillpay().getInvoice() + " - " + payment.getBillpay().getClifor().getName());
+		ext.setHistoric("Pagamento para: " + payment.getBillpay().getClifor().getName());
 		ext.setPayment(payment);
 		ext.setReceivement(null);
 		ext.setValue(payment.getBillpay().getValue());
@@ -79,7 +79,7 @@ public class BankStatementService {
 		ext.setBankAccount(receivement.getBankAccount());
 		ext.setCredit(true);
 		ext.setDate(receivement.getDate());
-		ext.setHistoric("Recebimento da conta nº " + receivement.getReceivable().getInvoice() + " - " + receivement.getReceivable().getClifor().getName());
+		ext.setHistoric("Recebimento de: " + receivement.getReceivable().getClifor().getName());
 		ext.setPayment(null);
 		ext.setReceivement(receivement);
 		ext.setValue(receivement.getReceivable().getValue());
@@ -98,7 +98,7 @@ public class BankStatementService {
 		ext.setBankAccount(entity.getOriginAccount());
 		ext.setCredit(false);
 		ext.setDate(entity.getDate());
-		ext.setHistoric("Transferência para a conta nº " + entity.getDestinationAccount().getCode());
+		ext.setHistoric("Enviado transferência para: " + entity.getDestinationAccount().getCode());
 		ext.setPayment(null);
 		ext.setReceivement(null);
 		ext.setTransferencia(entity);
@@ -112,7 +112,7 @@ public class BankStatementService {
 		ext2.setBankAccount(entity.getDestinationAccount());
 		ext2.setCredit(true);
 		ext2.setDate(entity.getDate());
-		ext2.setHistoric("Transferência recebida da conta nº " + entity.getOriginAccount().getCode());
+		ext2.setHistoric("Recebimento transferência de: " + entity.getOriginAccount().getCode());
 		ext2.setPayment(null);
 		ext2.setReceivement(null);
 		ext2.setTransferencia(entity);
@@ -135,6 +135,16 @@ public class BankStatementService {
 
 	public void deleteByDateInitialAndFinal(Date dateBeginner, Date dateFinish) {
 		dao.deleteByDateInitialAndFinal(dateBeginner, dateFinish);
+	}
+
+
+	public BankStatement findByPayment(Integer payment) {
+		return dao.findByPayment(payment);
+	}
+
+
+	public void deletePaymentById(Integer id) {
+		dao.deletePaymentById(id);		
 	}
 
 

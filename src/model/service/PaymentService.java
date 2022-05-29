@@ -20,14 +20,17 @@ public class PaymentService {
 	private BankStatementService statementService = new BankStatementService();
 	private MovimentService movimentService = new MovimentService();
 
+	
 	public List<Payment> findAll() {
 		return dao.findAllOrderByDate();
 	}
 
+	
 	public void remove(Payment entity) {
 		dao.deleteById(entity.getId());
 		
 	}
+	
 	
 	public Payment findById(Integer id) {
 		if(id == null) {
@@ -36,6 +39,7 @@ public class PaymentService {
 		return dao.findById(id);
 	}
 
+	
 	public void save(Payment entity, BillpayService billService) {
 		try {
 			boolean movimentOpen = movimentService.movimentOpen();
@@ -58,8 +62,11 @@ public class PaymentService {
 	}
 
 	
-	public void cancelarPagamento(Billpay entity) {
+	public void cancelarPagamento(Billpay entity, BillpayService service) {
+		Payment payment = dao.findByBillpay(entity.getId());
+		statementService.deletePaymentById(payment.getId());
 		entity.setStatus("PAGAR");
+		service.saveOrUpdate(entity);
 	}
 
 

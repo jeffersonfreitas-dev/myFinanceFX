@@ -182,12 +182,13 @@ public class BillpayViewController implements Initializable{
 		            
 		            if(entity.getStatus().equals("QUITADA")) {
 		            	if(entity.getFechada()) {
-		            		Alerts.showAlert("Erro ao abrir pagamento", null, "Está conta já foi quitada e não pode ser mais alterada.", AlertType.ERROR);
+		            		Alerts.showAlert("Erro ao abrir pagamento", null, "Está conta já foi paga e processada e não pode ser mais alterada.", AlertType.ERROR);
 		            	}else {
 		            		Optional<ButtonType> result = Alerts.showConfirmation("Confirmação", "Você tem certeza que deseja excluir este pagamento?");
 		            		
 		            		if(result.get() == ButtonType.OK) {
-		            			payService.cancelarPagamento(entity);
+		            			payService.cancelarPagamento(entity, service);
+		            			updateTableFiltro(this.status, this.nome, this.valorCombobox, this.dtaInicio, this.dtaFinal);
 		            		}
 		            	}
 		            }else {

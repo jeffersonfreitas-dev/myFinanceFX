@@ -148,6 +148,58 @@ public class DAOPaymentImpl implements DAOPayment{
 			Database.closeResultSet(rs);
 		}
 	}
+	
+	
+	
+	@Override
+	public Payment findByBillpay(Integer billpay) {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT p.*, \r\n"
+				+ "	b.id as cod_bill, \r\n"
+				+ "	b.historic as historicbill,\r\n"
+				+ "	b.date as datebill,\r\n"
+				+ "	b.due_date as due_datebill,\r\n"
+				+ "	b.portion as portionbill,\r\n"
+				+ "	b.fulfillment as fulfillmentbill,\r\n"
+				+ "	a.id as cod_account,\r\n"
+				+ "	a.account,\r\n"
+				+ "	a.type,\r\n"
+				+ "	aa.id as idagence,\r\n"
+				+ "	aa.agence,\r\n"
+				+ "	bb.id as idbank,\r\n"
+				+ "	bb.name as namebank,\r\n"
+				+ "	ac.id as idaccountplan,\r\n"
+				+ "	ac.name as nameaccountplan,\r\n"
+				+ "	c.id as idclifor,\r\n"
+				+ "	c.name as nameclifor\r\n"
+				+ "	FROM payment p INNER JOIN billpay b ON p.id_billpay = b.id \r\n"
+				+ "	INNER JOIN bank_account a ON p.id_bank_account = a.id\r\n"
+				+ "	INNER JOIN bank_agence aa ON a.id_bank_agence = aa.id\r\n"
+				+ "	INNER JOIN clifor c ON b.id_clifor = c.id\r\n"
+				+ "	INNER JOIN account_plan ac on b.id_account_plan = ac.id\r\n"
+				+ "	INNER JOIN bank bb ON aa.id_bank = bb.id\r\n"
+				+ "	WHERE b.id = ?;";
+		
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, billpay);
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) {
+				Payment pay = getEntity(rs);
+				return pay;
+			}
+			return null;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException("Ocorreu um erro ao executar o comando findById pagamento -> " + e.getMessage());
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
+	}
+	
 
 
 	@Override

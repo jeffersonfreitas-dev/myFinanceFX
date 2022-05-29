@@ -164,7 +164,52 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 			Database.closeResultSet(rs);
 		}
 	}
+	
+	
+	
+	@Override
+	public BankStatement findByPayment(Integer payment) {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT x.*, \r\n"
+				+ "	p.id as cod_payment, \r\n"
+				+ "	c.id as cod_account,\r\n"
+				+ "	c.account,\r\n"
+				+ "	c.type,\r\n"
+				+ "	a.id as cod_agence,\r\n"
+				+ "	a.agence,\r\n"
+				+ "	b.id as cod_bank,\r\n"
+				+ "	b.name as nomebank,\r\n"
+				+ "	r.id as cod_receivement, \r\n"
+				+ "	t.id as cod_transferencia \r\n"
+				+ "	FROM bank_statement x \r\n"
+				+ "	INNER JOIN bank_account c ON x.id_bank_account = c.id\r\n"
+				+ "	INNER JOIN bank_agence a ON c.id_bank_agence = a.id\r\n"
+				+ "	INNER JOIN bank b ON a.id_bank = b.id\r\n"
+				+ "	LEFT JOIN payment p ON x.id_payment = p.id \r\n"
+				+ "	LEFT JOIN receivement r ON x.id_receivement = r.id \r\n"
+				+ "	LEFT JOIN transferencia t ON x.id_transferencia = t.id\r\n"
+				+ "WHERE p.id = ?";
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, payment);
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) {
+				BankStatement entity = getBankStatement(rs);
+				return entity;
+			}
+			return null;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Código Pagamento nº " + payment);
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
+	}
 
+	
 
 	@Override
 	public List<BankStatement> findAllOrderByDateAndBankAccount() {
@@ -264,6 +309,26 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 	public void deleteTransferenciaById(Integer id) {
 		PreparedStatement stmt = null;
 		String sql = "DELETE FROM bank_statement WHERE id_transferencia = ? ";
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, id);
+			Integer result = stmt.executeUpdate();
+			if(result < 1) {
+				throw new DatabaseException(DefaultMessages.getMsgErroDeletar() + ". Nenhuma linha afetada");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException(DefaultMessages.getMsgErroDeletar());
+		}finally {
+			Database.closeStatement(stmt);
+		}
+	}
+
+	
+	@Override
+	public void deletePaymentById(Integer id) {
+		PreparedStatement stmt = null;
+		String sql = "DELETE FROM bank_statement WHERE id_payment = ? ";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, id);
@@ -397,4 +462,5 @@ public class DAOBankStatementImpl implements DAOBankStatement{
 		bank.setName(rs.getString("nomebank"));
 		return bank;
 	}
+
 }

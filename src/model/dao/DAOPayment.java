@@ -11,5 +11,6 @@ public interface DAOPayment {
 	void deleteById (Integer id);
 	Payment findById(Integer id);
 	List<Payment> findAllOrderByDate();
+	Payment findByBillpay(Integer id);
 
 }

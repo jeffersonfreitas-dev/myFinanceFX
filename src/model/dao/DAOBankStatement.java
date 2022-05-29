@@ -17,5 +17,7 @@ public interface DAOBankStatement {
 	void deleteTransferenciaById(Integer id);
 	Integer hasMovimentByDate(Date dateBeginner, Date dateFinish);
 	void deleteByDateInitialAndFinal(Date dateBeginner, Date dateFinish);
+	BankStatement findByPayment(Integer payment);
+	void deletePaymentById(Integer id);
 
 }
