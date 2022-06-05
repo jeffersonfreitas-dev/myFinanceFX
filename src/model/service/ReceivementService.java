@@ -16,7 +16,7 @@ import model.entities.Receivement;
 import utils.Alerts;
 
 public class ReceivementService {
-	
+
 	private BankStatementService statementService = new BankStatementService();
 	private DAOReceivement dao = DAOFactory.createReceivementDAO();
 	private DAOBankAccount daoAccount = DAOFactory.createBankAccountDAO();
@@ -28,14 +28,18 @@ public class ReceivementService {
 
 	public void remove(Receivement entity) {
 		dao.deleteById(entity.getId());
-		
+
 	}
 
 	public void save(Receivement entity, ReceivableService receivableService) {
 		try {
-			if(movimentOpen() && dateInMoviment(entity.getDate())) {
+			Moviment moviment = movimentOpen();
+			if (moviment != null && dateInMoviment(entity.getDate())) {
 				Receivable receb = receivableService.findById(entity.getReceivable().getId());
 				receb.setStatus("RECEBIDO");
+
+				atualizarValorPoupar(entity, moviment);
+
 				receivableService.saveOrUpdate(receb);
 				Integer id = dao.insert(entity);
 				Receivement receivement = dao.findById(id);
@@ -44,45 +48,46 @@ public class ReceivementService {
 				receivement.setReceivable(receb);
 				statementService.createBankStatementByReceivement(receivement);
 			}
-			
-		
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			Alerts.showAlert("Erro ao salvar", "Recebimento não realizado", e.getMessage(), AlertType.ERROR);
-		}		
+		}
 	}
-	
-	
+
 	private boolean dateInMoviment(Date date) {
 		List<Moviment> moviments = daoMoviment.findByAllOpenMoviment();
-		if(moviments.isEmpty()) {
+		if (moviments.isEmpty()) {
 			throw new DatabaseException("Não existe nenhum movimento aberto");
 		}
-		
+
 		Moviment moviment = moviments.get(0);
-		
+
 		boolean isBeforeFinish = date.before(moviment.getDateFinish());
 		boolean isAfterBeginner = date.after(moviment.getDateBeginner());
-		
-		if(isAfterBeginner && isBeforeFinish){
+
+		if (isAfterBeginner && isBeforeFinish) {
 			return true;
-		}else {
+		} else {
 			throw new DatabaseException("A data do recebimento está fora do periodo do movimento aberto");
 		}
 	}
 
-	
-	private boolean movimentOpen() {
+	private Moviment movimentOpen() {
 		List<Moviment> moviments = daoMoviment.findByAllOpenMoviment();
-		
-		if(moviments.isEmpty()) {
+
+		if (moviments.isEmpty()) {
 			throw new DatabaseException("Não existe nenhum movimento aberto");
 		}
-		return true;
+		return moviments.get(0);
 	}
 
 	public Receivement findById(Integer id) {
 		return dao.findById(id);
 	}
 
+	private void atualizarValorPoupar(Receivement entity, Moviment moviment) {
+		moviment.setValuePoupanca(moviment.getValuePoupanca() + entity.getReceivable().getValue() * 0.1);
+		daoMoviment.update(moviment);
+	}
 }

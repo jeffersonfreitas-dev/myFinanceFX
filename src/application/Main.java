@@ -1,7 +1,5 @@
 package application;
 	
-import java.io.IOException;
-
 import org.kordamp.bootstrapfx.BootstrapFX;
 
 import javafx.application.Application;
@@ -18,7 +16,9 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			BorderPane mainPanel = setMainPainelConfiguration();
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/main/MainView.fxml"));
+			BorderPane mainPanel = loader.load();
+			mainPanel.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
 			mainPanel.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			mainPanel.getStyleClass().add("container");
 			mainScene = new Scene(mainPanel);
@@ -32,13 +32,6 @@ public class Main extends Application {
 	}
 	
 	
-	private BorderPane setMainPainelConfiguration() throws IOException{
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/main/MainView.fxml"));
-		BorderPane pane = loader.load();
-		pane.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
-		return pane;
-	}
-
 	public static void main(String[] args) {
 		launch(args);
 	}

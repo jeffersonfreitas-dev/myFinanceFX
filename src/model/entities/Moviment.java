@@ -12,6 +12,7 @@ public class Moviment implements Serializable {
 	private Date dateFinish;
 	private Double valueBeginner;
 	private Double valueFinish;
+	private Double valuePoupanca;
 	private Double balanceMoviment;
 	private boolean closed;
 
@@ -77,6 +78,14 @@ public class Moviment implements Serializable {
 
 	public void setClosed(boolean closed) {
 		this.closed = closed;
+	}
+
+	public Double getValuePoupanca() {
+		return valuePoupanca;
+	}
+
+	public void setValuePoupanca(Double valuePoupanca) {
+		this.valuePoupanca = valuePoupanca;
 	}
 
 	@Override

@@ -73,6 +73,8 @@ public class MovimentViewController implements Initializable{
 	@FXML
 	private TableColumn<Moviment, Double> tblColumnBalance;
 	@FXML
+	private TableColumn<Moviment, Double> tblColumnPoupanca;
+	@FXML
 	private TableColumn<Moviment, Double> tblColumnValueBeginner;
 	@FXML
 	private TableColumn<Moviment, String> tblColumnName;
@@ -108,6 +110,8 @@ public class MovimentViewController implements Initializable{
 		Utils.formatTableColumnDouble(tblColumnValueFinish, 2);
 		tblColumnValueBeginner.setCellValueFactory(new PropertyValueFactory<>("valueBeginner"));
 		Utils.formatTableColumnDouble(tblColumnValueBeginner, 2);
+		tblColumnPoupanca.setCellValueFactory(new PropertyValueFactory<>("valuePoupanca"));
+		Utils.formatTableColumnDouble(tblColumnPoupanca, 2);
 		tblColumnStatus.setCellValueFactory(v -> {
 			String result = "";
 			result = v.getValue().isClosed() ? "FECHADO" : "ABERTO";

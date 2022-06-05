@@ -32,6 +32,7 @@
             <TableColumn fx:id="tblColumnValueBeginner" editable="false" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" resizable="false" style="-fx-alignment: center-right;" text="Valor Inicio" />
             <TableColumn fx:id="tblColumnValueFinish" editable="false" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" resizable="false" style="-fx-alignment: center-right;" text="Valor Final" />
             <TableColumn fx:id="tblColumnBalance" editable="false" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" resizable="false" style="-fx-alignment: center-right;" text="Saldo" />
+            <TableColumn fx:id="tblColumnPoupanca" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" style="-fx-alignment: center-right;" text="Poupar" />
             <TableColumn fx:id="tblColumnCLOSE" editable="false" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" resizable="false" sortable="false" style="-fx-alignment: center;" />
             <TableColumn fx:id="tblColumnDELETE" editable="false" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" resizable="false" sortable="false" style="-fx-alignment: center;" />
         </columns>
