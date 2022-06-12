@@ -29,8 +29,8 @@ public class DAOBillpayImpl implements DAOBillpay{
 	@Override
 	public void insert(Billpay entity) {
 		PreparedStatement stmt = null;
-		String sql = "INSERT INTO billpay (invoice, historic, date, due_date, value, status, id_clifor, id_company, id_account_plan) VALUES "
-				+ "(upper(?), upper(?), ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO billpay (invoice, historic, date, due_date, value, status, id_clifor, id_company, id_account_plan, fechado) VALUES "
+				+ "(upper(?), upper(?), ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, entity.getInvoice());
@@ -42,6 +42,7 @@ public class DAOBillpayImpl implements DAOBillpay{
 			stmt.setInt(7, entity.getClifor().getId());
 			stmt.setInt(8, entity.getCompany().getId());
 			stmt.setInt(9, entity.getAccountPlan().getId());
+			stmt.setBoolean(10, entity.getFechada());
 			int result = stmt.executeUpdate();
 			if(result < 1) {
 				throw new DatabaseException(DefaultMessages.getMsgErroSalvar() + ". Nenhuma linha afetada");
@@ -59,7 +60,7 @@ public class DAOBillpayImpl implements DAOBillpay{
 	public void update(Billpay entity) {
 		PreparedStatement stmt = null;
 		String sql = "UPDATE billpay SET invoice = upper(?), historic = upper(?), date = ?, due_date = ?, value = ?,"
-				+ " status = ?, id_clifor = ?, id_company = ?, id_account_plan = ? WHERE id = ?";
+				+ " status = ?, id_clifor = ?, id_company = ?, id_account_plan = ?, fechado = ? WHERE id = ?";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, entity.getInvoice());
@@ -71,7 +72,8 @@ public class DAOBillpayImpl implements DAOBillpay{
 			stmt.setInt(7, entity.getClifor().getId());
 			stmt.setInt(8, entity.getCompany().getId());
 			stmt.setInt(9, entity.getAccountPlan().getId());
-			stmt.setInt(10, entity.getId());
+			stmt.setBoolean(10, entity.getFechada());
+			stmt.setInt(11, entity.getId());
 			int result = stmt.executeUpdate();
 			if(result < 1) {
 				throw new DatabaseException(DefaultMessages.getMsgErroAtualizar() + ". Nenhuma linha afetada");
@@ -287,5 +289,8 @@ public class DAOBillpayImpl implements DAOBillpay{
 		company.setName(rs.getString("name_company"));
 		return company;
 	}
+
+
+
 
 }

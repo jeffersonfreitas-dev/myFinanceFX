@@ -9,9 +9,12 @@ import database.exceptions.DatabaseException;
 import model.dao.DAOBankAccount;
 import model.dao.DAOFactory;
 import model.dao.DAOMoviment;
+import model.dao.DAOPayment;
 import model.entities.BankAccount;
 import model.entities.BankStatement;
+import model.entities.Billpay;
 import model.entities.Moviment;
+import model.entities.Payment;
 import model.exceptions.RecordAlreadyRecordedException;
 import model.exceptions.ValidationException;
 import utils.MyUtils;
@@ -21,6 +24,8 @@ public class MovimentService {
 	private DAOMoviment dao = DAOFactory.createMovimentDAO();
 	private DAOBankAccount daoAccount = DAOFactory.createBankAccountDAO();
 	private BankStatementService statementService = new BankStatementService();
+	private BillpayService billService = new BillpayService();
+	private DAOPayment daoPayment = DAOFactory.createPaymentDAO();
 
 	
 	public List<Moviment> findAll(){
@@ -94,6 +99,13 @@ public class MovimentService {
 						s.setBalance(total - s.getValue());
 						total = total - s.getValue();
 					}
+				}
+				
+				if(s.getPayment().getId() > 0 && !s.isInitialValue()) {
+					Payment pay = daoPayment.findById(s.getPayment().getId());
+					Billpay bill = pay.getBillpay();
+					bill.setFechada(true);
+					billService.saveOrUpdate(bill);
 				}
 			}
 			b.setBalance(total);

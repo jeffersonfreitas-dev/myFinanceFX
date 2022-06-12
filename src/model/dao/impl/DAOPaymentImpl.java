@@ -11,11 +11,13 @@ import java.util.List;
 import database.Database;
 import database.exceptions.DatabaseException;
 import model.dao.DAOPayment;
+import model.entities.AccountPlan;
 import model.entities.Bank;
 import model.entities.BankAccount;
 import model.entities.BankAgence;
 import model.entities.Billpay;
 import model.entities.Clifor;
+import model.entities.Company;
 import model.entities.Payment;
 
 public class DAOPaymentImpl implements DAOPayment{
@@ -110,6 +112,11 @@ public class DAOPaymentImpl implements DAOPayment{
 				+ "	b.date as datebill,\r\n"
 				+ "	b.due_date as due_datebill,\r\n"
 				+ "	b.portion as portionbill,\r\n"
+				+ "	b.value as valuebill,\r\n"
+				+ "	b.status as statusbill,\r\n"
+				+ "	b.id_company as idCompanybill,\r\n"
+				+ "	b.id_account_plan as idAccountPlanbill,\r\n"				
+				+ "	b.fechado as fechadobill,\r\n"
 				+ "	b.fulfillment as fulfillmentbill,\r\n"
 				+ "	a.id as cod_account,\r\n"
 				+ "	a.account,\r\n"
@@ -161,6 +168,11 @@ public class DAOPaymentImpl implements DAOPayment{
 				+ "	b.date as datebill,\r\n"
 				+ "	b.due_date as due_datebill,\r\n"
 				+ "	b.portion as portionbill,\r\n"
+				+ "	b.value as valuebill,\r\n"
+				+ "	b.status as statusbill,\r\n"
+				+ "	b.id_company as idCompanybill,\r\n"
+				+ "	b.id_account_plan as idAccountPlanbill,\r\n"
+				+ "	b.fechado as fechadobill,\r\n"
 				+ "	b.fulfillment as fulfillmentbill,\r\n"
 				+ "	a.id as cod_account,\r\n"
 				+ "	a.account,\r\n"
@@ -269,11 +281,16 @@ public class DAOPaymentImpl implements DAOPayment{
 		Billpay bill = new Billpay();
 		bill.setId(rs.getInt("cod_bill"));
 		bill.setHistoric(rs.getString("historicbill"));
+		bill.setStatus(rs.getString("statusbill"));
+		bill.setCompany(new Company(rs.getInt("idCompanybill")));
+		bill.setAccountPlan(new AccountPlan(rs.getInt("idAccountPlanbill")));
 		bill.setDate(rs.getDate("datebill"));
 		bill.setDueDate(rs.getDate("due_datebill"));
 		bill.setPortion(rs.getInt("portionbill"));
 		bill.setFulfillment(rs.getInt("fulfillmentbill"));
 		bill.setClifor(getClifor(rs));
+		bill.setValue(rs.getDouble("valuebill"));
+		bill.setFechada(rs.getBoolean("fechadobill"));
 		return bill;
 	}
 

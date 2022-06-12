@@ -7,6 +7,7 @@ public class Company implements Serializable {
 
 	private Integer id;
 	private String name;
+	
 
 	public Integer getId() {
 		return id;
@@ -32,6 +33,11 @@ public class Company implements Serializable {
 		super();
 		this.id = id;
 		this.name = name;
+	}
+
+	public Company(Integer id) {
+		super();
+		this.id = id;
 	}
 
 	@Override

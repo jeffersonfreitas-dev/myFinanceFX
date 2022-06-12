@@ -15,6 +15,10 @@ public class AccountPlan implements Serializable {
 		this.credit = credit;
 	}
 
+	public AccountPlan(Integer id) {
+		this.id = id;
+	}
+
 	public AccountPlan() {
 	}
 
