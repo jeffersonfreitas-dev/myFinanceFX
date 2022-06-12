@@ -51,6 +51,8 @@ public class MovimentService {
 			moviment.setBalanceMoviment(0.0);
 			moviment.setValueFinish(0.0);
 			moviment.setValuePoupanca(0.0);
+			moviment.setValueAplicacao(0.0);
+			moviment.setValueResgate(0.0);
 			
 			LocalDate d = moviment.getDateBeginner().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			

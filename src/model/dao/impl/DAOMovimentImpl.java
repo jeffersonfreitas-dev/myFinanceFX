@@ -29,7 +29,7 @@ public class DAOMovimentImpl implements DAOMoviment{
 		validaCamposObrigatorios(entity);
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String sql = "INSERT INTO moviment (date_beginner, name, date_finish, value_beginner, balance_moviment, value_finish, value_poupanca, closed) VALUES (?, upper(?), ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO moviment (date_beginner, name, date_finish, value_beginner, balance_moviment, value_finish, value_poupanca, value_aplicacao, value_resgate, closed) VALUES (?, upper(?), ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			stmt.setDate(1, new java.sql.Date(entity.getDateBeginner().getTime()));
@@ -39,7 +39,9 @@ public class DAOMovimentImpl implements DAOMoviment{
 			stmt.setDouble(5, entity.getBalanceMoviment());
 			stmt.setDouble(6, entity.getValueFinish());
 			stmt.setDouble(7, entity.getValuePoupanca());
-			stmt.setBoolean(8, entity.isClosed());
+			stmt.setDouble(8, entity.getValueAplicacao());
+			stmt.setDouble(9, entity.getValueResgate());
+			stmt.setBoolean(10, entity.isClosed());
 			int result = stmt.executeUpdate();
 			if(result < 1) {
 				throw new DatabaseException(DefaultMessages.getMsgErroSalvar() + ". Nenhuma linha afetada");
@@ -67,7 +69,7 @@ public class DAOMovimentImpl implements DAOMoviment{
 
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String sql = "UPDATE moviment SET date_beginner = ?, name = upper(?), date_finish = ?, value_beginner = ?, balance_moviment = ?, value_finish = ?, value_poupanca = ?, closed = ? WHERE id = ?";
+		String sql = "UPDATE moviment SET date_beginner = ?, name = upper(?), date_finish = ?, value_beginner = ?, balance_moviment = ?, value_finish = ?, value_poupanca = ?, value_aplicacao = ?, value_resgate = ?, closed = ? WHERE id = ?";
 		try {
 			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			stmt.setDate(1, new java.sql.Date(entity.getDateBeginner().getTime()));
@@ -77,8 +79,10 @@ public class DAOMovimentImpl implements DAOMoviment{
 			stmt.setDouble(5, entity.getBalanceMoviment());
 			stmt.setDouble(6, entity.getValueFinish());
 			stmt.setDouble(7, entity.getValuePoupanca());
-			stmt.setBoolean(8, entity.isClosed());
-			stmt.setInt(9, entity.getId());
+			stmt.setDouble(8, entity.getValueAplicacao());
+			stmt.setDouble(9, entity.getValueResgate());
+			stmt.setBoolean(10, entity.isClosed());
+			stmt.setInt(11, entity.getId());
 			int result = stmt.executeUpdate();
 			
 			if(result < 1) {
@@ -184,6 +188,8 @@ public class DAOMovimentImpl implements DAOMoviment{
 		moviment.setValueBeginner(rs.getDouble("value_beginner"));
 		moviment.setValueFinish(rs.getDouble("value_finish"));
 		moviment.setValuePoupanca(rs.getDouble("value_poupanca"));
+		moviment.setValueAplicacao(rs.getDouble("value_aplicacao"));
+		moviment.setValueResgate(rs.getDouble("value_resgate"));
 		return moviment;
 	}
 

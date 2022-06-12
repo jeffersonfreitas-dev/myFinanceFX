@@ -106,7 +106,7 @@ public class DAOTransferenciaImpl implements DAOTransferencia{
 	public Transferencia findById(Integer id) {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT t.*, o.id as cod_origem, o.code as code_origem, d.id as cod_destination, d.code as code_destination FROM transferencia t INNER JOIN bank_account o ON t.id_account_origin = o.id "
+		String sql = "SELECT t.*, o.id as cod_origem, o.type as type_origem, o.code as code_origem, d.id as cod_destination, d.type as type_destino, d.code as code_destination FROM transferencia t INNER JOIN bank_account o ON t.id_account_origin = o.id "
 				+ "INNER JOIN bank_account d ON t.id_account_destination = d.id WHERE t.id = ?";
 		try {
 			stmt = conn.prepareStatement(sql);
@@ -133,7 +133,7 @@ public class DAOTransferenciaImpl implements DAOTransferencia{
 		List<Transferencia> list = new ArrayList<Transferencia>();
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String sql = "SELECT t.*, o.id as cod_origem, o.code as code_origem, d.id as cod_destination, d.code as code_destination FROM transferencia t INNER JOIN bank_account o ON t.id_account_origin = o.id "
+		String sql = "SELECT t.*, o.id as cod_origem, o.code as code_origem, o.type as type_origem, d.id as cod_destination, d.code as code_destination, d.type as type_destino FROM transferencia t INNER JOIN bank_account o ON t.id_account_origin = o.id "
 				+ "INNER JOIN bank_account d ON t.id_account_destination = d.id order by t.date";
 		try {
 			stmt = conn.prepareStatement(sql);
@@ -171,6 +171,7 @@ public class DAOTransferenciaImpl implements DAOTransferencia{
 		BankAccount account = new BankAccount();
 		account.setId(rs.getInt("cod_origem"));
 		account.setCode(rs.getString("code_origem"));
+		account.setType(rs.getString("type_origem"));
 		return account;
 	}
 
@@ -178,6 +179,7 @@ public class DAOTransferenciaImpl implements DAOTransferencia{
 		BankAccount account = new BankAccount();
 		account.setId(rs.getInt("cod_destination"));
 		account.setCode(rs.getString("code_destination"));
+		account.setType(rs.getString("type_destino"));
 		return account;
 	}
 

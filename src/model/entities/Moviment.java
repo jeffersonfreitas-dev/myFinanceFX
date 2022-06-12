@@ -13,6 +13,9 @@ public class Moviment implements Serializable {
 	private Double valueBeginner;
 	private Double valueFinish;
 	private Double valuePoupanca;
+	private Double valueDevedor;
+	private Double valueAplicacao;
+	private Double valueResgate;
 	private Double balanceMoviment;
 	private boolean closed;
 
@@ -86,6 +89,30 @@ public class Moviment implements Serializable {
 
 	public void setValuePoupanca(Double valuePoupanca) {
 		this.valuePoupanca = valuePoupanca;
+	}
+
+	public Double getValueDevedor() {
+		return valueDevedor;
+	}
+
+	public void setValueDevedor(Double valueDevedor) {
+		this.valueDevedor = valueDevedor;
+	}
+
+	public Double getValueAplicacao() {
+		return valueAplicacao;
+	}
+
+	public void setValueAplicacao(Double valueAplicacao) {
+		this.valueAplicacao = valueAplicacao;
+	}
+
+	public Double getValueResgate() {
+		return valueResgate;
+	}
+
+	public void setValueResgate(Double valueResgate) {
+		this.valueResgate = valueResgate;
 	}
 
 	@Override

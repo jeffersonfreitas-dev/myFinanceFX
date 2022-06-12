@@ -4,7 +4,9 @@ import java.util.List;
 
 import javafx.scene.control.Alert.AlertType;
 import model.dao.DAOFactory;
+import model.dao.DAOMoviment;
 import model.dao.DAOTransferencia;
+import model.entities.Moviment;
 import model.entities.Transferencia;
 import utils.Alerts;
 
@@ -13,6 +15,7 @@ public class TransferenciaService {
 	private DAOTransferencia dao = DAOFactory.createTransferenciaDAO();
 	private BankStatementService statementService = new BankStatementService();
 	private MovimentService movimentService = new MovimentService();
+	private DAOMoviment daoMoviment = DAOFactory.createMovimentDAO();
 
 	
 	public Transferencia findById(Integer id) {
@@ -30,6 +33,17 @@ public class TransferenciaService {
 			if(movimentOpen && dateInMoviment) {
 				statementService.deleteByTransferenciaId(entity.getId());
 				dao.deleteById(entity.getId());
+				
+				Moviment moviment = movimentService.findByAllOpenMoviment().get(0);
+				
+				if(entity.getDestinationAccount().getType().equals("APLICA플O")) {
+					moviment.setValueAplicacao(moviment.getValueAplicacao() - entity.getValue());
+				}
+				if(entity.getOriginAccount().getType().equals("APLICA플O")) {
+					moviment.setValueResgate(moviment.getValueResgate() - entity.getValue());
+				}
+				daoMoviment.update(moviment);
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -50,6 +64,17 @@ public class TransferenciaService {
 					Integer id = dao.insert(entity);
 					entity = dao.findById(id);
 					statementService.createBankStatementByTransferencia(entity);
+
+					Moviment moviment = movimentService.findByAllOpenMoviment().get(0);
+					
+					if(entity.getDestinationAccount().getType().equals("APLICA플O")) {
+						moviment.setValueAplicacao(moviment.getValueAplicacao() + entity.getValue());
+					}
+					if(entity.getOriginAccount().getType().equals("APLICA플O")) {
+						moviment.setValueResgate(moviment.getValueResgate() + entity.getValue());
+					}
+					daoMoviment.update(moviment);
+
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
