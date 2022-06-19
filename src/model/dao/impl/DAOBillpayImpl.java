@@ -247,6 +247,56 @@ public class DAOBillpayImpl implements DAOBillpay{
 			Database.closeResultSet(rs);
 		}
 	}
+	
+	
+	@Override
+	public List<Billpay> findAllByAccountPlanId(Integer idAccountPlan) {
+		List<Billpay> list = new ArrayList<Billpay>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "select \r\n"
+				+ "a.name, \r\n"
+				+ "a.id as cod_account, \r\n"
+				+ "a.credit, \r\n"
+				+ "b.id,\r\n"
+				+ "b.historic,\r\n"
+				+ "b.date,\r\n"
+				+ "b.due_date,\r\n"
+				+ "b.value,\r\n"
+				+ "b.portion,\r\n"
+				+ "b.invoice,\r\n"
+				+ "b.fechado,\r\n"
+				+ "b.fulfillment,\r\n"
+				+ "b.status,\r\n"
+				+ "c.id as cod_clifor,\r\n"
+				+ "c.name as name_clifor,\r\n"
+				+ "cc.id as cod_company,\r\n"
+				+ "cc.name as name_company\r\n"
+				+ "from account_plan a \r\n"
+				+ "inner join billpay b on b.id_account_plan = a.id\r\n"
+				+ "inner join company cc on b.id_company = cc.id\r\n"
+				+ "inner join clifor c on b.id_clifor = c.id\r\n"
+				+ "where a.id = ?\r\n"
+				+ "order by b.due_date";
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, idAccountPlan);
+			rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				Billpay bill = getBillpay(rs);
+				list.add(bill);
+			}
+			return list;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException(DefaultMessages.getMsgErroFindby() + ". Código nº " + idAccountPlan);
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
+	}
+
 
 	
 	private Billpay getBillpay(ResultSet rs) throws SQLException {
@@ -289,8 +339,5 @@ public class DAOBillpayImpl implements DAOBillpay{
 		company.setName(rs.getString("name_company"));
 		return company;
 	}
-
-
-
 
 }

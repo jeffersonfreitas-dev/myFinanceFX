@@ -15,4 +15,5 @@ public interface DAOAccountPlan {
 	List<AccountPlan> findAllPagination(Integer limit);
 	AccountPlan findByNameAndCredit(String name, boolean credit);
 
+
 }

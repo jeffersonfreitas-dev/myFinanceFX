@@ -13,5 +13,6 @@ public interface DAOReceivable {
 	List<Receivable> findAllOrderByDueDate();
 	Receivable findByInvoiceAndCompanyId(String invoice, Integer id_company);
 	List<Receivable> filtro(String status);
+	List<Receivable> findAllByAccountPlanId(Integer idAccountPlan);
 
 }

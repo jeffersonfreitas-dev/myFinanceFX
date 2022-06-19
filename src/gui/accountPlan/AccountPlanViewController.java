@@ -2,6 +2,7 @@ package gui.accountPlan;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -38,6 +39,8 @@ import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import model.entities.AccountPlan;
 import model.service.AccountPlanService;
+import net.sf.jasperreports.engine.JRException;
+import report.accountPlan.ReportAccountPlan;
 import utils.Alerts;
 
 public class AccountPlanViewController implements Initializable {
@@ -70,6 +73,8 @@ public class AccountPlanViewController implements Initializable {
 	private TableColumn<AccountPlan, String> tblColumnName;
 	@FXML
 	private TableColumn<AccountPlan, AccountPlan> tblColumnEDIT;
+	@FXML
+	private TableColumn<AccountPlan, AccountPlan> tblColumnHISTORIC;
 	@FXML
 	private TableColumn<AccountPlan, AccountPlan> tblColumnDELETE;
 	@FXML
@@ -121,6 +126,7 @@ public class AccountPlanViewController implements Initializable {
 	public void updateTableView() {
 		setPropertiesFilter(this.tipo);
 		initEditButtons();
+		initHistoricButtons();
 		initRemoveButtons();
 	}
 
@@ -158,6 +164,38 @@ public class AccountPlanViewController implements Initializable {
 				});
 			}
 		});
+	}
+
+	private void initHistoricButtons() {
+		tblColumnHISTORIC.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tblColumnHISTORIC.setCellFactory(param -> new TableCell<AccountPlan, AccountPlan>() {
+			private final Button button = new Button();
+			
+			@Override
+			protected void updateItem(AccountPlan entity, boolean empty) {
+				button.setGraphic(new ImageView("/assets/icons/detail16.png"));
+				button.setStyle(" -fx-background-color:transparent;");
+				button.setCursor(Cursor.HAND);
+				super.updateItem(entity, empty);
+				if (entity == null) {
+					setGraphic(null);
+					return;
+				}
+				
+				setGraphic(button);
+				button.setOnAction(e -> {
+					openReport(entity.getId());
+				});
+			}
+		});
+	}
+	
+	private void openReport(Integer id) {
+        try {
+            new ReportAccountPlan().showExtratoSimple(id);
+        } catch (ClassNotFoundException | JRException | SQLException e1) {
+            e1.printStackTrace();
+        }
 	}
 
 	private void initRemoveButtons() {

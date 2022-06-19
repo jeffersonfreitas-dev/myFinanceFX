@@ -145,6 +145,37 @@ public class DAOReceivementImpl implements DAOReceivement{
 			Database.closeResultSet(rs);
 		}
 	}
+	
+	
+	@Override
+	public Receivement findByReceivable(Integer receivable) {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		String sql = "SELECT p.*, \r\n"
+				+ "	b.id as cod_bill, \r\n"
+				+ "	a.id as cod_account\r\n"
+				+ "	FROM receivement p INNER JOIN receivable b ON p.id_receivable = b.id \r\n"
+				+ "	INNER JOIN bank_account a ON p.id_bank_account = a.id\r\n"
+				+ "	WHERE b.id = ?";
+		
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, receivable);
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) {
+				Receivement pay = getEntity(rs);
+				return pay;
+			}
+			return null;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DatabaseException("Ocorreu um erro ao executar o comando findById recebimento -> " + e.getMessage());
+		}finally {
+			Database.closeStatement(stmt);
+			Database.closeResultSet(rs);
+		}
+	}
 
 	
 	private Receivement getEntity(ResultSet rs) throws SQLException {
@@ -169,5 +200,8 @@ public class DAOReceivementImpl implements DAOReceivement{
 		bill.setId(rs.getInt("cod_bill"));
 		return bill;
 	}
+
+
+
 
 }

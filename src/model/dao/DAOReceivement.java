@@ -11,5 +11,6 @@ public interface DAOReceivement {
 	void deleteById (Integer id);
 	Receivement findById(Integer id);
 	List<Receivement> findAllOrderByDate();
+	Receivement findByReceivable(Integer id);
 
 }

@@ -59,6 +59,7 @@
           <TableColumn fx:id="tblColumnId" editable="false" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" resizable="false" style="-fx-alignment: center; -fx-border-fill: transparent;" text="ID" />
           <TableColumn fx:id="tblColumnCredit" editable="false" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" resizable="false" style="-fx-alignment: center-left;" text="Tipo" />
             <TableColumn fx:id="tblColumnName" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Nome" />
+            <TableColumn fx:id="tblColumnHISTORIC" editable="false" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" resizable="false" sortable="false" style="-fx-alignment: center;" />
             <TableColumn fx:id="tblColumnEDIT" editable="false" maxWidth="35.0" minWidth="35.0" prefWidth="35.0" resizable="false" sortable="false" style="-fx-alignment: center;" />
             <TableColumn fx:id="tblColumnDELETE" editable="false" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" resizable="false" sortable="false" style="-fx-alignment: center;" />
         </columns>
