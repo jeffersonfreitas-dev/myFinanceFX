@@ -2,6 +2,7 @@ package gui.clifor;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -38,6 +39,8 @@ import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import model.entities.Clifor;
 import model.service.CliforService;
+import net.sf.jasperreports.engine.JRException;
+import report.clifor.ReportClifor;
 import utils.Alerts;
 
 public class CliforViewController implements Initializable{
@@ -71,6 +74,8 @@ public class CliforViewController implements Initializable{
 	private TableColumn<Clifor, Clifor> tblColumnEDIT;
 	@FXML
 	private TableColumn<Clifor, Clifor> tblColumnDELETE;
+	@FXML
+	private TableColumn<Clifor, Clifor> tblColumnHISTORIC;
 	@FXML
 	private RadioButton rdioClientes;
 	@FXML
@@ -146,6 +151,7 @@ public class CliforViewController implements Initializable{
 		filtroNome.setText(nome);
 		initEditButtons();
 		initRemoveButtons();
+		initHistoricButtons();
 	}
 
 	
@@ -195,6 +201,39 @@ public class CliforViewController implements Initializable{
 				button.setOnAction(e -> removeEntity(entity));
 			}
 		});
+	}
+	
+	private void initHistoricButtons() {
+		tblColumnHISTORIC.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tblColumnHISTORIC.setCellFactory(param -> new TableCell<Clifor, Clifor>() {
+			private final Button button = new Button();
+			
+			@Override
+			protected void updateItem(Clifor entity, boolean empty) {
+				button.setGraphic(new ImageView("/assets/icons/detail16.png"));
+				button.setStyle(" -fx-background-color:transparent;");
+				button.setCursor(Cursor.HAND);
+				super.updateItem(entity, empty);
+				if (entity == null) {
+					setGraphic(null);
+					return;
+				}
+				
+				setGraphic(button);
+				button.setOnAction(e -> {
+					openReport(entity.getId());
+				});
+			}
+		});
+	}
+	
+	
+	private void openReport(Integer id) {
+        try {
+            new ReportClifor().showExtratoSimple(id);
+        } catch (ClassNotFoundException | JRException | SQLException e1) {
+            e1.printStackTrace();
+        }
 	}
 
 	private void removeEntity(Clifor entity) {

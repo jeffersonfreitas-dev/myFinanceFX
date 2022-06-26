@@ -36,7 +36,7 @@ public class ReceivementService {
 			Moviment moviment = movimentOpen();
 			if (moviment != null && dateInMoviment(entity.getDate())) {
 				Receivable receb = receivableService.findById(entity.getReceivable().getId());
-				receb.setStatus("RECEBIDO");
+				receb.setStatus("RECEBIDA");
 
 				atualizarValorPoupar(entity, moviment);
 

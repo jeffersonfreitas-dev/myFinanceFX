@@ -2,6 +2,7 @@ package gui.billpay;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -51,6 +52,8 @@ import model.service.BillpayService;
 import model.service.CliforService;
 import model.service.CompanyService;
 import model.service.PaymentService;
+import net.sf.jasperreports.engine.JRException;
+import report.billpay.ReportBillpay;
 import utils.Alerts;
 import utils.Utils;
 
@@ -105,7 +108,7 @@ public class BillpayViewController implements Initializable{
 	@FXML
 	private TableColumn<Billpay, Billpay> tblColumnDELETE;
 	@FXML
-	private TableColumn<Billpay, Billpay> tblColumnPAY;
+	private TableColumn<Billpay, Billpay> tblColumnHISTORIC;
 	@FXML
 	private RadioButton rdioPagas;
 	@FXML
@@ -267,7 +270,7 @@ public class BillpayViewController implements Initializable{
 		initializationNodes();
 		initRemoveButtons();
 		initEditButtons();
-		initDetailButtons();
+		initHistoricButtons();
 	}
 	
 	
@@ -304,26 +307,6 @@ public class BillpayViewController implements Initializable{
 	}
 	
 	
-	private void initDetailButtons() {
-		tblColumnPAY.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		tblColumnPAY.setCellFactory(param -> new TableCell<Billpay, Billpay>() {
-			private final Button button = new Button();
-			
-			@Override
-			protected void updateItem(Billpay entity, boolean empty) {
-				button.setGraphic(new ImageView("/assets/icons/detail16.png"));
-				button.setStyle(" -fx-background-color:transparent;");
-				button.setCursor(Cursor.HAND);
-				super.updateItem(entity, empty);
-				if(entity == null) {
-					setGraphic(null);
-					return;
-				}
-				setGraphic(button);
-			}
-		});
-	}
-
 
 	private void initRemoveButtons() {
 		tblColumnDELETE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
@@ -364,6 +347,38 @@ public class BillpayViewController implements Initializable{
 		}
 	}
 	
+	
+	private void initHistoricButtons() {
+		tblColumnHISTORIC.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tblColumnHISTORIC.setCellFactory(param -> new TableCell<Billpay, Billpay>() {
+			private final Button button = new Button();
+			
+			@Override
+			protected void updateItem(Billpay entity, boolean empty) {
+				button.setGraphic(new ImageView("/assets/icons/detail16.png"));
+				button.setStyle(" -fx-background-color:transparent;");
+				button.setCursor(Cursor.HAND);
+				super.updateItem(entity, empty);
+				if (entity == null) {
+					setGraphic(null);
+					return;
+				}
+				
+				setGraphic(button);
+				button.setOnAction(e -> {
+					openReport(entity.getId());
+				});
+			}
+		});
+	}
+	
+	private void openReport(Integer id) {
+        try {
+            new ReportBillpay().showExtratoSimple(id);
+        } catch (ClassNotFoundException | JRException | SQLException e1) {
+            e1.printStackTrace();
+        }
+	}
 	
 	private synchronized <T> void loadModalView(String path, Double width, Double height, Billpay entity, String title, Stage stage, Consumer<T> initialization) {
 		try {

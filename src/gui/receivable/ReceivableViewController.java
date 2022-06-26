@@ -2,6 +2,7 @@ package gui.receivable;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -47,33 +48,38 @@ import model.service.CliforService;
 import model.service.CompanyService;
 import model.service.ReceivableService;
 import model.service.ReceivementService;
+import net.sf.jasperreports.engine.JRException;
+import report.receivable.ReportReceivable;
 import utils.Alerts;
 import utils.Utils;
 
-public class ReceivableViewController implements Initializable{
-	
+public class ReceivableViewController implements Initializable {
+
 	private ReceivableService service;
+
 	public void setReceivableService(ReceivableService service) {
 		this.service = service;
 	}
-	
+
 	private String status = "RECEBER";
-	
+
 	@FXML
 	private Button btnNew;
+
 	@FXML
 	public void onBtnNewAction(ActionEvent event) {
 		Stage stage = new Stage();
 		Receivable entity = new Receivable();
-		loadModalView("/gui/receivable/ReceivableViewRegister.fxml", 600.0, 585.0, entity, "Cadastro de contas a receber", stage, (ReceivableViewRegisterController controller) -> {
-			controller.setReceivableService(new ReceivableService());
-			controller.setCompanyService(new CompanyService());
-			controller.setCliforService(new CliforService());
-			controller.setAccountPlanService(new AccountPlanService());
-			controller.setReceivable(entity);
-			controller.loadAssociateObjects();
-			controller.updateFormData();				
-			});		
+		loadModalView("/gui/receivable/ReceivableViewRegister.fxml", 600.0, 585.0, entity,
+				"Cadastro de contas a receber", stage, (ReceivableViewRegisterController controller) -> {
+					controller.setReceivableService(new ReceivableService());
+					controller.setCompanyService(new CompanyService());
+					controller.setCliforService(new CliforService());
+					controller.setAccountPlanService(new AccountPlanService());
+					controller.setReceivable(entity);
+					controller.loadAssociateObjects();
+					controller.updateFormData();
+				});
 	}
 
 	@FXML
@@ -93,22 +99,20 @@ public class ReceivableViewController implements Initializable{
 	@FXML
 	private TableColumn<Receivable, Receivable> tblColumnDELETE;
 	@FXML
-	private TableColumn<Receivable, Receivable> tblColumnPAY;
+	private TableColumn<Receivable, Receivable> tblColumnHISTORIC;
 	@FXML
 	private RadioButton rdioRecebida;
 	@FXML
 	private RadioButton rdioReceber;
 	@FXML
 	private ToggleGroup rdioGroup;
-	
+
 	private ObservableList<Receivable> obsList = null;
 
-	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		initializationNodes();
 	}
-
 
 	private void initializationNodes() {
 		rdioReceber.setToggleGroup(rdioGroup);
@@ -121,64 +125,63 @@ public class ReceivableViewController implements Initializable{
 		tblColumnHistoric.setCellValueFactory(new PropertyValueFactory<>("historic"));
 		tblColumnValue.setCellValueFactory(new PropertyValueFactory<>("value"));
 		Utils.formatTableColumnDouble(tblColumnValue, 2);
-		tblColumnProvider.setCellValueFactory(v -> {	String s = v.getValue().getClifor().getName();
-		return new ReadOnlyStringWrapper(s);
+		tblColumnProvider.setCellValueFactory(v -> {
+			String s = v.getValue().getClifor().getName();
+			return new ReadOnlyStringWrapper(s);
 		});
-		
+
 		rdioReceber.setSelected(true);
-		
-		
-		//METODO DOIS CLICKES ROW TABELA
-		tblView.setRowFactory( tv -> {
-		    TableRow<Receivable> row = new TableRow<>();
-		    row.setOnMouseClicked(event -> {
-		        if (event.getClickCount() == 2 && (! row.isEmpty())) {
-		        	Receivable entity = row.getItem();
-		        	
-		            if(entity.getStatus().equals("RECEBIDA")) {
-		            	Alerts.showAlert("Erro ao abrir recebimento", null, "Está conta já foi recebida", AlertType.ERROR);
-		            }else {
-		            	Stage stage = new Stage();
-						loadModalView("/gui/receivement/ReceivementViewRegister.fxml", 600.0, 350.0, entity, "Recebimento de contas", stage, (ReceivementViewRegisterController controller) -> {
-							controller.setReceivableService(new ReceivableService());
-							controller.setAccountService(new BankAccountService());
-							controller.setService(new ReceivementService());
-							controller.setReceivement(new Receivement());
-							controller.setReceivable(entity);			
-							controller.loadAssociateObjects();
-		            	});
-		            }
-		        }
-		    });
-		    return row ;
+
+		// METODO DOIS CLICKES ROW TABELA
+		tblView.setRowFactory(tv -> {
+			TableRow<Receivable> row = new TableRow<>();
+			row.setOnMouseClicked(event -> {
+				if (event.getClickCount() == 2 && (!row.isEmpty())) {
+					Receivable entity = row.getItem();
+
+					if (entity.getStatus().equals("RECEBIDA")) {
+						Alerts.showAlert("Erro ao abrir recebimento", null, "Está conta já foi recebida",
+								AlertType.ERROR);
+					} else {
+						Stage stage = new Stage();
+						loadModalView("/gui/receivement/ReceivementViewRegister.fxml", 600.0, 350.0, entity,
+								"Recebimento de contas", stage, (ReceivementViewRegisterController controller) -> {
+									controller.setReceivableService(new ReceivableService());
+									controller.setAccountService(new BankAccountService());
+									controller.setService(new ReceivementService());
+									controller.setReceivement(new Receivement());
+									controller.setReceivable(entity);
+									controller.loadAssociateObjects();
+								});
+					}
+				}
+			});
+			return row;
 		});
 	}
-	
-	
+
 	public void rdioButtonFiltroClick() {
 		RadioButton rb = (RadioButton) rdioGroup.getSelectedToggle();
-		if(rb.getText().equalsIgnoreCase("Recebidas")) {
+		if (rb.getText().equalsIgnoreCase("Recebidas")) {
 			this.status = "RECEBIDA";
-		}else {
+		} else {
 			this.status = "RECEBER";
 		}
 		updateTableFiltro(this.status);
 	}
-	
-	
+
 	private void updateTableFiltro(String status) {
-		if(service == null) {
+		if (service == null) {
 			throw new IllegalStateException("O serviço não foi instanciado");
 		}
-		
+
 		List<Receivable> list = service.filtro(status);
 		obsList = FXCollections.observableArrayList(list);
 		tblView.setItems(obsList);
 	}
 
-
 	public void updateTableView() {
-		if(service == null) {
+		if (service == null) {
 			throw new IllegalStateException("O serviço não foi instanciado");
 		}
 		List<Receivable> list = service.filtro(status);
@@ -187,76 +190,87 @@ public class ReceivableViewController implements Initializable{
 		initializationNodes();
 		initRemoveButtons();
 		initEditButtons();
-		initDetailButtons();
+		initHistoricButtons();
 	}
-	
-	
-	
+
 	private void initEditButtons() {
 		tblColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
 		tblColumnEDIT.setCellFactory(param -> new TableCell<Receivable, Receivable>() {
 			private final Button button = new Button();
+
 			@Override
 			protected void updateItem(Receivable entity, boolean empty) {
 				button.setGraphic(new ImageView("/assets/icons/edit16.png"));
 				button.setStyle(" -fx-background-color:transparent;");
 				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
-				if(entity == null || entity.getStatus().equals("R")) {
+				if (entity == null || entity.getStatus().equals("RECEBIDA")) {
 					setGraphic(null);
 					return;
 				}
-				
+
 				setGraphic(button);
-				button.setOnAction( e -> {
+				button.setOnAction(e -> {
 					Stage stage = new Stage();
-					loadModalView("/gui/receivable/ReceivableViewRegister.fxml", 600.0, 585.0, entity, "Cadastro de contas a receber", stage, (ReceivableViewRegisterController controller) -> {
-						controller.setReceivableService(new ReceivableService());
-						controller.setCompanyService(new CompanyService());
-						controller.setCliforService(new CliforService());
-						controller.setAccountPlanService(new AccountPlanService());
-						controller.setReceivable(entity);
-						controller.loadAssociateObjects();
-						controller.updateFormData();				
-					});
+					loadModalView("/gui/receivable/ReceivableViewRegister.fxml", 600.0, 585.0, entity,
+							"Cadastro de contas a receber", stage, (ReceivableViewRegisterController controller) -> {
+								controller.setReceivableService(new ReceivableService());
+								controller.setCompanyService(new CompanyService());
+								controller.setCliforService(new CliforService());
+								controller.setAccountPlanService(new AccountPlanService());
+								controller.setReceivable(entity);
+								controller.loadAssociateObjects();
+								controller.updateFormData();
+							});
 				});
 			}
 		});
 	}
-	
-	private void initDetailButtons() {
-		tblColumnPAY.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
-		tblColumnPAY.setCellFactory(param -> new TableCell<Receivable, Receivable>() {
+
+	private void initHistoricButtons() {
+		tblColumnHISTORIC.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tblColumnHISTORIC.setCellFactory(param -> new TableCell<Receivable, Receivable>() {
 			private final Button button = new Button();
-			
+
 			@Override
 			protected void updateItem(Receivable entity, boolean empty) {
 				button.setGraphic(new ImageView("/assets/icons/detail16.png"));
 				button.setStyle(" -fx-background-color:transparent;");
 				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
-				if(entity == null) {
+				if (entity == null) {
 					setGraphic(null);
 					return;
 				}
+
 				setGraphic(button);
+				button.setOnAction(e -> {
+					openReport(entity.getId());
+				});
 			}
 		});
 	}
 
+	private void openReport(Integer id) {
+		try {
+			new ReportReceivable().showExtratoSimple(id);
+		} catch (ClassNotFoundException | JRException | SQLException e1) {
+			e1.printStackTrace();
+		}
+	}
 
 	private void initRemoveButtons() {
 		tblColumnDELETE.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
 		tblColumnDELETE.setCellFactory(param -> new TableCell<Receivable, Receivable>() {
 			private final Button button = new Button();
-			
+
 			@Override
 			protected void updateItem(Receivable entity, boolean empty) {
 				button.setGraphic(new ImageView("/assets/icons/trash16.png"));
 				button.setStyle(" -fx-background-color:transparent;");
 				button.setCursor(Cursor.HAND);
 				super.updateItem(entity, empty);
-				if(entity == null || entity.getStatus().equals("R")) {
+				if (entity == null || entity.getStatus().equals("RECEBIDA")) {
 					setGraphic(null);
 					return;
 				}
@@ -265,12 +279,13 @@ public class ReceivableViewController implements Initializable{
 			}
 		});
 	}
-	
+
 	private void removeEntity(Receivable entity) {
-		Optional<ButtonType> result = Alerts.showConfirmation("Confirmação", "Você tem certeza que deseja remover este item?");
-		
-		if(result.get() == ButtonType.OK) {
-			if(service == null) {
+		Optional<ButtonType> result = Alerts.showConfirmation("Confirmação",
+				"Você tem certeza que deseja remover este item?");
+
+		if (result.get() == ButtonType.OK) {
+			if (service == null) {
 				throw new IllegalStateException("Serviço não instanciado");
 			}
 			try {
@@ -282,16 +297,16 @@ public class ReceivableViewController implements Initializable{
 			}
 		}
 	}
-	
-	
-	private synchronized <T> void loadModalView(String path, Double width, Double height, Receivable entity, String title, Stage stage, Consumer<T> initialization) {
+
+	private synchronized <T> void loadModalView(String path, Double width, Double height, Receivable entity,
+			String title, Stage stage, Consumer<T> initialization) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
 			Window window = btnNew.getScene().getWindow();
-			Pane pane = loader.load();	
+			Pane pane = loader.load();
 
 			Scene scene = new Scene(pane);
-			scene.getStylesheets().addAll(BootstrapFX.bootstrapFXStylesheet()); 
+			scene.getStylesheets().addAll(BootstrapFX.bootstrapFXStylesheet());
 			stage.setTitle(title);
 			stage.setScene(scene);
 			stage.setResizable(false);
@@ -299,24 +314,22 @@ public class ReceivableViewController implements Initializable{
 			stage.initModality(Modality.WINDOW_MODAL);
 			stage.setHeight(height);
 			stage.setWidth(width);
-			
-			
+
 			T controller = loader.getController();
 			initialization.accept(controller);
-			
+
 			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 				@Override
 				public void handle(WindowEvent event) {
 					updateTableView();
 				}
 			});
-			
+
 			stage.showAndWait();
 		} catch (IOException e) {
 			e.printStackTrace();
 			Alerts.showAlert("Erro", "Erro ao abrir a janela", e.getMessage(), AlertType.ERROR);
 		}
 	}
-	
 
 }

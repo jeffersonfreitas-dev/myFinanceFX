@@ -14,5 +14,6 @@ public interface DAOReceivable {
 	Receivable findByInvoiceAndCompanyId(String invoice, Integer id_company);
 	List<Receivable> filtro(String status);
 	List<Receivable> findAllByAccountPlanId(Integer idAccountPlan);
+	List<Receivable> findAllByCliforId(Integer id);
 
 }
