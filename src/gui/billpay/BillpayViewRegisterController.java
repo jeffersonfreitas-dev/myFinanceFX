@@ -75,6 +75,14 @@ public class BillpayViewRegisterController implements Initializable{
 	@FXML
 	private TextField txtValue;
 	@FXML
+	private TextField txtId;
+	@FXML
+	private TextField txtInvoice;
+	@FXML
+	private TextField txtPortion;
+	@FXML
+	private TextField txtFulfillment;
+	@FXML
 	private TextField txtQtdParcelas;
 	@FXML
 	private TextArea txtHistoric;
@@ -150,6 +158,7 @@ public class BillpayViewRegisterController implements Initializable{
 		}
 		try {
 			Billpay entity = getFormDate();
+			entity.setFechada(this.entity.getFechada());
 			service.saveOrUpdate(entity);
 			onBtnCancelAction(event);
 			Stage stage = Utils.getCurrentStage(event);
@@ -206,6 +215,10 @@ public class BillpayViewRegisterController implements Initializable{
 		
 		txtHistoric.setText(entity.getHistoric());
 		txtValue.setText(String.format("%.2f", entity.getValue()));
+		txtId.setText(String.valueOf(entity.getId()));
+		txtInvoice.setText(entity.getInvoice());
+		txtPortion.setText(String.valueOf(entity.getPortion()));
+		txtFulfillment.setText(String.valueOf(entity.getFulfillment()));
 		
 		if(entity.getDueDate() != null) {
 			pkDueDate.setValue(convertToLocalDateViaInstant(entity.getDueDate()));
@@ -256,6 +269,11 @@ public class BillpayViewRegisterController implements Initializable{
 		Billpay bill = new Billpay();
 		ValidationException exception = new ValidationException("");
 		bill.setStatus(entity.getStatus());
+		bill.setId(Utils.tryParseToInt(txtId.getText()));
+		bill.setInvoice(txtInvoice.getText());
+		bill.setPortion(Utils.tryParseToInt(txtPortion.getText()));
+		bill.setFulfillment(Utils.tryParseToInt(txtFulfillment.getText()));
+		bill.setParcelas(Utils.tryParseToInt(txtQtdParcelas.getText()));
 		
 		if(pkEmission.getValue() == null) {
 			exception.setError("emission", "Informe uma data de emissão válida");
@@ -294,12 +312,6 @@ public class BillpayViewRegisterController implements Initializable{
 			exception.setError("accountPlan", "Selecione um plano de conta");
 		}
 		bill.setAccountPlan(cmbAccount.getValue());
-		
-		if(txtQtdParcelas.getText() == null) {
-			bill.setFulfillment(1);
-		}else {
-			bill.setFulfillment(Utils.tryParseToInt(txtQtdParcelas.getText()));
-		}
 		
 		if(exception.getErrors().size() > 0) {
 			throw exception;

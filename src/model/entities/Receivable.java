@@ -19,7 +19,8 @@ public class Receivable implements Serializable {
 	private Company company;
 	private AccountPlan accountPlan;
 	private Boolean Fechada;
-
+	private Integer parcelas;
+	
 	public Clifor getClifor() {
 		return clifor;
 	}
@@ -125,6 +126,14 @@ public class Receivable implements Serializable {
 
 	public void setFechada(Boolean fechada) {
 		Fechada = fechada;
+	}
+
+	public Integer getParcelas() {
+		return parcelas;
+	}
+
+	public void setParcelas(Integer parcelas) {
+		this.parcelas = parcelas;
 	}
 
 	@Override

@@ -36,6 +36,13 @@ public class ReceivableService {
 		if(entity.getId() == null) {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(entity.getDueDate());
+			cal.add(Calendar.MONTH, -1);
+			
+			if(entity.getParcelas() == null && entity.getFulfillment() == null) {
+				entity.setFulfillment(1);
+			}else {
+				entity.setFulfillment(entity.getParcelas());
+			}
 			
 			for(int i = 0; i < entity.getFulfillment(); i++) {
 				Receivable receb = new Receivable();
@@ -49,7 +56,7 @@ public class ReceivableService {
 				receb.setValue(entity.getValue() / entity.getFulfillment());
 				receb.setPortion(i+1);
 				receb.setStatus("RECEBER");
-				cal.add(Calendar.MONTH, i);
+				cal.add(Calendar.MONTH, 1);
 				receb.setDueDate(cal.getTime());
 				dao.insert(receb);
 			}

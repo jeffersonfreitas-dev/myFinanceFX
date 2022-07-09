@@ -19,6 +19,7 @@ public class Billpay implements Serializable {
 	private Company company;
 	private AccountPlan accountPlan;
 	private Boolean fechada;
+	private Integer parcelas;
 
 	public Clifor getClifor() {
 		return clifor;
@@ -125,6 +126,14 @@ public class Billpay implements Serializable {
 
 	public void setFechada(Boolean fechada) {
 		this.fechada = fechada;
+	}
+
+	public Integer getParcelas() {
+		return parcelas;
+	}
+
+	public void setParcelas(Integer parcelas) {
+		this.parcelas = parcelas;
 	}
 
 	@Override

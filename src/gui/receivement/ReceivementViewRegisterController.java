@@ -74,7 +74,7 @@ public class ReceivementViewRegisterController implements Initializable{
 			@Override
 			protected void updateItem(BankAccount item, boolean empty) {
 				super.updateItem(item, empty);
-				setText(empty ? "" : item.getAccount() +" - "+ item.getBankAgence().getBank().getName());
+				setText(empty ? "" : item.getCode());
 			}
 		};
 		cmbAccount.setCellFactory(factory);

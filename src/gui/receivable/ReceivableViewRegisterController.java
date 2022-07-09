@@ -77,6 +77,14 @@ public class ReceivableViewRegisterController implements Initializable{
 	@FXML
 	private TextField txtParcelamento;
 	@FXML
+	private TextField txtPortion;
+	@FXML
+	private TextField txtFulfillment;
+	@FXML
+	private TextField txtId;
+	@FXML
+	private TextField txtInvoice;
+	@FXML
 	private TextArea txtHistoric;
 	
 	@FXML
@@ -207,6 +215,10 @@ public class ReceivableViewRegisterController implements Initializable{
 		
 		txtHistoric.setText(entity.getHistoric());
 		txtValue.setText(String.format("%.2f", entity.getValue()));
+		txtPortion.setText(String.valueOf(entity.getPortion()));
+		txtId.setText(String.valueOf(entity.getId()));
+		txtInvoice.setText(entity.getInvoice());
+		txtFulfillment.setText(String.valueOf(entity.getFulfillment()));
 		
 		if(entity.getDueDate() != null) {
 			pkDueDate.setValue(convertToLocalDateViaInstant(entity.getDueDate()));
@@ -242,8 +254,8 @@ public class ReceivableViewRegisterController implements Initializable{
 		}
 		
 		List<Company> companies = companyService.findByAll();
-		List<Clifor> clifors = cliforService.findAll();
-		List<AccountPlan> accounts = accountService.findAll();
+		List<Clifor> clifors = cliforService.findAllByTipo(false);
+		List<AccountPlan> accounts = accountService.findAllByType(true);
 		obsAccount = FXCollections.observableArrayList(accounts);
 		obsClifor = FXCollections.observableArrayList(clifors);
 		obsCompany = FXCollections.observableArrayList(companies);
@@ -257,6 +269,11 @@ public class ReceivableViewRegisterController implements Initializable{
 		Receivable recep = new Receivable();
 		ValidationException exception = new ValidationException("");
 		recep.setStatus(entity.getStatus());
+		recep.setId(Utils.tryParseToInt(txtId.getText()));
+		recep.setInvoice(txtInvoice.getText());
+		recep.setPortion(Utils.tryParseToInt(txtPortion.getText()));
+		recep.setFulfillment(Utils.tryParseToInt(txtFulfillment.getText()));
+		recep.setParcelas(Utils.tryParseToInt(txtParcelamento.getText()));
 		
 
 		if(pkEmission.getValue() == null) {
@@ -301,12 +318,7 @@ public class ReceivableViewRegisterController implements Initializable{
 		}
 		recep.setAccountPlan(cmbAccount.getValue());
 		
-		if(txtParcelamento.getText() == null || txtParcelamento.getText() == "") {
-			recep.setFulfillment(1);
-		}else {
-			recep.setFulfillment(Utils.tryParseToInt(txtParcelamento.getText()));
-		}
-		
+
 		if(exception.getErrors().size() > 0) {
 			throw exception;
 		}

@@ -37,6 +37,13 @@ public class BillpayService {
 		if(entity.getId() == null) {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(entity.getDueDate());
+			cal.add(Calendar.MONTH, -1);
+			
+			if(entity.getParcelas() == null && entity.getFulfillment() == null) {
+				entity.setFulfillment(1);
+			}else {
+				entity.setFulfillment(entity.getParcelas());
+			}
 
 			for(int i = 0; i < entity.getFulfillment(); i++) {
 				Billpay bill = new Billpay();
@@ -50,7 +57,7 @@ public class BillpayService {
 				bill.setValue(entity.getValue() / entity.getFulfillment());
 				bill.setPortion(i+1);
 				bill.setStatus("PAGAR");
-				cal.add(Calendar.MONTH, i);
+				cal.add(Calendar.MONTH, 1);
 				bill.setDueDate(cal.getTime());
 				bill.setFechada(false);
 				dao.insert(bill);

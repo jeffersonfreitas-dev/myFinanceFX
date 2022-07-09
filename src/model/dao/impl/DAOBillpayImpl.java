@@ -29,8 +29,8 @@ public class DAOBillpayImpl implements DAOBillpay{
 	@Override
 	public void insert(Billpay entity) {
 		PreparedStatement stmt = null;
-		String sql = "INSERT INTO billpay (invoice, historic, date, due_date, value, status, id_clifor, id_company, id_account_plan, fechado) VALUES "
-				+ "(upper(?), upper(?), ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO billpay (invoice, historic, date, due_date, value, status, id_clifor, id_company, id_account_plan, fechado, portion, fulfillment) VALUES "
+				+ "(upper(?), upper(?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, entity.getInvoice());
@@ -43,6 +43,8 @@ public class DAOBillpayImpl implements DAOBillpay{
 			stmt.setInt(8, entity.getCompany().getId());
 			stmt.setInt(9, entity.getAccountPlan().getId());
 			stmt.setBoolean(10, entity.getFechada());
+			stmt.setInt(11, entity.getPortion());
+			stmt.setInt(12, entity.getFulfillment());
 			int result = stmt.executeUpdate();
 			if(result < 1) {
 				throw new DatabaseException(DefaultMessages.getMsgErroSalvar() + ". Nenhuma linha afetada");
@@ -60,7 +62,7 @@ public class DAOBillpayImpl implements DAOBillpay{
 	public void update(Billpay entity) {
 		PreparedStatement stmt = null;
 		String sql = "UPDATE billpay SET invoice = upper(?), historic = upper(?), date = ?, due_date = ?, value = ?,"
-				+ " status = ?, id_clifor = ?, id_company = ?, id_account_plan = ?, fechado = ? WHERE id = ?";
+				+ " status = ?, id_clifor = ?, id_company = ?, id_account_plan = ?, fechado = ?, portion = ?, fulfillment = ? WHERE id = ?";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, entity.getInvoice());
@@ -73,7 +75,9 @@ public class DAOBillpayImpl implements DAOBillpay{
 			stmt.setInt(8, entity.getCompany().getId());
 			stmt.setInt(9, entity.getAccountPlan().getId());
 			stmt.setBoolean(10, entity.getFechada());
-			stmt.setInt(11, entity.getId());
+			stmt.setInt(11, entity.getPortion());
+			stmt.setInt(12, entity.getFulfillment());
+			stmt.setInt(13, entity.getId());
 			int result = stmt.executeUpdate();
 			if(result < 1) {
 				throw new DatabaseException(DefaultMessages.getMsgErroAtualizar() + ". Nenhuma linha afetada");
@@ -361,6 +365,8 @@ public class DAOBillpayImpl implements DAOBillpay{
 		bill.setStatus(rs.getString("status"));
 		bill.setValue(rs.getDouble("value"));
 		bill.setFechada(rs.getBoolean("fechado"));
+		bill.setPortion(rs.getInt("portion"));
+		bill.setFulfillment(rs.getInt("fulfillment"));
 		return bill;
 	}
 

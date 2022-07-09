@@ -278,5 +278,6 @@ alter table billpay add column fechado boolean;
 alter table moviment add column value_poupanca decimal(10,2);
 alter table moviment add column value_aplicacao decimal(10,2);
 alter table moviment add column value_resgate decimal(10,2);
+alter table bank_account add type varchar(20);
 
   

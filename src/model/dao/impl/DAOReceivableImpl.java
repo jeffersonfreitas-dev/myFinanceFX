@@ -113,7 +113,7 @@ public class DAOReceivableImpl implements DAOReceivable{
 		ResultSet rs = null;
 		String sql = "SELECT b.*, c.id as cod_clifor, c.name as name_clifor, e.id as cod_company, e.name as name_company, p.id as cod_account, "
 				+ "p.credit, p.name FROM receivable b INNER JOIN clifor c ON b.id_clifor = c.id "
-				+ "INNER JOIN company e ON b.id_company = e.id INNER JOIN account_plan p ON b.id_account_plan = p.id WHERE b.id = ?";
+				+ "INNER JOIN company e ON b.id_company = e.id INNER JOIN account_plan p ON b.id_account_plan = p.id WHERE b.id = ? order by b.due_date";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, id);
@@ -262,7 +262,7 @@ public class DAOReceivableImpl implements DAOReceivable{
 		ResultSet rs = null;
 		String sql = "SELECT b.*, c.id as cod_clifor, c.name as name_clifor, e.id as cod_company, e.name as name_company, p.id as cod_account, "
 				+ "p.credit, p.name FROM receivable b INNER JOIN clifor c ON b.id_clifor = c.id INNER JOIN company e ON b.id_company = e.id "
-				+ "INNER JOIN account_plan p ON b.id_account_plan = p.id WHERE upper(invoice) = upper(?) AND id_company = ? ";
+				+ "INNER JOIN account_plan p ON b.id_account_plan = p.id WHERE upper(invoice) = upper(?) AND id_company = ? order by b.due_date";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, invoice);
@@ -291,7 +291,7 @@ public class DAOReceivableImpl implements DAOReceivable{
 		ResultSet rs = null;
 		String sql = "SELECT b.*, c.id as cod_clifor, c.name as name_clifor, e.id as cod_company, e.name as name_company, p.id as cod_account, "
 				+ "p.credit, p.name FROM receivable b INNER JOIN clifor c ON b.id_clifor = c.id INNER JOIN company e ON b.id_company = e.id "
-				+ "INNER JOIN account_plan p ON b.id_account_plan = p.id WHERE b.status = ? ";
+				+ "INNER JOIN account_plan p ON b.id_account_plan = p.id WHERE b.status = ? order by b.due_date";
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, status);

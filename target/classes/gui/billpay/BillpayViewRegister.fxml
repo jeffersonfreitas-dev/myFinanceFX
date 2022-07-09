@@ -116,6 +116,10 @@
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="14">
                <children>
                   <TextField fx:id="txtQtdParcelas" prefHeight="35.0" prefWidth="220.0" promptText="Quantidade Parcelas" />
+                  <TextField fx:id="txtId" prefHeight="25.0" prefWidth="66.0" visible="false" />
+                  <TextField fx:id="txtInvoice" prefHeight="25.0" prefWidth="44.0" visible="false" />
+                  <TextField fx:id="txtPortion" prefHeight="25.0" prefWidth="37.0" visible="false" />
+                  <TextField fx:id="txtFulfillment" prefHeight="25.0" prefWidth="42.0" visible="false" />
                </children>
             </HBox>
             <Label fx:id="lblErrorDueDate" prefHeight="15.0" prefWidth="517.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="11">
